@@ -16,8 +16,10 @@ export function onLocaleChange(listener) {
 function applyLocale() {
   document.documentElement.lang = locale;
   document.documentElement.dataset.localeReady = 'true';
-  document.title = t(document.body.dataset.page === 'detail' ? 'detailTitleMeta' : 'homeTitleMeta');
-  document.querySelector('meta[name="description"]')?.setAttribute('content', t(document.body.dataset.page === 'detail' ? 'detailDescriptionMeta' : 'homeDescriptionMeta'));
+  const titleKey = document.body.dataset.titleKey || (document.body.dataset.page === 'detail' ? 'detailTitleMeta' : 'homeTitleMeta');
+  const descKey = document.body.dataset.descKey || (document.body.dataset.page === 'detail' ? 'detailDescriptionMeta' : 'homeDescriptionMeta');
+  document.title = t(titleKey);
+  document.querySelector('meta[name="description"]')?.setAttribute('content', t(descKey));
   document.querySelectorAll('[data-i18n]').forEach((node) => { node.textContent = t(node.dataset.i18n); });
   document.querySelectorAll('[data-i18n-aria]').forEach((node) => { node.setAttribute('aria-label', t(node.dataset.i18nAria)); });
   document.querySelectorAll('[data-i18n-alt]').forEach((node) => { node.setAttribute('alt', t(node.dataset.i18nAlt)); });
