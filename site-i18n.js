@@ -23,6 +23,12 @@ function applyLocale() {
   document.querySelectorAll('[data-i18n]').forEach((node) => { node.textContent = t(node.dataset.i18n); });
   document.querySelectorAll('[data-i18n-aria]').forEach((node) => { node.setAttribute('aria-label', t(node.dataset.i18nAria)); });
   document.querySelectorAll('[data-i18n-alt]').forEach((node) => { node.setAttribute('alt', t(node.dataset.i18nAlt)); });
+  document.querySelectorAll('img[data-loc-base]').forEach((node) => {
+    const target = node.dataset.locBase + '/' + locale + '.png';
+    if (node.getAttribute('src') === target) return;
+    node.onerror = () => { node.onerror = null; node.src = node.dataset.locBase + '/en.png'; };
+    node.src = target;
+  });
   document.querySelectorAll('[data-language-select]').forEach((node) => { node.value = locale; });
 }
 
