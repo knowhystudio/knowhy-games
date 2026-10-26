@@ -18,6 +18,12 @@
 .detail-screen span { position: absolute; right: -10px; bottom: -10px; padding: 7px 11px; border-radius: 8px; background: #27534e; color: white; font-size: .78rem; font-weight: 800; }
 .detail-section { padding: clamp(64px, 7vw, 90px) 24px; background: var(--paper); }
 .detail-section:nth-of-type(odd) { background: var(--paper-light); }
+.release-section { padding-block: clamp(40px, 4.5vw, 58px); }
+.release-section h2 { margin-bottom: 18px; }
+.release-status { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; max-width: 780px; }
+.release-status li { display: flex; align-items: baseline; gap: 6px 18px; padding: 13px 18px; border: 1px solid var(--line); border-radius: 13px; background: #fffefa; box-shadow: 0 12px 24px -22px #294c47aa; }
+.release-status strong { flex: 0 0 132px; font-size: .92rem; letter-spacing: .01em; }
+.release-status span { flex: 1; min-width: 0; color: var(--muted); font-size: .9rem; line-height: 1.55; }
 .detail-section h2 { max-width: 780px; margin: 0 0 30px; }
 .rule-grid, .mode-grid { display: grid; gap: 16px; }
 .rule-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
@@ -35,6 +41,21 @@
   .back-link { margin-bottom: 26px; }
   .detail-screen { width: min(68vw, 270px); }
   .detail-section { padding: 62px 18px; }
+  .release-section { padding-block: 44px; }
+  .release-status li { flex-direction: column; gap: 3px; padding: 12px 15px; }
+  .release-status strong { flex-basis: auto; }
   .rule-grid, .mode-grid { grid-template-columns: 1fr; }
   .rule-grid article > span { margin-bottom: 12px; }
 }
+
+/* Night appearance for the game pages (the header theme toggle is site-wide). */
+body.night .detail-hero { background: #1c3035; }
+body.night .detail-lead { color: var(--muted); }
+body.night .back-link { color: var(--green); }
+body.night .detail-tags span { border-color: var(--line); background: var(--paper-light); color: var(--green); }
+body.night .platform-note { color: var(--muted); }
+body.night .detail-screen span { background: var(--accent); }
+body.night .release-status li { border-color: var(--line); background: var(--paper-light); }
+body.night .rule-grid article, body.night .mode-grid article { border-color: var(--line); background: var(--paper-light); }
+body.night .rule-grid article > span { background: #3b3325; color: #eac99e; }
+body.night .rule-grid p, body.night .mode-grid p, body.night .mode-foot { color: var(--muted); }

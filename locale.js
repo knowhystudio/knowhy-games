@@ -11,7 +11,7 @@ export const translations = {
     detailBack: '← All games', detailEyebrow: 'Independent game · playtest', detailTitle: 'Classroom Snacks', detailLead: 'The teacher turns away. This is your chance. Pick a snack, take a bite, and hide it before they look back.', detailTagSolo: 'Solo strategy', detailTagFour: 'Four difficulties', detailTagModes: 'Timed / endless', detailPlay: 'Play on itch.io ↗', detailPlatform: 'The game opens on itch.io; this site shares its story and play details.', detailImageAlt: 'Gameplay screenshot of the Classroom Snacks classroom', detailImageCaption: 'Actual gameplay',
     howKicker: 'HOW TO PLAY', howTitle: 'One snack at a time.', stepOneTitle: 'Pick a snack', stepOneBody: 'Each snack takes a different time to eat and gives a different amount of fullness and points.', stepTwoTitle: 'Wait for an opening', stepTwoBody: 'Watch where the teacher stands and faces. You can stop eating halfway through.', stepThreeTitle: 'Hide it in time', stepThreeBody: 'In timed mode, reach the fullness goal and last until the bell rings.',
     modesKicker: 'TWO WAYS TO PLAY', modesTitle: 'Finish the class or chase a record.', timedTitle: 'Timed challenge', timedBody: 'Fill up before class ends and make it through the round.', endlessTitle: 'Endless challenge', endlessBody: 'No class timer and no snack limit. How high can you score?', modesFoot: 'Both modes have four difficulties. Personal records are saved separately.',
-    boardKicker: 'PLAYTEST LEADERBOARD', boardTitle: 'Endless rankings', boardIntro: 'Each difficulty has its own ranking. Only scores players choose to share appear here.', boardDisclaimer: 'Top 20 per difficulty. Playtest scores are not verified against cheating.', tierNormal: 'Normal', tierAdvanced: 'Advanced', tierHard: 'Hard', tierHell: 'Hell', boardPanel: 'ENDLESS', boardTop20: 'TOP 20', boardRank: 'Rank', boardPlayer: 'Player', boardScore: 'Score', boardLoading: 'Loading rankings…', boardOffline: 'Rankings are not connected. Places remain open.', boardEmpty: 'No ranked scores yet. The first places are open.', boardError: 'Rankings are unavailable right now. Places remain open.', boardCount: '{count} players ranked', footerAll: 'All games'
+    boardKicker: 'PLAYTEST LEADERBOARD', boardTitle: 'Endless rankings', boardIntro: 'Each difficulty has its own ranking. Only scores players choose to share appear here.', boardDisclaimer: 'Top 20 per difficulty. Playtest scores are not verified against cheating.', tierNormal: 'Normal', tierAdvanced: 'Advanced', tierHard: 'Hard', tierHell: 'Hell', boardPanel: 'ENDLESS', boardTop20: 'TOP 20', boardRank: 'Rank', boardPlayer: 'Player', boardScore: 'Score', boardLoading: 'Loading rankings…', boardOffline: 'Rankings are not connected. Places remain open.', boardEmpty: 'No ranked scores yet. The first places are open.', boardError: 'Rankings are unavailable right now. Places remain open.', boardCount: '{count} players ranked'
   },
   'zh-CN': {
     navGames: '游戏作品', navAbout: '关于', navAll: '所有游戏', navHow: '玩法', navBoard: '无尽榜单', navMain: '主导航', navLanguage: '网站语言', themeDay: '☀ 白天', themeNight: '☾ 夜晚',
@@ -23,7 +23,7 @@ export const translations = {
     detailBack: '← 所有游戏', detailEyebrow: '独立游戏 · 试玩中', detailTitle: '课堂偷吃', detailLead: '老师一转身，机会就来了。挑好零食，抓住空档吃一口；他回头时，记得及时收起来。', detailTagSolo: '单人轻策略', detailTagFour: '四档难度', detailTagModes: '限时 / 无尽', detailPlay: '前往 itch.io 游玩 ↗', detailPlatform: '游戏将在 itch.io 打开；本站只介绍作品和玩法。', detailImageAlt: '《课堂偷吃》的教室游玩画面', detailImageCaption: '游戏内实机画面',
     howKicker: '玩法', howTitle: '这一局，怎么偷吃？', stepOneTitle: '选一份零食', stepOneBody: '不同零食的进食时间、饱腹和积分各不相同。', stepTwoTitle: '等个空档开吃', stepTwoBody: '留意老师的位置和朝向；吃到一半也可以停。', stepThreeTitle: '老师回头就收手', stepThreeBody: '限时模式下达到饱腹目标，并坚持到下课铃响。',
     modesKicker: '两种玩法', modesTitle: '想通关，还是想冲分？', timedTitle: '限时挑战', timedBody: '下课前达到饱腹目标，守住这一局。', endlessTitle: '无尽挑战', endlessBody: '没有下课倒计时，也不会吃光零食；目标是积累更多分数。', modesFoot: '两种玩法各有四档难度；本地纪录分开保存。',
-    boardKicker: '试玩榜单', boardTitle: '无尽模式积分榜', boardIntro: '四档独立排名，仅显示玩家自愿提交的成绩。', boardDisclaimer: '各难度最多展示前 20 名；试玩成绩尚未经过防作弊验证。', tierNormal: '普通', tierAdvanced: '复杂', tierHard: '困难', tierHell: '地狱', boardPanel: '无尽', boardTop20: '前 20 名', boardRank: '名次', boardPlayer: '玩家', boardScore: '积分', boardLoading: '正在读取榜单…', boardOffline: '榜单服务尚未接通，名次席位暂时空着。', boardEmpty: '暂无上榜成绩，前排席位等你来占。', boardError: '暂时无法读取榜单，名次席位暂时空着。', boardCount: '当前已上榜 {count} 位', footerAll: '全部游戏'
+    boardKicker: '试玩榜单', boardTitle: '无尽模式积分榜', boardIntro: '四档独立排名，仅显示玩家自愿提交的成绩。', boardDisclaimer: '各难度最多展示前 20 名；试玩成绩尚未经过防作弊验证。', tierNormal: '普通', tierAdvanced: '复杂', tierHard: '困难', tierHell: '地狱', boardPanel: '无尽', boardTop20: '前 20 名', boardRank: '名次', boardPlayer: '玩家', boardScore: '积分', boardLoading: '正在读取榜单…', boardOffline: '榜单服务尚未接通，名次席位暂时空着。', boardEmpty: '暂无上榜成绩，前排席位等你来占。', boardError: '暂时无法读取榜单，名次席位暂时空着。', boardCount: '当前已上榜 {count} 位'
   },
   ja: {
     navGames: 'ゲーム', navAbout: 'サイトについて', navAll: '全ゲーム', navHow: '遊び方', navBoard: 'エンドレス順位', navMain: 'メインナビ', navLanguage: 'サイトの言語', themeDay: '☀ 昼', themeNight: '☾ 夜',
@@ -35,7 +35,7 @@ export const translations = {
     detailBack: '← 全ゲーム', detailEyebrow: 'インディーゲーム · テスト公開中', detailTitle: 'Classroom Snacks', detailLead: '先生が背を向けたらチャンス。おやつを選んでひと口。こちらを向く前に隠そう。', detailTagSolo: '一人用の軽い戦略', detailTagFour: '4段階の難易度', detailTagModes: '時間制 / エンドレス', detailPlay: 'itch.io でプレイ ↗', detailPlatform: 'ゲームは itch.io で開きます。このサイトでは作品と遊び方を紹介しています。', detailImageAlt: 'Classroom Snacks の教室のプレイ画面', detailImageCaption: '実際のゲーム画面',
     howKicker: '遊び方', howTitle: 'おやつは一つずつ。', stepOneTitle: 'おやつを選ぶ', stepOneBody: '食べる時間、満腹度、得点はおやつによって異なります。', stepTwoTitle: '隙を待つ', stepTwoBody: '先生の位置と向きに注目。途中で食べるのをやめることもできます。', stepThreeTitle: '間に合うように隠す', stepThreeBody: '時間制では満腹目標を達成し、チャイムまで見つからずに過ごそう。',
     modesKicker: '二つの遊び方', modesTitle: 'クリアを狙う？記録に挑む？', timedTitle: '時間制チャレンジ', timedBody: '授業が終わるまでに満腹になり、最後まで切り抜けよう。', endlessTitle: 'エンドレスチャレンジ', endlessBody: '時間制限もおやつの数の制限もなし。どこまで得点を伸ばせる？', modesFoot: 'どちらも難易度は4段階。自己ベストは別々に保存されます。',
-    boardKicker: 'テスト順位', boardTitle: 'エンドレス順位表', boardIntro: '難易度ごとに集計。自分で共有したスコアだけが表示されます。', boardDisclaimer: '各難易度上位20名。テストスコアの不正対策は未実施です。', tierNormal: '普通', tierAdvanced: '複雑', tierHard: '難しい', tierHell: '地獄', boardPanel: 'エンドレス', boardTop20: '上位20名', boardRank: '順位', boardPlayer: 'プレイヤー', boardScore: '得点', boardLoading: '順位を読み込み中…', boardOffline: '順位サービスは未接続です。枠は空けてあります。', boardEmpty: 'まだ記録がありません。最初の枠を目指そう。', boardError: '現在順位を読み込めません。枠は空けてあります。', boardCount: '{count} 人がランクイン', footerAll: '全ゲーム'
+    boardKicker: 'テスト順位', boardTitle: 'エンドレス順位表', boardIntro: '難易度ごとに集計。自分で共有したスコアだけが表示されます。', boardDisclaimer: '各難易度上位20名。テストスコアの不正対策は未実施です。', tierNormal: '普通', tierAdvanced: '複雑', tierHard: '難しい', tierHell: '地獄', boardPanel: 'エンドレス', boardTop20: '上位20名', boardRank: '順位', boardPlayer: 'プレイヤー', boardScore: '得点', boardLoading: '順位を読み込み中…', boardOffline: '順位サービスは未接続です。枠は空けてあります。', boardEmpty: 'まだ記録がありません。最初の枠を目指そう。', boardError: '現在順位を読み込めません。枠は空けてあります。', boardCount: '{count} 人がランクイン'
   },
   ko: {
     navGames: '게임', navAbout: '소개', navAll: '모든 게임', navHow: '플레이 방법', navBoard: '무한 순위', navMain: '주 메뉴', navLanguage: '사이트 언어', themeDay: '☀ 낮', themeNight: '☾ 밤',
@@ -47,7 +47,7 @@ export const translations = {
     detailBack: '← 모든 게임', detailEyebrow: '인디 게임 · 테스트 중', detailTitle: 'Classroom Snacks', detailLead: '선생님이 등을 돌리면 기회입니다. 간식을 골라 한입 먹고, 다시 보기 전에 숨기세요.', detailTagSolo: '1인용 전략', detailTagFour: '4단계 난이도', detailTagModes: '시간제 / 무한', detailPlay: 'itch.io에서 플레이 ↗', detailPlatform: '게임은 itch.io에서 열립니다. 이곳에서는 작품과 플레이 방법을 소개합니다.', detailImageAlt: 'Classroom Snacks 교실 플레이 화면', detailImageCaption: '실제 게임 화면',
     howKicker: '플레이 방법', howTitle: '간식은 한 번에 하나씩.', stepOneTitle: '간식 고르기', stepOneBody: '간식마다 먹는 시간, 포만감, 점수가 다릅니다.', stepTwoTitle: '틈 기다리기', stepTwoBody: '선생님의 위치와 방향을 살피세요. 먹는 도중에도 멈출 수 있습니다.', stepThreeTitle: '제때 숨기기', stepThreeBody: '시간제 모드에서는 포만 목표를 채우고 종이 울릴 때까지 버티세요.',
     modesKicker: '두 가지 모드', modesTitle: '수업을 끝낼까, 기록에 도전할까?', timedTitle: '시간제 도전', timedBody: '수업이 끝나기 전에 배를 채우고 끝까지 살아남으세요.', endlessTitle: '무한 도전', endlessBody: '시간 제한도 간식 수 제한도 없습니다. 얼마나 높은 점수를 낼 수 있을까요?', modesFoot: '두 모드 모두 난이도는 4단계이며 개인 최고 기록은 따로 저장됩니다.',
-    boardKicker: '테스트 순위', boardTitle: '무한 모드 순위', boardIntro: '난이도별 순위입니다. 플레이어가 공유한 점수만 표시됩니다.', boardDisclaimer: '난이도별 상위 20명. 테스트 점수에는 부정행위 검증이 없습니다.', tierNormal: '보통', tierAdvanced: '복잡', tierHard: '어려움', tierHell: '지옥', boardPanel: '무한', boardTop20: '상위 20명', boardRank: '순위', boardPlayer: '플레이어', boardScore: '점수', boardLoading: '순위 불러오는 중…', boardOffline: '순위 서비스가 연결되지 않았습니다. 빈자리는 유지됩니다.', boardEmpty: '아직 등록된 점수가 없습니다. 첫 자리에 도전하세요.', boardError: '지금은 순위를 불러올 수 없습니다. 빈자리는 유지됩니다.', boardCount: '{count}명 순위 등록', footerAll: '모든 게임'
+    boardKicker: '테스트 순위', boardTitle: '무한 모드 순위', boardIntro: '난이도별 순위입니다. 플레이어가 공유한 점수만 표시됩니다.', boardDisclaimer: '난이도별 상위 20명. 테스트 점수에는 부정행위 검증이 없습니다.', tierNormal: '보통', tierAdvanced: '복잡', tierHard: '어려움', tierHell: '지옥', boardPanel: '무한', boardTop20: '상위 20명', boardRank: '순위', boardPlayer: '플레이어', boardScore: '점수', boardLoading: '순위 불러오는 중…', boardOffline: '순위 서비스가 연결되지 않았습니다. 빈자리는 유지됩니다.', boardEmpty: '아직 등록된 점수가 없습니다. 첫 자리에 도전하세요.', boardError: '지금은 순위를 불러올 수 없습니다. 빈자리는 유지됩니다.', boardCount: '{count}명 순위 등록'
   },
   es: {
     navGames: 'Juegos', navAbout: 'Acerca de', navAll: 'Todos los juegos', navHow: 'Cómo jugar', navBoard: 'Clasificación infinita', navMain: 'Navegación principal', navLanguage: 'Idioma del sitio', themeDay: '☀ Día', themeNight: '☾ Noche',
@@ -59,7 +59,7 @@ export const translations = {
     detailBack: '← Todos los juegos', detailEyebrow: 'Juego independiente · prueba', detailTitle: 'Classroom Snacks', detailLead: 'El profesor se da la vuelta: es tu oportunidad. Elige un tentempié, da un bocado y escóndelo antes de que mire.', detailTagSolo: 'Estrategia individual', detailTagFour: 'Cuatro dificultades', detailTagModes: 'Contrarreloj / infinito', detailPlay: 'Jugar en itch.io ↗', detailPlatform: 'El juego se abre en itch.io; aquí encontrarás su historia y cómo jugar.', detailImageAlt: 'Captura del aula de Classroom Snacks', detailImageCaption: 'Imagen real del juego',
     howKicker: 'CÓMO JUGAR', howTitle: 'Un bocado cada vez.', stepOneTitle: 'Elige un tentempié', stepOneBody: 'Cada comida tarda un tiempo distinto y da saciedad y puntos diferentes.', stepTwoTitle: 'Espera el momento', stepTwoBody: 'Observa la posición y mirada del profesor. Puedes parar a mitad de bocado.', stepThreeTitle: 'Escóndelo a tiempo', stepThreeBody: 'En el modo contrarreloj, llega al objetivo de saciedad y resiste hasta el timbre.',
     modesKicker: 'DOS MODOS', modesTitle: '¿Terminar la clase o batir un récord?', timedTitle: 'Reto contrarreloj', timedBody: 'Llénate antes de que termine la clase y supera la ronda.', endlessTitle: 'Reto infinito', endlessBody: 'Sin límite de tiempo ni de comida. ¿Cuántos puntos lograrás?', modesFoot: 'Ambos modos tienen cuatro dificultades y récords personales separados.',
-    boardKicker: 'CLASIFICACIÓN DE PRUEBA', boardTitle: 'Clasificación infinita', boardIntro: 'Cada dificultad tiene su lista. Solo aparecen las puntuaciones compartidas voluntariamente.', boardDisclaimer: 'Los 20 mejores por dificultad. No se verifica el juego limpio en esta prueba.', tierNormal: 'Normal', tierAdvanced: 'Avanzado', tierHard: 'Difícil', tierHell: 'Infierno', boardPanel: 'INFINITO', boardTop20: '20 MEJORES', boardRank: 'Puesto', boardPlayer: 'Jugador', boardScore: 'Puntos', boardLoading: 'Cargando clasificación…', boardOffline: 'La clasificación no está conectada. Los puestos siguen libres.', boardEmpty: 'Aún no hay puntuaciones. Los primeros puestos están libres.', boardError: 'No se puede cargar la clasificación. Los puestos siguen libres.', boardCount: '{count} jugadores clasificados', footerAll: 'Todos los juegos'
+    boardKicker: 'CLASIFICACIÓN DE PRUEBA', boardTitle: 'Clasificación infinita', boardIntro: 'Cada dificultad tiene su lista. Solo aparecen las puntuaciones compartidas voluntariamente.', boardDisclaimer: 'Los 20 mejores por dificultad. No se verifica el juego limpio en esta prueba.', tierNormal: 'Normal', tierAdvanced: 'Avanzado', tierHard: 'Difícil', tierHell: 'Infierno', boardPanel: 'INFINITO', boardTop20: '20 MEJORES', boardRank: 'Puesto', boardPlayer: 'Jugador', boardScore: 'Puntos', boardLoading: 'Cargando clasificación…', boardOffline: 'La clasificación no está conectada. Los puestos siguen libres.', boardEmpty: 'Aún no hay puntuaciones. Los primeros puestos están libres.', boardError: 'No se puede cargar la clasificación. Los puestos siguen libres.', boardCount: '{count} jugadores clasificados'
   },
   'pt-BR': {
     navGames: 'Jogos', navAbout: 'Sobre', navAll: 'Todos os jogos', navHow: 'Como jogar', navBoard: 'Ranking infinito', navMain: 'Navegação principal', navLanguage: 'Idioma do site', themeDay: '☀ Dia', themeNight: '☾ Noite',
@@ -71,7 +71,7 @@ export const translations = {
     detailBack: '← Todos os jogos', detailEyebrow: 'Jogo independente · teste', detailTitle: 'Classroom Snacks', detailLead: 'O professor virou de costas: aproveite. Escolha um lanche, dê uma mordida e esconda antes que ele olhe.', detailTagSolo: 'Estratégia solo', detailTagFour: 'Quatro dificuldades', detailTagModes: 'Cronometrado / infinito', detailPlay: 'Jogar no itch.io ↗', detailPlatform: 'O jogo abre no itch.io; aqui você conhece a história e as regras.', detailImageAlt: 'Captura da sala de aula de Classroom Snacks', detailImageCaption: 'Imagem real do jogo',
     howKicker: 'COMO JOGAR', howTitle: 'Um lanche de cada vez.', stepOneTitle: 'Escolha um lanche', stepOneBody: 'Cada lanche leva um tempo diferente para comer e dá saciedade e pontos distintos.', stepTwoTitle: 'Espere uma brecha', stepTwoBody: 'Observe onde o professor está e para onde olha. Você pode parar no meio.', stepThreeTitle: 'Esconda a tempo', stepThreeBody: 'No modo cronometrado, atinja a meta de saciedade e resista até o sinal.',
     modesKicker: 'DOIS MODOS', modesTitle: 'Vencer a aula ou bater um recorde?', timedTitle: 'Desafio cronometrado', timedBody: 'Fique satisfeito antes de a aula acabar e sobreviva à rodada.', endlessTitle: 'Desafio infinito', endlessBody: 'Sem limite de tempo nem de lanches. Até onde vai sua pontuação?', modesFoot: 'Ambos os modos têm quatro dificuldades e recordes pessoais separados.',
-    boardKicker: 'RANKING DE TESTE', boardTitle: 'Ranking infinito', boardIntro: 'Cada dificuldade tem sua lista. Só aparecem pontuações compartilhadas pelos jogadores.', boardDisclaimer: 'Os 20 melhores por dificuldade. Esta versão de teste não verifica trapaças.', tierNormal: 'Normal', tierAdvanced: 'Avançado', tierHard: 'Difícil', tierHell: 'Inferno', boardPanel: 'INFINITO', boardTop20: '20 MELHORES', boardRank: 'Posição', boardPlayer: 'Jogador', boardScore: 'Pontos', boardLoading: 'Carregando ranking…', boardOffline: 'O ranking não está conectado. As posições continuam livres.', boardEmpty: 'Ainda não há pontuações. As primeiras posições estão livres.', boardError: 'Não foi possível carregar o ranking. As posições continuam livres.', boardCount: '{count} jogadores no ranking', footerAll: 'Todos os jogos'
+    boardKicker: 'RANKING DE TESTE', boardTitle: 'Ranking infinito', boardIntro: 'Cada dificuldade tem sua lista. Só aparecem pontuações compartilhadas pelos jogadores.', boardDisclaimer: 'Os 20 melhores por dificuldade. Esta versão de teste não verifica trapaças.', tierNormal: 'Normal', tierAdvanced: 'Avançado', tierHard: 'Difícil', tierHell: 'Inferno', boardPanel: 'INFINITO', boardTop20: '20 MELHORES', boardRank: 'Posição', boardPlayer: 'Jogador', boardScore: 'Pontos', boardLoading: 'Carregando ranking…', boardOffline: 'O ranking não está conectado. As posições continuam livres.', boardEmpty: 'Ainda não há pontuações. As primeiras posições estão livres.', boardError: 'Não foi possível carregar o ranking. As posições continuam livres.', boardCount: '{count} jogadores no ranking'
   },
   fr: {
     navGames: 'Jeux', navAbout: 'À propos', navAll: 'Tous les jeux', navHow: 'Comment jouer', navBoard: 'Classement infini', navMain: 'Navigation principale', navLanguage: 'Langue du site', themeDay: '☀ Jour', themeNight: '☾ Nuit',
@@ -83,7 +83,7 @@ export const translations = {
     detailBack: '← Tous les jeux', detailEyebrow: 'Jeu indépendant · test', detailTitle: 'Classroom Snacks', detailLead: 'Le professeur tourne le dos : c’est le moment. Choisissez un encas, prenez une bouchée et cachez-le avant son retour.', detailTagSolo: 'Stratégie solo', detailTagFour: 'Quatre difficultés', detailTagModes: 'Chronométré / infini', detailPlay: 'Jouer sur itch.io ↗', detailPlatform: 'Le jeu s’ouvre sur itch.io ; ce site présente son univers et ses règles.', detailImageAlt: 'Capture de la salle de classe de Classroom Snacks', detailImageCaption: 'Image du jeu',
     howKicker: 'COMMENT JOUER', howTitle: 'Un encas à la fois.', stepOneTitle: 'Choisissez un encas', stepOneBody: 'Chaque encas demande un temps différent et apporte satiété et points.', stepTwoTitle: 'Attendez une ouverture', stepTwoBody: 'Surveillez la position et le regard du professeur. Vous pouvez vous arrêter à mi-chemin.', stepThreeTitle: 'Cachez-le à temps', stepThreeBody: 'En mode chronométré, atteignez la satiété visée et tenez jusqu’à la sonnerie.',
     modesKicker: 'DEUX MODES', modesTitle: 'Finir le cours ou battre un record ?', timedTitle: 'Défi chronométré', timedBody: 'Mangez à votre faim avant la fin du cours et terminez la manche.', endlessTitle: 'Défi infini', endlessBody: 'Ni limite de temps ni limite d’encas. Jusqu’où monterez-vous ?', modesFoot: 'Chaque mode propose quatre difficultés et conserve ses propres records.',
-    boardKicker: 'CLASSEMENT TEST', boardTitle: 'Classement infini', boardIntro: 'Chaque difficulté a son classement. Seuls les scores partagés volontairement y figurent.', boardDisclaimer: 'Top 20 par difficulté. Les scores de test ne sont pas vérifiés contre la triche.', tierNormal: 'Normal', tierAdvanced: 'Avancé', tierHard: 'Difficile', tierHell: 'Enfer', boardPanel: 'INFINI', boardTop20: 'TOP 20', boardRank: 'Rang', boardPlayer: 'Joueur', boardScore: 'Score', boardLoading: 'Chargement du classement…', boardOffline: 'Le classement n’est pas connecté. Les places restent libres.', boardEmpty: 'Aucun score pour le moment. Les premières places sont libres.', boardError: 'Classement indisponible. Les places restent libres.', boardCount: '{count} joueurs classés', footerAll: 'Tous les jeux'
+    boardKicker: 'CLASSEMENT TEST', boardTitle: 'Classement infini', boardIntro: 'Chaque difficulté a son classement. Seuls les scores partagés volontairement y figurent.', boardDisclaimer: 'Top 20 par difficulté. Les scores de test ne sont pas vérifiés contre la triche.', tierNormal: 'Normal', tierAdvanced: 'Avancé', tierHard: 'Difficile', tierHell: 'Enfer', boardPanel: 'INFINI', boardTop20: 'TOP 20', boardRank: 'Rang', boardPlayer: 'Joueur', boardScore: 'Score', boardLoading: 'Chargement du classement…', boardOffline: 'Le classement n’est pas connecté. Les places restent libres.', boardEmpty: 'Aucun score pour le moment. Les premières places sont libres.', boardError: 'Classement indisponible. Les places restent libres.', boardCount: '{count} joueurs classés'
   },
   de: {
     navGames: 'Spiele', navAbout: 'Über uns', navAll: 'Alle Spiele', navHow: 'Spielanleitung', navBoard: 'Endlos-Rangliste', navMain: 'Hauptnavigation', navLanguage: 'Websitesprache', themeDay: '☀ Tag', themeNight: '☾ Nacht',
@@ -95,7 +95,7 @@ export const translations = {
     detailBack: '← Alle Spiele', detailEyebrow: 'Indie-Spiel · Testversion', detailTitle: 'Classroom Snacks', detailLead: 'Die Lehrkraft dreht sich weg – deine Chance. Wähle einen Snack, nimm einen Bissen und verstecke ihn, bevor sie zurückblickt.', detailTagSolo: 'Solo-Strategie', detailTagFour: 'Vier Schwierigkeitsgrade', detailTagModes: 'Zeit / Endlos', detailPlay: 'Auf itch.io spielen ↗', detailPlatform: 'Das Spiel öffnet sich auf itch.io; hier findest du Infos zum Spiel und zur Steuerung.', detailImageAlt: 'Gameplay-Screenshot aus dem Klassenzimmer von Classroom Snacks', detailImageCaption: 'Echtes Spielbild',
     howKicker: 'SO FUNKTIONIERT ES', howTitle: 'Ein Snack nach dem anderen.', stepOneTitle: 'Snack auswählen', stepOneBody: 'Snacks unterscheiden sich bei Essdauer, Sättigung und Punkten.', stepTwoTitle: 'Auf eine Lücke warten', stepTwoBody: 'Achte auf Position und Blickrichtung der Lehrkraft. Du kannst jederzeit aufhören.', stepThreeTitle: 'Rechtzeitig verstecken', stepThreeBody: 'Im Zeitmodus musst du das Sättigungsziel erreichen und bis zur Glocke durchhalten.',
     modesKicker: 'ZWEI MODI', modesTitle: 'Unterricht schaffen oder Rekord jagen?', timedTitle: 'Zeit-Challenge', timedBody: 'Erreiche das Sättigungsziel vor Unterrichtsende und halte durch.', endlessTitle: 'Endlos-Challenge', endlessBody: 'Keine Zeitgrenze und unbegrenzt Snacks. Wie hoch wird deine Punktzahl?', modesFoot: 'Beide Modi haben vier Schwierigkeitsgrade und getrennte persönliche Bestwerte.',
-    boardKicker: 'TEST-RANGLISTE', boardTitle: 'Endlos-Rangliste', boardIntro: 'Jeder Schwierigkeitsgrad hat eine eigene Liste. Nur freiwillig geteilte Punkte erscheinen hier.', boardDisclaimer: 'Top 20 pro Schwierigkeit. Testwerte werden nicht auf Betrug geprüft.', tierNormal: 'Normal', tierAdvanced: 'Komplex', tierHard: 'Schwer', tierHell: 'Hölle', boardPanel: 'ENDLOS', boardTop20: 'TOP 20', boardRank: 'Rang', boardPlayer: 'Spieler', boardScore: 'Punkte', boardLoading: 'Rangliste wird geladen…', boardOffline: 'Rangliste ist nicht verbunden. Plätze bleiben frei.', boardEmpty: 'Noch keine Einträge. Die ersten Plätze sind frei.', boardError: 'Rangliste derzeit nicht erreichbar. Plätze bleiben frei.', boardCount: '{count} Spieler in der Rangliste', footerAll: 'Alle Spiele'
+    boardKicker: 'TEST-RANGLISTE', boardTitle: 'Endlos-Rangliste', boardIntro: 'Jeder Schwierigkeitsgrad hat eine eigene Liste. Nur freiwillig geteilte Punkte erscheinen hier.', boardDisclaimer: 'Top 20 pro Schwierigkeit. Testwerte werden nicht auf Betrug geprüft.', tierNormal: 'Normal', tierAdvanced: 'Komplex', tierHard: 'Schwer', tierHell: 'Hölle', boardPanel: 'ENDLOS', boardTop20: 'TOP 20', boardRank: 'Rang', boardPlayer: 'Spieler', boardScore: 'Punkte', boardLoading: 'Rangliste wird geladen…', boardOffline: 'Rangliste ist nicht verbunden. Plätze bleiben frei.', boardEmpty: 'Noch keine Einträge. Die ersten Plätze sind frei.', boardError: 'Rangliste derzeit nicht erreichbar. Plätze bleiben frei.', boardCount: '{count} Spieler in der Rangliste'
   }
 };
 
@@ -887,7 +887,6 @@ const SITE_I18N_NEW = {
     boardEmpty: "Пока нет результатов — первые места свободны.",
     boardError: "Рейтинг временно недоступен. Места остаются свободными.",
     boardCount: "{count} игроков в рейтинге",
-    footerAll: "Все игры",
     // ho,
     hoTitle: "Hidden Object",
     hoTag: "Зум и поиск · 2 сцены",
@@ -1049,7 +1048,6 @@ const SITE_I18N_NEW = {
     boardEmpty: "ยังไม่มีคะแนนติดอันดับ ที่นั่งแรก ๆ ว่างอยู่",
     boardError: "อ่านกระดานไม่ได้ชั่วคราว ที่ว่างยังเปิดอยู่",
     boardCount: "มี {count} คนติดอันดับ",
-    footerAll: "เกมทั้งหมด",
     // ho,
     hoTitle: "Hidden Object",
     hoTag: "ซูมและค้นหา · 2 ฉาก",
@@ -1211,7 +1209,6 @@ const SITE_I18N_NEW = {
     boardEmpty: "Chưa có điểm nào — các vị trí đầu đang trống.",
     boardError: "Chưa đọc được bảng. Chỗ trống vẫn mở.",
     boardCount: "{count} người trên bảng",
-    footerAll: "Tất cả trò chơi",
     // ho,
     hoTitle: "Hidden Object",
     hoTag: "Thu phóng tìm kiếm · 2 cảnh",
@@ -1373,7 +1370,6 @@ const SITE_I18N_NEW = {
     boardEmpty: "Belum ada skor teratas. Slot awal masih kosong.",
     boardError: "Papan tak tersedia sementara. Slot tetap terbuka.",
     boardCount: "{count} pemain di papan",
-    footerAll: "Semua permainan",
     // ho,
     hoTitle: "Hidden Object",
     hoTag: "Zoom & cari · 2 adegan",
@@ -1535,7 +1531,6 @@ const SITE_I18N_NEW = {
     boardEmpty: "Henüz skor yok — ilk sıralar boş.",
     boardError: "Tablo şu anda okunamıyor. Siteler açık kalıyor.",
     boardCount: "{count} oyuncu sıralandı",
-    footerAll: "Tüm oyunlar",
     // ho,
     hoTitle: "Hidden Object",
     hoTag: "Yakınlaştır & ara · 2 sahne",
@@ -1697,7 +1692,6 @@ const SITE_I18N_NEW = {
     boardEmpty: "Jeszcze brak wyników — pierwsze miejsca czekają.",
     boardError: "Ranking chwilowo niedostępny. Miejsca pozostają otwarte.",
     boardCount: "{count} graczy w rankingu",
-    footerAll: "Wszystkie gry",
     // ho,
     hoTitle: "Hidden Object",
     hoTag: "Zoom i szukaj · 2 sceny",
@@ -1825,3 +1819,194 @@ for (const locale of SUPPORTED_LOCALES) {
   const [gamemonetizeStatus, pokiStatus] = additionalReleaseCopy[locale];
   Object.assign(translations[locale], { gamemonetizeStatus, pokiStatus });
 }
+
+// 2026-10-26 UI fixes (all 14 locales, same key set):
+// portalsOther/portalsOtherNote — the "Other portals" release row is now translatable (was hard-coded English).
+// itchLiveStatus — separate itch.io status for the five browser-live games (itchStatus stays Classroom-Snacks-specific).
+// eyebrowItch — game-page eyebrow label binding. footerFamily — footer group title binding (was hard-coded Chinese).
+// aboutCount — real catalog count shown in the About section. *Alt — localized gameplay-screenshot alt texts.
+const UI_FIX_I18N = {
+  en: {
+    portalsOther: 'Other portals',
+    portalsOtherNote: 'Other portal builds ship from the same codebase; not yet submitted.',
+    itchLiveStatus: 'Live now — play in the browser, no install.',
+    eyebrowItch: 'KNOWHY GAMES · itch.io',
+    footerFamily: 'KNOWHY family sites',
+    aboutCount: '6 games in the catalog so far — every one playable in the browser.',
+    hoAlt: 'Hidden Object gameplay screenshot',
+    jgAlt: 'Jigsaw gameplay screenshot',
+    mmAlt: 'Plant Memory Flip gameplay screenshot',
+    ngAlt: 'Nonogram · Plant Logic Puzzles gameplay screenshot',
+    cnAlt: 'Plant Coloring gameplay screenshot',
+  },
+  'zh-CN': {
+    portalsOther: '其他平台',
+    portalsOtherNote: '其他平台版本基于同一代码库构建，尚未提交。',
+    itchLiveStatus: '已上线，浏览器即开即玩，无需安装。',
+    eyebrowItch: 'KNOWHY GAMES · itch.io',
+    footerFamily: 'KNOWHY 系列站点',
+    aboutCount: '目录现已收录 6 款游戏，全部可在浏览器中直接游玩。',
+    hoAlt: '《隐藏物件》的游玩画面',
+    jgAlt: '《拼图》的游玩画面',
+    mmAlt: '《植物记忆翻牌》的游玩画面',
+    ngAlt: '《数织 · 植物逻辑谜题》的游玩画面',
+    cnAlt: '《植物涂色》的游玩画面',
+  },
+  ja: {
+    portalsOther: 'その他のポータル',
+    portalsOtherNote: '他ポータル向けビルドも同じコードベースから作られます。現時点では未提出です。',
+    itchLiveStatus: '公開中。ブラウザでそのまま遊べます。インストール不要。',
+    eyebrowItch: 'KNOWHY GAMES · itch.io',
+    footerFamily: 'KNOWHY 関連サイト',
+    aboutCount: '現在 6 本のゲームを掲載中。どれもブラウザで直接遊べます。',
+    hoAlt: 'ハイドン オブジェクトのプレイ画面',
+    jgAlt: 'ジグソーのプレイ画面',
+    mmAlt: 'プラント メモリーフリップのプレイ画面',
+    ngAlt: 'ノノグラム · 植物ロジックパズルのプレイ画面',
+    cnAlt: 'プラント カラーリングのプレイ画面',
+  },
+  ko: {
+    portalsOther: '기타 포털',
+    portalsOtherNote: '다른 포털용 빌드도 같은 코드베이스로 만들어지며, 아직 제출하지 않았습니다.',
+    itchLiveStatus: '현재 출시됨. 브라우저에서 바로 플레이할 수 있고 설치가 필요 없습니다.',
+    eyebrowItch: 'KNOWHY GAMES · itch.io',
+    footerFamily: 'KNOWHY 사이트 모음',
+    aboutCount: '지금까지 6종의 게임을 수록했습니다. 모두 브라우저에서 바로 플레이할 수 있습니다.',
+    hoAlt: '히든 오브젝트 플레이 화면',
+    jgAlt: '지그소 플레이 화면',
+    mmAlt: '식물 메모리 플립 플레이 화면',
+    ngAlt: '노노그램 · 식물 로직 퍼즐 플레이 화면',
+    cnAlt: '식물 컬러링 플레이 화면',
+  },
+  es: {
+    portalsOther: 'Otros portales',
+    portalsOtherNote: 'Las versiones para otros portales salen de la misma base de código; aún no se han enviado.',
+    itchLiveStatus: 'Disponible ahora: juega en el navegador, sin instalar nada.',
+    eyebrowItch: 'KNOWHY GAMES · itch.io',
+    footerFamily: 'Sitios de la familia KNOWHY',
+    aboutCount: '6 juegos en el catálogo por ahora; todos se juegan directamente en el navegador.',
+    hoAlt: 'Captura de juego de Hidden Object',
+    jgAlt: 'Captura de juego de Jigsaw',
+    mmAlt: 'Captura de juego de Plant Memory Flip',
+    ngAlt: 'Captura de juego de Nonogram · Plant Logic Puzzles',
+    cnAlt: 'Captura de juego de Plant Coloring',
+  },
+  'pt-BR': {
+    portalsOther: 'Outros portais',
+    portalsOtherNote: 'As versões para outros portais saem da mesma base de código; ainda não foram enviadas.',
+    itchLiveStatus: 'Disponível agora — jogue no navegador, sem instalar.',
+    eyebrowItch: 'KNOWHY GAMES · itch.io',
+    footerFamily: 'Sites da família KNOWHY',
+    aboutCount: '6 jogos no catálogo até agora — todos jogáveis direto no navegador.',
+    hoAlt: 'Captura de jogo de Hidden Object',
+    jgAlt: 'Captura de jogo de Jigsaw',
+    mmAlt: 'Captura de jogo de Plant Memory Flip',
+    ngAlt: 'Captura de jogo de Nonogram · Plant Logic Puzzles',
+    cnAlt: 'Captura de jogo de Plant Coloring',
+  },
+  fr: {
+    portalsOther: 'Autres portails',
+    portalsOtherNote: 'Les versions pour les autres portails partent de la même base de code ; pas encore soumises.',
+    itchLiveStatus: 'Disponible — jouez dans le navigateur, sans installation.',
+    eyebrowItch: 'KNOWHY GAMES · itch.io',
+    footerFamily: 'Sites de la famille KNOWHY',
+    aboutCount: '6 jeux au catalogue à ce jour, tous jouables directement dans le navigateur.',
+    hoAlt: "Capture d'écran de jeu de Hidden Object",
+    jgAlt: "Capture d'écran de jeu de Jigsaw",
+    mmAlt: "Capture d'écran de jeu de Plant Memory Flip",
+    ngAlt: "Capture d'écran de jeu de Nonogram · Plant Logic Puzzles",
+    cnAlt: "Capture d'écran de jeu de Plant Coloring",
+  },
+  de: {
+    portalsOther: 'Weitere Portale',
+    portalsOtherNote: 'Builds für weitere Portale stammen aus derselben Codebasis; noch nicht eingereicht.',
+    itchLiveStatus: 'Jetzt verfügbar – direkt im Browser spielen, ohne Installation.',
+    eyebrowItch: 'KNOWHY GAMES · itch.io',
+    footerFamily: 'KNOWHY-Familie',
+    aboutCount: '6 Spiele im Katalog – alle direkt im Browser spielbar.',
+    hoAlt: 'Gameplay-Screenshot von Hidden Object',
+    jgAlt: 'Gameplay-Screenshot von Jigsaw',
+    mmAlt: 'Gameplay-Screenshot von Plant Memory Flip',
+    ngAlt: 'Gameplay-Screenshot von Nonogram · Plant Logic Puzzles',
+    cnAlt: 'Gameplay-Screenshot von Plant Coloring',
+  },
+  ru: {
+    portalsOther: 'Другие платформы',
+    portalsOtherNote: 'Сборки для других платформ собираются из той же кодовой базы; пока не отправлены.',
+    itchLiveStatus: 'Уже доступно — играйте прямо в браузере, без установки.',
+    eyebrowItch: 'KNOWHY GAMES · itch.io',
+    footerFamily: 'Сайты семейства KNOWHY',
+    aboutCount: 'В каталоге пока 6 игр — все открываются прямо в браузере.',
+    hoAlt: 'Скриншот игры Hidden Object',
+    jgAlt: 'Скриншот игры Jigsaw',
+    mmAlt: 'Скриншот игры Plant Memory Flip',
+    ngAlt: 'Скриншот игры Nonogram · Plant Logic Puzzles',
+    cnAlt: 'Скриншот игры Plant Coloring',
+  },
+  th: {
+    portalsOther: 'พอร์ทัลอื่น ๆ',
+    portalsOtherNote: 'บิลด์สำหรับพอร์ทัลอื่นใช้โค้ดเดียวกัน ยังไม่ส่งเข้ารีวิว',
+    itchLiveStatus: 'เปิดให้เล่นแล้ว เล่นในเบราว์เซอร์ได้เลย ไม่ต้องติดตั้ง',
+    eyebrowItch: 'KNOWHY GAMES · itch.io',
+    footerFamily: 'เว็บไซต์ในเครือ KNOWHY',
+    aboutCount: 'ตอนนี้มี 6 เกมในแคตตาล็อก เล่นในเบราว์เซอร์ได้ทุกเกม',
+    hoAlt: 'ภาพจากในเกม Hidden Object',
+    jgAlt: 'ภาพจากในเกมจิ๊กซอว์',
+    mmAlt: 'ภาพจากในเกม Plant Memory Flip',
+    ngAlt: 'ภาพจากในเกม Nonogram · Plant Logic Puzzles',
+    cnAlt: 'ภาพจากในเกม Plant Coloring',
+  },
+  vi: {
+    portalsOther: 'Các nền tảng khác',
+    portalsOtherNote: 'Bản dựng cho các nền tảng khác dùng cùng một mã nguồn; chưa gửi.',
+    itchLiveStatus: 'Đã phát hành — chơi ngay trên trình duyệt, không cần cài đặt.',
+    eyebrowItch: 'KNOWHY GAMES · itch.io',
+    footerFamily: 'Các trang thuộc KNOWHY',
+    aboutCount: 'Hiện có 6 trò chơi trong danh mục, tất cả đều chơi trực tiếp trên trình duyệt.',
+    hoAlt: 'Ảnh chụp màn hình trò chơi Hidden Object',
+    jgAlt: 'Ảnh chụp màn hình trò chơi Jigsaw',
+    mmAlt: 'Ảnh chụp màn hình trò chơi Plant Memory Flip',
+    ngAlt: 'Ảnh chụp màn hình trò chơi Nonogram · Plant Logic Puzzles',
+    cnAlt: 'Ảnh chụp màn hình trò chơi Plant Coloring',
+  },
+  id: {
+    portalsOther: 'Portal lainnya',
+    portalsOtherNote: 'Build untuk portal lain berasal dari basis kode yang sama; belum dikirim.',
+    itchLiveStatus: 'Sudah tayang — main langsung di browser, tanpa instalasi.',
+    eyebrowItch: 'KNOWHY GAMES · itch.io',
+    footerFamily: 'Situs keluarga KNOWHY',
+    aboutCount: '6 game ada di katalog sejauh ini — semuanya bisa langsung dimainkan di browser.',
+    hoAlt: 'Tangkapan layar gameplay Hidden Object',
+    jgAlt: 'Tangkapan layar gameplay Jigsaw',
+    mmAlt: 'Tangkapan layar gameplay Plant Memory Flip',
+    ngAlt: 'Tangkapan layar gameplay Nonogram · Plant Logic Puzzles',
+    cnAlt: 'Tangkapan layar gameplay Plant Coloring',
+  },
+  tr: {
+    portalsOther: 'Diğer portallar',
+    portalsOtherNote: 'Diğer portallar için derlemeler aynı kod tabanından geliyor; henüz gönderilmedi.',
+    itchLiveStatus: 'Şimdi yayında — tarayıcıda oynayın, kurulum gerekmez.',
+    eyebrowItch: 'KNOWHY GAMES · itch.io',
+    footerFamily: 'KNOWHY aile siteleri',
+    aboutCount: 'Katalogda şimdilik 6 oyun var — hepsi tarayıcıda doğrudan oynanabilir.',
+    hoAlt: 'Hidden Object oyun içi görüntüsü',
+    jgAlt: 'Jigsaw oyun içi görüntüsü',
+    mmAlt: 'Plant Memory Flip oyun içi görüntüsü',
+    ngAlt: 'Nonogram · Plant Logic Puzzles oyun içi görüntüsü',
+    cnAlt: 'Plant Coloring oyun içi görüntüsü',
+  },
+  pl: {
+    portalsOther: 'Inne portale',
+    portalsOtherNote: 'Wersje na inne portale powstają z tej samej bazy kodu; jeszcze nie wysłane.',
+    itchLiveStatus: 'Już dostępna — graj w przeglądarce, bez instalacji.',
+    eyebrowItch: 'KNOWHY GAMES · itch.io',
+    footerFamily: 'Serwisy rodziny KNOWHY',
+    aboutCount: 'W katalogu jest na razie 6 gier — wszystkie zagrasz bezpośrednio w przeglądarce.',
+    hoAlt: 'Zrzut ekranu z gry Hidden Object',
+    jgAlt: 'Zrzut ekranu z gry Jigsaw',
+    mmAlt: 'Zrzut ekranu z gry Plant Memory Flip',
+    ngAlt: 'Zrzut ekranu z gry Nonogram · Plant Logic Puzzles',
+    cnAlt: 'Zrzut ekranu z gry Plant Coloring',
+  },
+};
+for (const [loc, dict] of Object.entries(UI_FIX_I18N)) Object.assign(translations[loc] ??= {}, dict);
