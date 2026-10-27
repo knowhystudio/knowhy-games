@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="description" content="治愈小店打烊前——60秒粉彩治愈系小店经营小游戏，竖屏单手游玩。" />
+<meta name="theme-color" content="#fdf3f6" />
+<title>治愈小店打烊前 · Cozy Shop Before Closing</title>
+<style>
+  :root {
+    --bg-top: #fdf3f6;
+    --bg-bottom: #f2f9f3;
+    --card: #ffffff;
+    --ink: #6b5560;
+    --ink-soft: #a78f9b;
+    --pink: #f9d3e0;
+    --pink-deep: #ef9db8;
+    --mint: #d6efe4;
+    --mint-deep: #86cfb4;
+    --butter: #fdeecb;
+    --butter-deep: #f0ca82;
+    --lavender: #e9e2f6;
+    --danger: #e98a8a;
+    --radius: 18px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    background: linear-gradient(180deg, var(--bg-top) 0%, var(--bg-bottom) 100%);
+    color: var(--ink);
+    font-size: 14px;
+    overflow: hidden;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  button { font-family: inherit; color: inherit; border: none; cursor: pointer; }
+  button:disabled { cursor: default; }
+
+  #app {
+    max-width: 420px;
+    height: 100%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    padding: calc(10px + env(safe-area-inset-top)) 12px calc(10px + env(safe-area-inset-bottom));
+  }
+
+  /* ── 顶栏 ── */
+  header { display: flex; justify-content: space-between; align-items: center; }
+  .shop-name { font-weight: 700; font-size: 16px; }
+  .timer {
+    background: var(--card);
+    border-radius: 999px;
+    padding: 5px 14px;
+    font-size: 15px;
+    font-weight: 700;
+    box-shadow: 0 3px 10px rgba(214, 158, 180, 0.15);
+  }
+  .timer.low { color: var(--danger); animation: beat 1s ease-in-out infinite; }
+  .stats { display: flex; gap: 8px; margin-top: 8px; }
+  .stat {
+    flex: 1;
+    background: var(--card);
+    border-radius: 12px;
+    padding: 6px 2px;
+    text-align: center;
+    font-size: 13px;
+    color: var(--ink-soft);
+    box-shadow: 0 3px 10px rgba(214, 158, 180, 0.1);
+  }
+  .stat b { display: block; font-size: 16px; color: var(--ink); }
+
+  /* ── 顾客队列 ── */
+  #queue {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 10px;
+    padding: 12px 0 8px;
+    position: relative;
+  }
+  .empty-hint {
+    margin: auto;
+    text-align: center;
+    color: var(--ink-soft);
+    font-size: 13px;
+    line-height: 1.9;
+  }
+  .empty-hint .lamps { font-size: 34px; }
+  .customer {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 10px 12px;
+    box-shadow: 0 4px 14px rgba(214, 158, 180, 0.16);
+    animation: pop 0.25s ease;
+  }
+  .customer .avatar { font-size: 30px; width: 42px; text-align: center; flex: none; }
+  .customer .info { flex: 1; min-width: 0; }
+  .bubble {
+    display: inline-block;
+    background: var(--butter);
+    border-radius: 12px 12px 12px 4px;
+    padding: 3px 10px;
+    font-size: 13px;
+    margin-bottom: 6px;
+  }
+  .patience {
+    height: 6px;
+    background: #f4e4ea;
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .patience-fill {
+    height: 100%;
+    width: 100%;
+    border-radius: 3px;
+    background: linear-gradient(90deg, var(--mint-deep), var(--pink-deep));
+    transition: width 0.15s linear;
+  }
+  .customer.urgent .patience-fill { background: var(--danger); }
+  .customer.urgent .bubble { background: var(--pink); }
+  .customer.leaving { transition: opacity 0.3s ease, transform 0.3s ease; pointer-events: none; }
+  .customer.leaving.happy { opacity: 0; transform: translateY(-14px) scale(0.96); }
+  .customer.leaving.sad { opacity: 0; transform: translateY(10px) scale(0.96); filter: grayscale(0.8); }
+  .float-note {
+    position: absolute;
+    left: 50%;
+    top: 30%;
+    transform: translateX(-50%);
+    font-size: 15px;
+    font-weight: 700;
+    white-space: nowrap;
+    animation: floatUp 0.9s ease forwards;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  /* ── 提示条 ── */
+  #toast {
+    position: absolute;
+    top: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(107, 85, 96, 0.92);
+    color: #fff;
+    font-size: 13px;
+    border-radius: 999px;
+    padding: 6px 14px;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    pointer-events: none;
+    z-index: 5;
+    max-width: 100%;
+  }
+  #toast.show { opacity: 1; }
+
+  /* ── 道具 ── */
+  .item-legend { font-size: 13px; color: var(--ink-soft); margin: 0 2px 6px; }
+  #items { display: flex; gap: 8px; margin-bottom: 8px; }
+  .item-btn {
+    position: relative;
+    flex: 1;
+    height: 48px;
+    border-radius: 14px;
+    background: var(--lavender);
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    transition: transform 0.08s ease, opacity 0.2s ease;
+  }
+  .item-btn .big { font-size: 19px; }
+  .item-btn:active { transform: scale(0.95); }
+  .item-btn.empty { opacity: 0.38; }
+  .item-btn .count {
+    position: absolute;
+    top: -6px;
+    right: -4px;
+    background: var(--pink-deep);
+    color: #fff;
+    font-size: 13px;
+    line-height: 1;
+    padding: 3px 7px;
+    border-radius: 999px;
+  }
+  .item-btn.shake { animation: shake 0.3s ease; }
+
+  /* ── 商品 ── */
+  #products { display: flex; gap: 8px; }
+  .product-btn {
+    flex: 1;
+    height: 74px;
+    border-radius: var(--radius);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    font-size: 13px;
+    font-weight: 700;
+    box-shadow: 0 4px 12px rgba(214, 158, 180, 0.2);
+    transition: transform 0.08s ease;
+  }
+  .product-btn:active { transform: scale(0.95); }
+  .product-btn .big { font-size: 26px; }
+  .product-btn .coin { font-weight: 400; font-size: 13px; color: var(--ink-soft); }
+  .p-flower { background: var(--pink); }
+  .p-tea { background: var(--mint); }
+  .p-bread { background: var(--butter); }
+  .product-btn.shake { animation: shake 0.3s ease; }
+
+  /* ── 覆盖层：开始 / 结算 ── */
+  .overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 20;
+    background: rgba(253, 243, 246, 0.97);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    padding: 24px;
+    text-align: center;
+  }
+  .overlay.hidden { display: none; }
+  .overlay .moon { font-size: 52px; }
+  .overlay h1 { font-size: 21px; }
+  .overlay .sub { font-size: 13px; color: var(--ink-soft); }
+  .overlay .rules {
+    font-size: 13px;
+    line-height: 2;
+    color: var(--ink);
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 12px 18px;
+    box-shadow: 0 4px 14px rgba(214, 158, 180, 0.16);
+    text-align: left;
+  }
+  .primary-btn {
+    min-width: 220px;
+    height: 48px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--pink-deep), #f4b8cd);
+    color: #fff;
+    font-size: 16px;
+    font-weight: 700;
+    box-shadow: 0 6px 16px rgba(239, 157, 184, 0.45);
+    transition: transform 0.08s ease;
+  }
+  .primary-btn:active { transform: scale(0.96); }
+  .ghost-btn {
+    min-width: 220px;
+    height: 44px;
+    border-radius: 999px;
+    background: var(--card);
+    color: var(--ink);
+    font-size: 14px;
+    box-shadow: 0 3px 10px rgba(214, 158, 180, 0.18);
+  }
+  .ghost-btn:disabled { opacity: 0.45; }
+  .result-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    width: 100%;
+    max-width: 300px;
+  }
+  .result-cell {
+    background: var(--card);
+    border-radius: 14px;
+    padding: 10px 4px;
+    box-shadow: 0 4px 12px rgba(214, 158, 180, 0.14);
+  }
+  .result-cell b { display: block; font-size: 22px; }
+  .result-cell span { font-size: 13px; color: var(--ink-soft); }
+  .carry-line { font-size: 13px; color: var(--ink); }
+  .carry-line b { color: var(--pink-deep); }
+
+  @keyframes pop { from { opacity: 0; transform: translateY(10px) scale(0.97); } to { opacity: 1; transform: none; } }
+  @keyframes floatUp { from { opacity: 1; transform: translate(-50%, 0); } to { opacity: 0; transform: translate(-50%, -34px); } }
+  @keyframes beat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
+  @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+</style>
+</head>
+<body>
+  <div id="app">
+    <header>
+      <div class="shop-name">🌙 治愈小店</div>
+      <div class="timer" id="timer">⏰ 60s</div>
+    </header>
+    <div class="stats">
+      <div class="stat">🪙 金币<b id="statCoins">0</b></div>
+      <div class="stat">💗 暖心<b id="statWarmth">0</b></div>
+      <div class="stat">🚶 离开<b id="statLeft">0</b></div>
+    </div>
+    <main id="queue">
+      <div class="empty-hint"><div class="lamps">🪟🕯️🧸</div>小店很安静，顾客马上就来…</div>
+      <div id="toast"></div>
+    </main>
+    <div class="item-legend">🛵 立即完成一位 · 💡 一位耐心大回复 · 🫖 全体耐心小回复</div>
+    <div id="items"></div>
+    <div id="products"></div>
+  </div>
+
+  <!-- 开始界面 -->
+  <div class="overlay" id="startOverlay">
+    <div class="moon">🌙</div>
+    <h1>治愈小店打烊前</h1>
+    <div class="sub">Cozy Shop Before Closing</div>
+    <div class="rules">
+      🕯️ 打烊倒计时 <b>60 秒</b>，能接待多少位客人？<br />
+      👆 顾客想要什么，就点下方对应商品递给 TA<br />
+      ⏳ 顾客头顶耐心条耗尽就会失望离开<br />
+      🎁 每成功服务 5 单，随机补充 1 个道具（上限 2 个）
+    </div>
+    <button class="primary-btn" id="startBtn">🔋 开始营业</button>
+  </div>
+
+  <!-- 结算界面 -->
+  <div class="overlay hidden" id="resultOverlay">
+    <div class="moon">🌙</div>
+    <h1>打烊啦，今天辛苦了</h1>
+    <div class="result-grid">
+      <div class="result-cell"><b id="resServed">0</b><span>服务单数</span></div>
+      <div class="result-cell"><b id="resCoins">0</b><span>金币</span></div>
+      <div class="result-cell"><b id="resWarmth">0</b><span>暖心值</span></div>
+      <div class="result-cell"><b id="resLeft">0</b><span>离开顾客</span></div>
+    </div>
+    <div class="carry-line" id="carryLine"></div>
+    <button class="ghost-btn" id="rewardBtn">📺 看广告补 1 个道具</button>
+    <button class="primary-btn" id="restartBtn">🔁 再来一局</button>
+  </div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ============================================================
+   * 广告 SDK 适配器 —— 全文件唯一广告注入点。
+   * 默认 enabled = false：完全 no-op，不加载任何 SDK、不发任何外部请求。
+   * 接入广告平台时：把 enabled 改为 true，并给下面两个钩子赋上平台实现：
+   *   interstitial: async () => void   插屏，仅在「结算屏 → 再来一局」之间调用
+   *   rewarded:     async () => bool   激励，仅在结算屏「看广告补道具」按钮调用
+   * 游戏进行中不存在任何广告调用。
+   * ============================================================ */
+  const AdAdapter = {
+    enabled: false,
+    interstitial: null,
+    rewarded: null,
+    async showInterstitial() {
+      if (!this.enabled || !this.interstitial) return;
+      try { await this.interstitial(); } catch (e) { /* 广告失败不阻断游戏 */ }
+    },
+    async showRewarded() {
+      if (!this.enabled || !this.rewarded) return false;
+      try { return await this.rewarded(); } catch (e) { return false; }
+    },
+  };
+  window.AdAdapter = AdAdapter; // 供宿主页面接入时赋值
+
+  /* ── 配置 ── */
+  const GAME_SECONDS = 60;      // 打烊倒计时
+  const QUEUE_MAX = 3;          // 同时等待的顾客上限
+  const PATIENCE_MIN = 11;      // 顾客耐心区间（秒）
+  const PATIENCE_MAX = 14;
+  const SPAWN_MIN = 3.5;        // 顾客到店间隔（秒）
+  const SPAWN_MAX = 5.5;
+  const SERVE_WARMTH = 5;       // 每单暖心值
+  const RESTOCK_EVERY = 5;      // 每成功服务 N 单补 1 个随机道具
+  const ITEM_CAP = 2;           // 道具上限
+  const ITEM_START = 1;         // 每种道具开局数量
+
+  const PRODUCTS = [
+    { id: "flower", name: "鲜花", emoji: "🌸", coin: 8 },
+    { id: "tea",    name: "热茶", emoji: "🍵", coin: 6 },
+    { id: "bread",  name: "面包", emoji: "🍞", coin: 7 },
+  ];
+  const WISH_TEXT = { flower: "我想要一束 🌸", tea: "想喝杯热 🍵", bread: "好想吃 🍞 呀" };
+  const ITEMS = [
+    { id: "courier", name: "快递小哥", emoji: "🛵" },
+    { id: "lamp",    name: "暖灯",     emoji: "💡" },
+    { id: "teapot",  name: "招牌茶",   emoji: "🫖" },
+  ];
+  const AVATARS = ["🐰", "🐱", "🧒", "👵", "🐻", "🦊", "🐼", "🐥"];
+
+  const rand = (a, b) => a + Math.random() * (b - a);
+  const $ = (id) => document.getElementById(id);
+
+  /* ── DOM 引用 ── */
+  const queueEl = $("queue"), toastEl = $("toast");
+  const timerEl = $("timer"), statCoins = $("statCoins"), statWarmth = $("statWarmth"), statLeft = $("statLeft");
+  const itemsEl = $("items"), productsEl = $("products");
+  const startOverlay = $("startOverlay"), resultOverlay = $("resultOverlay");
+  const rewardBtn = $("rewardBtn"), restartBtn = $("restartBtn");
+
+  /* ── 状态 ── */
+  let state = null;
+  let rafId = 0, lastTs = 0;
+  let toastTimer = 0;
+  // 供自动化测试 / 调试读取当前状态
+  window.__cozyDebug = () => state;
+
+  function newState(carry) {
+    const items = {};
+    for (const it of ITEMS) {
+      items[it.id] = Math.min(ITEM_CAP, ITEM_START + (carry && carry[it.id] ? carry[it.id] : 0));
+    }
+    return {
+      running: false,
+      timeLeft: GAME_SECONDS,
+      coins: 0, warmth: 0, served: 0, left: 0,
+      sinceRestock: 0,
+      customers: [],
+      nextCid: 1,
+      items,
+      carry: { courier: 0, lamp: 0, teapot: 0 }, // 激励广告补的道具，仅对下一局生效
+      nextSpawnIn: 0.6,
+    };
+  }
+
+  /* ── 通用 UI ── */
+  function toast(msg) {
+    clearTimeout(toastTimer);
+    toastEl.textContent = msg;
+    toastEl.classList.add("show");
+    toastTimer = setTimeout(() => toastEl.classList.remove("show"), 1600);
+  }
+  function shakeEl(el) {
+    el.classList.remove("shake");
+    void el.offsetWidth;
+    el.classList.add("shake");
+  }
+  function floatNote(customerEl, text) {
+    const note = document.createElement("div");
+    note.className = "float-note";
+    note.textContent = text;
+    customerEl.appendChild(note);
+    setTimeout(() => note.remove(), 950);
+  }
+
+  /* ── 底部按钮 ── */
+  PRODUCTS.forEach((p) => {
+    const btn = document.createElement("button");
+    btn.className = "product-btn p-" + p.id;
+    btn.innerHTML = '<span class="big"></span><span class="pname"></span><span class="coin"></span>';
+    btn.querySelector(".big").textContent = p.emoji;
+    btn.querySelector(".pname").textContent = p.name;
+    btn.querySelector(".coin").textContent = "🪙+" + p.coin;
+    btn.addEventListener("click", () => onTapProduct(p, btn));
+    productsEl.appendChild(btn);
+  });
+  const itemBtns = {};
+  ITEMS.forEach((it) => {
+    const btn = document.createElement("button");
+    btn.className = "item-btn";
+    btn.title = it.name;
+    btn.setAttribute("aria-label", it.name);
+    btn.innerHTML = '<span class="big"></span><span class="iname"></span><span class="count"></span>';
+    btn.querySelector(".big").textContent = it.emoji;
+    btn.querySelector(".iname").textContent = it.name;
+    btn.addEventListener("click", () => onTapItem(it.id, btn));
+    itemsEl.appendChild(btn);
+    itemBtns[it.id] = btn;
+  });
+
+  function renderItems() {
+    ITEMS.forEach((it) => {
+      const btn = itemBtns[it.id];
+      const n = state ? state.items[it.id] : ITEM_START;
+      btn.querySelector(".count").textContent = "×" + n;
+      btn.classList.toggle("empty", n <= 0);
+      btn.disabled = !state || !state.running || n <= 0;
+    });
+  }
+  function renderHUD() {
+    if (!state) return;
+    statCoins.textContent = state.coins;
+    statWarmth.textContent = state.warmth;
+    statLeft.textContent = state.left;
+  }
+
+  /* ── 顾客 ── */
+  function spawnCustomer() {
+    const product = PRODUCTS[Math.floor(Math.random() * PRODUCTS.length)];
+    const c = {
+      id: state.nextCid++,
+      emoji: AVATARS[Math.floor(Math.random() * AVATARS.length)],
+      wish: product.id,
+      coin: product.coin,
+      patience: 1,
+      drain: 1 / rand(PATIENCE_MIN, PATIENCE_MAX),
+      el: null,
+    };
+    const card = document.createElement("div");
+    card.className = "customer";
+    card.innerHTML =
+      '<div class="avatar"></div>' +
+      '<div class="info"><div class="bubble"></div><div class="patience"><div class="patience-fill"></div></div></div>';
+    card.querySelector(".avatar").textContent = c.emoji;
+    card.querySelector(".bubble").textContent = WISH_TEXT[c.wish];
+    const hint = queueEl.querySelector(".empty-hint");
+    if (hint) hint.remove();
+    queueEl.appendChild(card);
+    c.el = card;
+    state.customers.push(c);
+  }
+  function removeCustomer(c, mood) {
+    const list = state.customers;
+    const i = list.indexOf(c);
+    if (i >= 0) list.splice(i, 1);
+    if (!c.el) return;
+    c.el.classList.add("leaving", mood);
+    setTimeout(() => c.el && c.el.remove(), 320);
+    if (state.customers.length === 0) {
+      setTimeout(() => {
+        if (state && state.customers.length === 0 && !queueEl.querySelector(".empty-hint")) {
+          const hint = document.createElement("div");
+          hint.className = "empty-hint";
+          hint.innerHTML = '<div class="lamps">🪟🕯️🧸</div>小店很安静，顾客马上就来…';
+          queueEl.appendChild(hint);
+        }
+      }, 330);
+    }
+  }
+  // 在等待顾客中挑一位：优先匹配愿望，其次耐心最低（最着急）
+  function pickCustomer(wish) {
+    const pool = state.customers.filter((c) => !wish || c.wish === wish);
+    if (!pool.length) return null;
+    return pool.reduce((a, b) => (a.patience <= b.patience ? a : b));
+  }
+
+  /* ── 服务 / 道具 ── */
+  function serveSuccess(c) {
+    state.served += 1;
+    state.coins += c.coin;
+    state.warmth += SERVE_WARMTH;
+    floatNote(c.el, "💗+" + SERVE_WARMTH + " 🪙+" + c.coin);
+    removeCustomer(c, "happy");
+    state.sinceRestock += 1;
+    if (state.sinceRestock >= RESTOCK_EVERY) {
+      state.sinceRestock = 0;
+      const lacking = ITEMS.filter((it) => state.items[it.id] < ITEM_CAP);
+      if (lacking.length) {
+        const it = lacking[Math.floor(Math.random() * lacking.length)];
+        state.items[it.id] += 1;
+        toast("🎁 进度奖励：" + it.emoji + it.name + " ×" + state.items[it.id]);
+      }
+    }
+    renderHUD();
+    renderItems();
+  }
+  function onTapProduct(p, btn) {
+    if (!state || !state.running) return;
+    const c = pickCustomer(p.id);
+    if (!c) {
+      shakeEl(btn);
+      toast("暂时没有顾客想要" + p.name + "～");
+      return;
+    }
+    serveSuccess(c);
+  }
+  function onTapItem(id, btn) {
+    if (!state || !state.running || state.items[id] <= 0) return;
+    if (!state.customers.length) {
+      shakeEl(btn);
+      toast("现在没有等待的顾客");
+      return;
+    }
+    state.items[id] -= 1;
+    if (id === "courier") {
+      const c = pickCustomer(null);
+      toast("🛵 快递小哥帮忙送出！");
+      serveSuccess(c);
+    } else if (id === "lamp") {
+      const c = pickCustomer(null);
+      c.patience = Math.min(1, c.patience + 0.5);
+      floatNote(c.el, "💡 耐心恢复了");
+      toast("💡 暖灯亮起，" + c.emoji + " 的耐心大幅恢复");
+      renderItems();
+    } else {
+      for (const c of state.customers) {
+        c.patience = Math.min(1, c.patience + 0.2);
+        floatNote(c.el, "🫖");
+      }
+      toast("🫖 招牌茶出炉，大家的耐心都恢复了");
+      renderItems();
+    }
+  }
+
+  /* ── 主循环 ── */
+  function loop(ts) {
+    if (!state || !state.running) return;
+    const dt = Math.min(0.1, (ts - lastTs) / 1000);
+    lastTs = ts;
+    state.timeLeft -= dt;
+    if (state.timeLeft <= 0) {
+      state.timeLeft = 0;
+      renderTimer();
+      endGame();
+      return;
+    }
+    state.nextSpawnIn -= dt;
+    if (state.nextSpawnIn <= 0 && state.customers.length < QUEUE_MAX) {
+      spawnCustomer();
+      state.nextSpawnIn = rand(SPAWN_MIN, SPAWN_MAX);
+    }
+    for (const c of state.customers.slice()) {
+      c.patience -= c.drain * dt;
+      if (c.patience <= 0) {
+        state.left += 1;
+        floatNote(c.el, "💨 失望走了");
+        removeCustomer(c, "sad");
+        renderHUD();
+      } else {
+        c.el.querySelector(".patience-fill").style.width = (c.patience * 100).toFixed(1) + "%";
+        c.el.classList.toggle("urgent", c.patience < 0.35);
+      }
+    }
+    renderTimer();
+    rafId = requestAnimationFrame(loop);
+  }
+  function renderTimer() {
+    const s = Math.ceil(state.timeLeft);
+    timerEl.textContent = "⏰ " + s + "s";
+    timerEl.classList.toggle("low", state.running && s <= 10);
+  }
+
+  /* ── 开始 / 结束 / 再来一局 ── */
+  function startGame(carry) {
+    state = newState(carry);
+    queueEl.querySelectorAll(".customer").forEach((el) => el.remove());
+    let hint = queueEl.querySelector(".empty-hint");
+    if (!hint) {
+      hint = document.createElement("div");
+      hint.className = "empty-hint";
+      hint.innerHTML = '<div class="lamps">🪟🕯️🧸</div>小店很安静，顾客马上就来…';
+      queueEl.appendChild(hint);
+    }
+    resultOverlay.classList.add("hidden");
+    startOverlay.classList.add("hidden");
+    renderHUD();
+    renderItems();
+    renderTimer();
+    state.running = true;
+    lastTs = performance.now();
+    cancelAnimationFrame(rafId);
+    rafId = requestAnimationFrame(loop);
+  }
+
+  function endGame() {
+    state.running = false;
+    cancelAnimationFrame(rafId);
+    renderItems();
+    $("resServed").textContent = state.served;
+    $("resCoins").textContent = state.coins;
+    $("resWarmth").textContent = state.warmth;
+    $("resLeft").textContent = state.left;
+    updateCarryLine();
+    updateRewardBtn();
+    resultOverlay.classList.remove("hidden");
+  }
+  function updateCarryLine() {
+    const parts = ITEMS.map((it) => it.emoji + "×" + Math.min(ITEM_CAP, ITEM_START + state.carry[it.id]));
+    $("carryLine").innerHTML = "下一局开局道具：" + parts.join("　");
+  }
+  function updateRewardBtn() {
+    const canAdd = ITEMS.some((it) => state.carry[it.id] < ITEM_CAP - ITEM_START);
+    rewardBtn.disabled = !canAdd;
+    rewardBtn.textContent = canAdd ? "📺 看广告补 1 个道具" : "道具已补满（上限 2 个）";
+  }
+
+  // 激励广告触发点：仅此按钮，且补的道具不超过上限
+  rewardBtn.addEventListener("click", async () => {
+    if (!state || rewardBtn.disabled) return;
+    rewardBtn.disabled = true;
+    const ok = await AdAdapter.showRewarded();
+    rewardBtn.disabled = false;
+    if (!ok) {
+      if (AdAdapter.enabled) toast("广告还没看完，下次再试试～");
+      else toast("当前为无广告模式，接入广告后可用");
+      updateRewardBtn();
+      return;
+    }
+    const lacking = ITEMS.filter((it) => state.carry[it.id] < ITEM_CAP - ITEM_START);
+    if (lacking.length) {
+      const it = lacking[Math.floor(Math.random() * lacking.length)];
+      state.carry[it.id] += 1;
+      toast("🎁 下一局 " + it.emoji + it.name + " +1");
+    }
+    updateCarryLine();
+    updateRewardBtn();
+  });
+
+  // 插屏广告触发点：仅「结算屏 → 再来一局」之间
+  restartBtn.addEventListener("click", async () => {
+    restartBtn.disabled = true;
+    await AdAdapter.showInterstitial();
+    restartBtn.disabled = false;
+    startGame(state ? state.carry : null);
+  });
+  $("startBtn").addEventListener("click", () => startGame(null));
+
+  renderItems();
+})();
+</script>
+</body>
+</html>
