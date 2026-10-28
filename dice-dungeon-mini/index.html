@@ -6,15 +6,27 @@
 <style>
 *{box-sizing:border-box}body{margin:0;background:#101725;color:#f8f3e8;font:16px/1.5 system-ui,-apple-system,sans-serif}main{max-width:440px;margin:auto;padding:18px 16px 30px}header{display:flex;justify-content:space-between;align-items:center;gap:8px}h1{font-size:22px;margin:0}h2{font-size:19px;margin:0 0 8px}.tag{font-size:13px;color:#b9c7dc}.panel{background:#1b283a;border:1px solid #35465b;border-radius:18px;padding:16px;margin-top:12px}.stats{display:flex;gap:8px;flex-wrap:wrap}.stat{flex:1;min-width:88px;background:#25364b;border-radius:10px;padding:8px;text-align:center;font-size:14px}.map{display:flex;gap:8px;margin:14px 0}.room{height:9px;flex:1;border-radius:8px;background:#3a4c61}.room.done{background:#7ed5b1}.room.current{background:#ffd176}.enemy{text-align:center;padding:6px}.monster{font-size:52px;line-height:1.2}.health{height:10px;border-radius:10px;background:#3c4656;overflow:hidden;margin:8px auto;max-width:240px}.health span{display:block;height:100%;background:#f4867c}.dice{display:flex;justify-content:center;gap:10px;min-height:62px;align-items:center;margin:10px 0}.die{display:grid;place-items:center;width:54px;height:54px;border-radius:12px;background:#fff5df;color:#29364a;font-weight:800;font-size:25px;box-shadow:0 4px #c4b28e}.hint{color:#c3d0df;font-size:14px;text-align:center;min-height:21px}button{font:inherit;font-weight:700;min-height:46px;border:0;border-radius:12px;cursor:pointer;padding:10px 12px}button:focus-visible{outline:3px solid #fff;outline-offset:2px}button:disabled{opacity:.45;cursor:not-allowed}.primary{width:100%;background:#ffd176;color:#342611}.items{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.items button{background:#344c64;color:#fff;font-size:14px}.choices{display:grid;gap:8px}.choices button{background:#344c64;color:#fff;text-align:left}.small{font-size:13px;color:#b9c7dc}.log{margin:0;min-height:42px;color:#d3dceb;font-size:14px}.bonus{width:100%;margin-top:8px;background:#35465b;color:white;font-size:14px}[hidden]{display:none!important}
 </style>
+<style>
+.stat strong{display:block;white-space:pre-line}.die{padding:4px;line-height:1.1;flex-shrink:0}.die small{font-size:11px;font-weight:500}.die[aria-pressed="true"]{outline:3px solid #ffd176;outline-offset:4px}.shield-status{margin:10px 0 0;padding:8px;border-radius:10px;background:#25364b;font-size:14px}.shield-status.active{background:#275547;color:#d7ffeb}.secondary{width:100%;margin-top:10px;background:#344c64;color:#fff}.items button{display:flex;flex-direction:column;align-items:center;gap:3px}.items small{font-size:12px;font-weight:400}.preview{margin:12px 0;padding:12px;border:1px solid #ffd176;border-radius:12px}.preview p{margin:0 0 8px}.preview button{width:100%;margin-top:6px}.choices small{display:block;margin-top:4px;font-weight:400}.rules{margin-top:16px;font-size:14px;color:#d3dceb}.rules summary{cursor:pointer;min-height:44px;display:flex;align-items:center}.rules ul{padding-left:22px}.summary{padding-left:22px}#enemyAttack{color:#ffd176}#potionEffect,#rerollTarget{margin:8px 0}
+</style>
 </head>
 <body><main>
 <header><div><div class="tag">轻松冒险 · 一局三个房间</div><h1>🎲 骰子地牢小局</h1></div><span class="tag">单手可玩</span></header>
-<section class="panel" aria-label="冒险状态"><div class="stats"><div class="stat">❤️ 生命 <strong id="hp"></strong></div><div class="stat">⚔️ 伤害 +<strong id="power"></strong></div><div class="stat">🎲 骰子 <strong id="diceCount"></strong></div></div><div class="map" id="map" aria-label="房间进度"></div><p class="log" id="log" aria-live="polite"></p></section>
-<section class="panel" id="battle"><div class="enemy"><div class="tag" id="roomLabel"></div><div class="monster" id="monster"></div><h2 id="enemyName"></h2><div class="health"><span id="enemyBar"></span></div><div class="small" id="enemyHp"></div></div><div class="dice" id="dice"></div><div class="hint" id="hint"></div><button class="primary" id="action"></button></section>
-<section class="panel" id="itemsPanel"><h2>冒险道具</h2><p class="small">每种最多 2 个 · 盾牌抵挡下一次伤害</p><div class="items"><button id="reroll">🎲 重掷 <span></span></button><button id="potion">🧪 药水 <span></span></button><button id="shield">🛡️ 盾牌 <span></span></button></div></section>
+<section class="panel" aria-label="冒险状态"><div class="stats"><div class="stat">❤️ 生命 <strong id="hp"></strong></div><div class="stat">⚔️ 加成 <strong id="power"></strong></div><div class="stat">🎲 骰子 <strong id="diceCount"></strong></div></div><p class="shield-status" id="shieldStatus" role="status"></p><div class="map" id="map" aria-label="房间进度"></div><p class="log" id="log" aria-live="polite"></p><button class="secondary" id="restartRun">重开本局</button></section>
+<section class="panel" id="battle"><div class="enemy"><div class="tag" id="roomLabel"></div><div class="monster" id="monster"></div><h2 id="enemyName"></h2><div class="health"><span id="enemyBar"></span></div><div class="small" id="enemyHp"></div><div id="enemyAttack"></div></div><div class="dice" id="dice" aria-label="点选要重掷的骰子"></div><div class="hint" id="hint"></div><div class="preview" id="rerollPreview" aria-live="polite" hidden><p id="rerollResult"></p><button class="secondary" id="keepRoll">保留原结果</button><button class="primary" id="acceptRoll">确认新结果</button></div><button class="primary" id="action"></button></section>
+<section class="panel" id="itemsPanel"><h2>冒险道具</h2><p class="small">每种最多 2 个。护盾抵挡下一次反击，跨房间保留；击杀不消耗，最多激活 1 面。</p><div class="items"><button id="reroll">🎲 重掷 <span></span><small>自选 1 颗 · 可保留原值</small></button><button id="potion">🧪 药水 <span></span><small>生命 +4 · 不超过上限</small></button><button id="shield">🛡️ 护盾 <span></span><small>抵挡 1 次反击</small></button></div><p class="small" id="rerollTarget"></p><p class="small" id="potionEffect"></p></section>
 <section class="panel" id="upgrade" hidden><h2>✨ 房间通过！选择一项升级</h2><p class="small" id="treasure"></p><button class="bonus" id="bonus" hidden>观看激励广告，获得一个道具</button><div class="choices"><button data-upgrade="power">⚔️ 加伤害：每颗骰子伤害 +1</button><button data-upgrade="heal">❤️ 回血：恢复 4 点生命</button><button data-upgrade="dice">🎲 多一颗骰子：每次攻击多掷一颗</button></div></section>
-<section class="panel" id="end" hidden><h2 id="endTitle"></h2><p id="endText"></p><button class="primary" id="restart">重新开始</button></section>
-<p class="small">击败怪物前进；生命归零则本局结束。每个房间的宝藏会补充一种道具。</p>
+<section class="panel" id="end" hidden><h2 id="endTitle"></h2><div id="endText"></div><button class="primary" id="restart">重新开始</button></section>
+<details class="panel rules" id="help"><summary>玩法与数值说明</summary><ul>
+<li>每颗骰子为六面骰（1–6）。掷骰后攻击，史莱姆反击 2 点、骷髅 3 点、守卫 3 点。击杀一击不承受反击伤害。</li>
+<li>点选要重掷的骰子，按钮旁会显示编号和原值。每次消耗 1 个重掷道具；新值出现后可保留原结果或确认新结果，保留原值也不退还道具。</li>
+<li>护盾抵挡下一次反击，跨房间保留，直到被消耗；击杀不消耗。最多激活 1 面，激活状态持续显示在顶部。</li>
+<li>药水恢复 +4 点生命，不超过生命上限；满血时不可使用，部分溢出时需确认浪费。三种道具初始各 1 个、各上限 2 个；宝藏只补充未满道具，全部满时会提示。</li>
+<li>力量升级：每颗骰子伤害 +1，另加固定伤害 +3；最多 2 级（每骰 +2、固定 +6）。伤害 = 骰子点数之和 + 每骰加成 × 骰子数 + 固定加成。</li>
+<li>治疗升级：生命上限 +4，再恢复 +4；初始上限 20，最高 28。即使满血也能完整获得这 4 点生命。</li>
+<li>额外骰子：每次攻击多掷 1 颗六面骰，初始 1 颗、最多 3 颗。升级旁显示未重掷时的平均伤害：力量更稳定，额外骰子波动更大，治疗增加生存空间。</li>
+<li>每次攻击计 1 回合。结算总伤害包含超过怪物剩余生命的溢出伤害。局中重开需确认，会清空本局进度。</li>
+</ul></details>
 </main>
 <script>
 'use strict';
@@ -22,20 +34,137 @@
 // Optional methods: showInterstitial() and showRewarded() => Promise<boolean>.
 const ads = window.DiceDungeonAds || {};
 const $ = id => document.getElementById(id);
-const names = {reroll:'重掷',potion:'药水',shield:'盾牌'};
+const names = {reroll:'重掷',potion:'药水',shield:'护盾'};
 const enemies = [{name:'苔藓史莱姆',icon:'🟢',hp:9,attack:2},{name:'小骷髅',icon:'💀',hp:15,attack:3},{name:'宝箱守卫',icon:'👾',hp:21,attack:3}];
+const limits = {items:2, power:2, dice:3, hp:28};
 let game, busy = false;
-function start(){game={room:0,hp:20,maxHp:20,power:0,diceCount:1,items:{reroll:1,potion:1,shield:1},shielded:false,rolls:[],phase:'roll',enemyHp:enemies[0].hp,cleared:0}; say('走进第一间房，掷骰迎战！'); render()}
+function start(){
+  game={room:0,hp:20,maxHp:20,power:0,diceCount:1,items:{reroll:1,potion:1,shield:1},shielded:false,rolls:[],selectedDie:null,rerollChoice:null,phase:'roll',enemyHp:enemies[0].hp,cleared:0,turns:0,totalDamage:0};
+  say('走进第一间房，掷骰迎战！'); render();
+}
 function say(s){$('log').textContent=s}
 function roll(){return Math.floor(Math.random()*6)+1}
-function render(){const g=game,e=enemies[g.room]; $('hp').textContent=g.hp+'/'+g.maxHp; $('power').textContent=g.power; $('diceCount').textContent=g.diceCount; $('map').innerHTML=enemies.map((_,i)=>`<div class="room ${i<g.cleared?'done':i===g.room&&g.phase!=='end'?'current':''}"></div>`).join(''); $('map').setAttribute('aria-label',`已通过 ${g.cleared} / 3 个房间`); $('battle').hidden=g.phase==='upgrade'||g.phase==='end'; $('itemsPanel').hidden=g.phase==='upgrade'||g.phase==='end'; $('upgrade').hidden=g.phase!=='upgrade'; $('end').hidden=g.phase!=='end'; $('roomLabel').textContent=`房间 ${g.room+1} / 3`; $('monster').textContent=e.icon; $('enemyName').textContent=e.name; $('enemyHp').textContent=`怪物生命 ${Math.max(0,g.enemyHp)} / ${e.hp}`; $('enemyBar').style.width=Math.max(0,g.enemyHp)/e.hp*100+'%'; $('dice').innerHTML=g.rolls.map(n=>`<div class="die" aria-label="骰子 ${n}">${n}</div>`).join(''); $('hint').textContent=g.phase==='roll'?'掷骰后可以重掷一颗，再攻击。':`攻击伤害：${g.rolls.reduce((a,b)=>a+b,0)+g.power*g.rolls.length}`; $('action').textContent=g.phase==='roll'?'🎲 掷骰前进':'⚔️ 攻击'; for(const k of Object.keys(names)){$(k).querySelector('span').textContent=g.items[k]+'/2';$(k).disabled=busy||!g.items[k]||(k==='reroll'&&g.phase!=='attack')||(k==='potion'&&g.hp===g.maxHp)||(k==='shield'&&g.shielded)} $('action').disabled=busy; $('bonus').hidden=typeof ads.showRewarded!=='function'; $('bonus').disabled=busy||Object.values(g.items).every(n=>n>=2); }
-function gainItem(){const available=Object.keys(names).filter(k=>game.items[k]<2); if(!available.length)return '道具已满'; const k=available[Math.floor(Math.random()*available.length)];game.items[k]++;return `获得 ${names[k]} ×1`}
-$('action').onclick=()=>{const g=game;if(g.phase==='roll'){g.rolls=Array.from({length:g.diceCount},roll);g.phase='attack';say('骰子已掷出，可以使用重掷。')}else if(g.phase==='attack'){const damage=g.rolls.reduce((a,b)=>a+b,0)+g.power*g.rolls.length;g.enemyHp-=damage;g.rolls=[];if(g.enemyHp<=0){g.cleared++;const loot=gainItem();if(g.cleared===3){g.phase='end';$('endTitle').textContent='🏆 冒险胜利！';$('endText').textContent=`通过 3 个房间，找到最后的宝藏。${loot}。`;say('你打败了地牢守卫！')}else{g.phase='upgrade';$('treasure').textContent=`宝藏：${loot}。选择升级后进入下一间房。`;say(`击败怪物！${loot}。`)}}else{let hit=enemies[g.room].attack;if(g.shielded){g.shielded=false;hit=0}g.hp=Math.max(0,g.hp-hit);say(hit?`造成 ${damage} 点伤害，怪物反击造成 ${hit} 点伤害。`:`造成 ${damage} 点伤害，盾牌挡住了反击！`);if(!g.hp){g.phase='end';$('endTitle').textContent='💫 冒险结束';$('endText').textContent=`本局通过 ${g.cleared} 个房间。勇士可以重新出发！`}else g.phase='roll'}}render()};
-$('reroll').onclick=()=>{if(game.phase!=='attack'||!game.items.reroll)return;game.items.reroll--;game.rolls[0]=roll();say('重掷了第一颗骰子。');render()};
-$('potion').onclick=()=>{if(!game.items.potion||game.hp===game.maxHp)return;game.items.potion--;const n=Math.min(4,game.maxHp-game.hp);game.hp+=n;say(`使用药水，恢复 ${n} 点生命。`);render()};
-$('shield').onclick=()=>{if(!game.items.shield||game.shielded)return;game.items.shield--;game.shielded=true;say('盾牌准备好了，将抵挡下一次伤害。');render()};
-document.querySelectorAll('[data-upgrade]').forEach(b=>b.onclick=()=>{const g=game;if(g.phase!=='upgrade'||busy)return;const u=b.dataset.upgrade;if(u==='power')g.power++;if(u==='heal')g.hp=Math.min(g.maxHp,g.hp+4);if(u==='dice')g.diceCount++;g.room++;g.enemyHp=enemies[g.room].hp;g.phase='roll';say('升级完成，进入下一间房！');render()});
-$('bonus').onclick=async()=>{if(busy||game.phase!=='upgrade'||typeof ads.showRewarded!=='function'||Object.values(game.items).every(n=>n>=2))return;busy=true;render();try{if(await ads.showRewarded())say(`激励奖励：${gainItem()}。`);else say('未获得奖励。')}catch(e){say('广告不可用，未获得奖励。')}finally{busy=false;render()}};
+function damageFor(rolls,power=game.power){return rolls.reduce((a,b)=>a+b,0)+power*(rolls.length+3)}
+function averageDamage(dice=game.diceCount,power=game.power){return dice*3.5+power*(dice+3)}
+function canUseItem(k){return !busy&&!game.rerollChoice&&['roll','attack'].includes(game.phase)&&game.items[k]>0}
+function render(){
+  const g=game,e=enemies[g.room],pending=!!g.rerollChoice;
+  $('hp').textContent=g.hp+'/'+g.maxHp;
+  $('power').textContent=`每骰 +${g.power}\n固定 +${g.power*3}`;
+  $('diceCount').textContent=g.diceCount+'/'+limits.dice;
+  $('shieldStatus').textContent=g.shielded?'🛡️ 护盾已激活 · 跨房间保留，抵挡下一次反击；击杀不消耗':'🛡️ 护盾未激活 · 最多激活 1 面';
+  $('shieldStatus').classList.toggle('active',g.shielded);
+  $('map').innerHTML=enemies.map((_,i)=>`<div class="room ${i<g.cleared?'done':i===g.room&&g.phase!=='end'?'current':''}"></div>`).join('');
+  $('map').setAttribute('aria-label',`已通过 ${g.cleared} / 3 个房间`);
+  $('battle').hidden=$('itemsPanel').hidden=['upgrade','end'].includes(g.phase);
+  $('upgrade').hidden=g.phase!=='upgrade'; $('end').hidden=g.phase!=='end';
+  $('restartRun').hidden=g.phase==='end'; $('restartRun').disabled=busy;
+  $('roomLabel').textContent=`房间 ${g.room+1} / 3`;
+  $('monster').textContent=e.icon; $('enemyName').textContent=e.name;
+  $('enemyHp').textContent=`怪物生命 ${Math.max(0,g.enemyHp)} / ${e.hp}`;
+  $('enemyBar').style.width=Math.max(0,g.enemyHp)/e.hp*100+'%';
+  $('enemyAttack').textContent=`反击伤害：${e.attack} 点${g.shielded?'（护盾将抵挡）':''} · 击杀不反击`;
+  $('dice').innerHTML=g.rolls.map((n,i)=>`<button class="die" data-die="${i}" aria-label="第 ${i+1} 颗骰子，${n} 点" aria-pressed="${g.selectedDie===i}" ${pending||busy?'disabled':''}><small>第 ${i+1} 颗</small>${n}</button>`).join('');
+  $('hint').textContent=g.phase==='roll'?'掷骰后点选一颗骰子，可重掷再攻击。':`攻击伤害：${damageFor(g.rolls)} 点 · ${damageFor(g.rolls)>=g.enemyHp?'本击可击杀，不受反击':`未击杀将受 ${g.shielded?0:e.attack} 点反击`}`;
+  const selected=g.selectedDie;
+  $('rerollTarget').textContent=selected===null?'重掷目标：尚未选择，请先点选骰子。':`将重掷第 ${selected+1} 颗骰子（当前 ${g.rolls[selected]} 点），消耗 1 个道具；可保留原值，不退还道具。`;
+  $('rerollPreview').hidden=!pending;
+  if(pending){const c=g.rerollChoice,newRolls=g.rolls.map((n,i)=>i===c.index?c.after:n);$('rerollResult').textContent=`第 ${c.index+1} 颗：原值 ${c.before} → 新值 ${c.after}。攻击伤害 ${damageFor(g.rolls)} → ${damageFor(newRolls)} 点。已消耗 1 个重掷道具，请选择保留原结果或确认新结果。`}
+  $('keepRoll').disabled=$('acceptRoll').disabled=busy;
+  $('action').textContent=g.phase==='roll'?'🎲 掷骰前进':'⚔️ 攻击';
+  $('action').disabled=busy||pending||!['roll','attack'].includes(g.phase);
+  for(const k of Object.keys(names)){
+    $(k).querySelector('span').textContent=g.items[k]+'/'+limits.items;
+    $(k).disabled=!canUseItem(k)||(k==='reroll'&&(g.phase!=='attack'||selected===null))||(k==='potion'&&g.hp===g.maxHp)||(k==='shield'&&g.shielded);
+  }
+  const healing=Math.min(4,g.maxHp-g.hp),waste=4-healing;
+  $('potionEffect').textContent=`药水 +4：当前可恢复 ${healing} 点，生命上限 ${g.maxHp}。${waste?`将浪费 ${waste} 点${healing===0?'（满血不可使用）':'，使用前需确认'}。`:'无浪费。'}`;
+  const descriptions={
+    power:`⚔️ 力量：每颗骰子 +1，固定伤害 +3<small>等级 ${g.power} → ${Math.min(limits.power,g.power+1)} / ${limits.power}；上限每骰 +2、固定 +6。平均伤害 ${averageDamage()} → ${averageDamage(g.diceCount,Math.min(limits.power,g.power+1))} 点。</small>`,
+    heal:`❤️ 治疗：生命上限 +4，再恢复 +4<small>生命 ${g.hp}/${g.maxHp} → ${Math.min(limits.hp,g.hp+4)}/${Math.min(limits.hp,g.maxHp+4)}；上限最高 ${limits.hp}，无浪费。平均伤害维持 ${averageDamage()} 点。</small>`,
+    dice:`🎲 额外骰子：每次攻击 +1 颗六面骰<small>骰子 ${g.diceCount} → ${Math.min(limits.dice,g.diceCount+1)} / ${limits.dice}；平均伤害 ${averageDamage()} → ${averageDamage(Math.min(limits.dice,g.diceCount+1))} 点。</small>`
+  };
+  document.querySelectorAll('[data-upgrade]').forEach(b=>{
+    const u=b.dataset.upgrade,atCap=u==='power'?g.power>=limits.power:u==='dice'?g.diceCount>=limits.dice:g.maxHp>=limits.hp;
+    b.innerHTML=descriptions[u]+(atCap?'<small>已达上限，不能选择</small>':''); b.disabled=busy||g.phase!=='upgrade'||atCap;
+  });
+  $('bonus').hidden=typeof ads.showRewarded!=='function';
+  const full=Object.values(g.items).every(n=>n>=limits.items);
+  $('bonus').disabled=busy||full;
+  $('bonus').textContent=full?'道具均已达 2/2，无法领取额外道具':'观看激励广告，获得 1 个未满道具（每种上限 2）';
+}
+function gainItem(){
+  const available=Object.keys(names).filter(k=>game.items[k]<limits.items);
+  if(!available.length)return '三种道具均已达 2/2，本次宝藏无法领取';
+  const k=available[Math.floor(Math.random()*available.length)];game.items[k]++;
+  return `获得 ${names[k]} ×1（现有 ${game.items[k]}/2）`;
+}
+function finish(won,loot=''){
+  const g=game;g.phase='end';
+  $('endTitle').textContent=won?'🏆 冒险胜利！':'💫 冒险结束';
+  $('endText').textContent=`通过 ${g.cleared} / 3 个房间。${loot?`最后宝藏：${loot}。`:''}`;
+  $('endText').insertAdjacentHTML('beforeend',`<ul class="summary"><li>回合数：${g.turns}（每次攻击计 1 回合）</li><li>总伤害：${g.totalDamage} 点（含溢出伤害）</li><li>剩余生命值：${g.hp} / ${g.maxHp}</li><li>剩余道具：重掷 ${g.items.reroll}/2、药水 ${g.items.potion}/2、护盾 ${g.items.shield}/2</li><li>已激活护盾：${g.shielded?'1 面（未消耗）':'0 面'}</li></ul>`);
+}
+$('action').onclick=()=>{
+  const g=game;if(busy||g.rerollChoice)return;
+  if(g.phase==='roll'){
+    g.rolls=Array.from({length:g.diceCount},roll);g.selectedDie=null;g.phase='attack';say('骰子已掷出，点选想重掷的骰子，或直接攻击。');
+  }else if(g.phase==='attack'){
+    const damage=damageFor(g.rolls);g.turns++;g.totalDamage+=damage;g.enemyHp-=damage;g.rolls=[];g.selectedDie=null;
+    if(g.enemyHp<=0){
+      g.cleared++;const loot=gainItem();
+      say(`造成 ${damage} 点伤害，击杀不受反击${g.shielded?'，护盾保留':''}！${loot}。`);
+      if(g.cleared===3)finish(true,loot);
+      else{g.phase='upgrade';$('treasure').textContent=`宝藏：${loot}。选择升级后进入下一间房。`}
+    }else{
+      let hit=enemies[g.room].attack;if(g.shielded){g.shielded=false;hit=0}
+      g.hp=Math.max(0,g.hp-hit);
+      say(hit?`造成 ${damage} 点伤害，怪物反击造成 ${hit} 点伤害。`:`造成 ${damage} 点伤害，护盾挡住了 ${enemies[g.room].attack} 点反击并已消耗！`);
+      if(!g.hp)finish(false);else g.phase='roll';
+    }
+  }
+  render();
+};
+$('dice').onclick=event=>{
+  const b=event.target.closest('[data-die]');if(!b||busy||game.rerollChoice||game.phase!=='attack')return;
+  game.selectedDie=Number(b.dataset.die);render();$('dice').querySelector(`[data-die="${game.selectedDie}"]`).focus();
+};
+$('reroll').onclick=()=>{
+  const g=game;if(!canUseItem('reroll')||g.phase!=='attack'||g.selectedDie===null)return;
+  g.items.reroll--;g.rerollChoice={index:g.selectedDie,before:g.rolls[g.selectedDie],after:roll()};
+  say('重掷结果尚未应用，请选择保留原结果或确认新结果。');render();$('keepRoll').focus();
+};
+function resolveReroll(accept){
+  const g=game,c=g.rerollChoice;if(busy||!c)return;
+  if(accept)g.rolls[c.index]=c.after;
+  g.rerollChoice=null;say(`第 ${c.index+1} 颗骰子${accept?'采用新结果':'保留原结果'}：${g.rolls[c.index]} 点。`);render();$('action').focus();
+}
+$('keepRoll').onclick=()=>resolveReroll(false);
+$('acceptRoll').onclick=()=>resolveReroll(true);
+$('potion').onclick=()=>{
+  if(!canUseItem('potion')||game.hp===game.maxHp)return;
+  const n=Math.min(4,game.maxHp-game.hp),waste=4-n;
+  if(waste&&!window.confirm(`药水 +4，当前只能恢复 ${n} 点，将浪费 ${waste} 点。仍要消耗 1 瓶药水吗？`))return;
+  game.items.potion--;game.hp+=n;say(`使用药水，恢复 ${n} 点生命${waste?`，已确认浪费 ${waste} 点`:''}。`);render();
+};
+$('shield').onclick=()=>{
+  if(!canUseItem('shield')||game.shielded)return;
+  game.items.shield--;game.shielded=true;say('护盾已激活：跨房间保留，抵挡下一次反击；击杀不消耗。');render();
+};
+document.querySelectorAll('[data-upgrade]').forEach(b=>b.onclick=()=>{
+  const g=game;if(g.phase!=='upgrade'||busy)return;
+  const u=b.dataset.upgrade;
+  if(u==='power'){if(g.power>=limits.power)return;g.power++}
+  else if(u==='heal'){if(g.maxHp>=limits.hp)return;g.maxHp+=4;g.hp+=4}
+  else if(u==='dice'){if(g.diceCount>=limits.dice)return;g.diceCount++}
+  else return;
+  g.room++;g.enemyHp=enemies[g.room].hp;g.phase='roll';say('升级完成，进入下一间房！');render();
+});
+$('restartRun').onclick=()=>{
+  if(busy||game.phase==='end')return;
+  if(window.confirm(`确定重开本局？已通过 ${game.cleared}/3 个房间，进行了 ${game.turns} 回合；本局进度和道具将重置。`))start();
+};
+$('bonus').onclick=async()=>{if(busy||game.phase!=='upgrade'||typeof ads.showRewarded!=='function'||Object.values(game.items).every(n=>n>=limits.items))return;busy=true;render();try{if(await ads.showRewarded()===true)say(`激励奖励：${gainItem()}。`);else say('未获得奖励。')}catch(e){say('广告不可用，未获得奖励。')}finally{busy=false;render()}};
 $('restart').onclick=async()=>{if(busy||game.phase!=='end')return;busy=true;$('restart').disabled=true;try{if(typeof ads.showInterstitial==='function')await ads.showInterstitial()}catch(e){}finally{busy=false;$('restart').disabled=false;start()}};
 start();
 </script></body></html>
