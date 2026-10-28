@@ -52,8 +52,8 @@
   .timer {
     background: var(--card);
     border-radius: 999px;
-    padding: 5px 14px;
-    font-size: 15px;
+    padding: 7px 16px;
+    font-size: 20px;
     font-weight: 700;
     box-shadow: 0 3px 10px rgba(214, 158, 180, 0.15);
   }
@@ -77,9 +77,9 @@
     min-height: 0;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
-    gap: 10px;
-    padding: 12px 0 8px;
+    justify-content: flex-end; /* 顾客卡片贴近底部商品区，压缩中间空隙 */
+    gap: 8px;
+    padding: 6px 0 8px;
     position: relative;
   }
   .empty-hint {
@@ -94,11 +94,19 @@
     display: flex;
     align-items: center;
     gap: 10px;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
     background: var(--card);
     border-radius: var(--radius);
     padding: 10px 12px;
     box-shadow: 0 4px 14px rgba(214, 158, 180, 0.16);
     animation: pop 0.25s ease;
+  }
+  .customer.selected {
+    outline: 3px solid var(--pink-deep);
+    box-shadow: 0 6px 18px rgba(239, 157, 184, 0.45);
+    transform: scale(1.02);
   }
   .customer .avatar { font-size: 30px; width: 42px; text-align: center; flex: none; }
   .customer .info { flex: 1; min-width: 0; }
@@ -116,6 +124,15 @@
     border-radius: 3px;
     overflow: hidden;
   }
+  .patience-row { display: flex; align-items: center; gap: 8px; }
+  .patience-row .patience { flex: 1; }
+  .ptime {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ink-soft);
+    min-width: 30px;
+    text-align: right;
+  }
   .patience-fill {
     height: 100%;
     width: 100%;
@@ -123,7 +140,11 @@
     background: linear-gradient(90deg, var(--mint-deep), var(--pink-deep));
     transition: width 0.15s linear;
   }
-  .customer.urgent .patience-fill { background: var(--danger); }
+  .customer.urgent .patience-fill {
+    background: var(--danger);
+    animation: blink 0.7s ease-in-out infinite;
+  }
+  .customer.urgent .ptime { color: var(--danger); }
   .customer.urgent .bubble { background: var(--pink); }
   .customer.leaving { transition: opacity 0.3s ease, transform 0.3s ease; pointer-events: none; }
   .customer.leaving.happy { opacity: 0; transform: translateY(-14px) scale(0.96); }
@@ -144,7 +165,7 @@
   /* ── 提示条 ── */
   #toast {
     position: absolute;
-    top: 4px;
+    bottom: 6px; /* 悬在道具按钮正上方，就近说明原因 */
     left: 50%;
     transform: translateX(-50%);
     background: rgba(107, 85, 96, 0.92);
@@ -162,33 +183,33 @@
   #toast.show { opacity: 1; }
 
   /* ── 道具 ── */
-  .item-legend { font-size: 13px; color: var(--ink-soft); margin: 0 2px 6px; }
+  .item-legend { font-size: 13px; color: var(--ink-soft); margin: 0 2px 4px; }
   #items { display: flex; gap: 8px; margin-bottom: 8px; }
   .item-btn {
     position: relative;
     flex: 1;
-    height: 48px;
+    height: 56px;
     border-radius: 14px;
     background: var(--lavender);
-    font-size: 13px;
+    font-size: 14px;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 4px;
     transition: transform 0.08s ease, opacity 0.2s ease;
   }
-  .item-btn .big { font-size: 19px; }
+  .item-btn .big { font-size: 22px; }
   .item-btn:active { transform: scale(0.95); }
-  .item-btn.empty { opacity: 0.38; }
+  .item-btn.empty { opacity: 0.45; }
   .item-btn .count {
     position: absolute;
-    top: -6px;
-    right: -4px;
+    top: -8px;
+    right: -6px;
     background: var(--pink-deep);
     color: #fff;
-    font-size: 13px;
+    font-size: 14px;
     line-height: 1;
-    padding: 3px 7px;
+    padding: 4px 8px;
     border-radius: 999px;
   }
   .item-btn.shake { animation: shake 0.3s ease; }
@@ -257,16 +278,6 @@
     transition: transform 0.08s ease;
   }
   .primary-btn:active { transform: scale(0.96); }
-  .ghost-btn {
-    min-width: 220px;
-    height: 44px;
-    border-radius: 999px;
-    background: var(--card);
-    color: var(--ink);
-    font-size: 14px;
-    box-shadow: 0 3px 10px rgba(214, 158, 180, 0.18);
-  }
-  .ghost-btn:disabled { opacity: 0.45; }
   .result-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -282,12 +293,11 @@
   }
   .result-cell b { display: block; font-size: 22px; }
   .result-cell span { font-size: 13px; color: var(--ink-soft); }
-  .carry-line { font-size: 13px; color: var(--ink); }
-  .carry-line b { color: var(--pink-deep); }
 
   @keyframes pop { from { opacity: 0; transform: translateY(10px) scale(0.97); } to { opacity: 1; transform: none; } }
   @keyframes floatUp { from { opacity: 1; transform: translate(-50%, 0); } to { opacity: 0; transform: translate(-50%, -34px); } }
   @keyframes beat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
+  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
   @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
 </style>
 </head>
@@ -318,8 +328,9 @@
     <div class="sub">Cozy Shop Before Closing</div>
     <div class="rules">
       🕯️ 打烊倒计时 <b>60 秒</b>，能接待多少位客人？<br />
-      👆 顾客想要什么，就点下方对应商品递给 TA<br />
-      ⏳ 顾客头顶耐心条耗尽就会失望离开<br />
+      👆 点顾客卡片可选中（高亮），再点对应商品递给 TA<br />
+      🎯 未选中时，自动服务最着急的、想要该商品的顾客<br />
+      ⏳ 耐心条与秒数归零前没拿到就会失望离开<br />
       🎁 每成功服务 5 单，随机补充 1 个道具（上限 2 个）
     </div>
     <button class="primary-btn" id="startBtn">🔋 开始营业</button>
@@ -335,8 +346,6 @@
       <div class="result-cell"><b id="resWarmth">0</b><span>暖心值</span></div>
       <div class="result-cell"><b id="resLeft">0</b><span>离开顾客</span></div>
     </div>
-    <div class="carry-line" id="carryLine"></div>
-    <button class="ghost-btn" id="rewardBtn">📺 看广告补 1 个道具</button>
     <button class="primary-btn" id="restartBtn">🔁 再来一局</button>
   </div>
 
@@ -349,7 +358,8 @@
    * 默认 enabled = false：完全 no-op，不加载任何 SDK、不发任何外部请求。
    * 接入广告平台时：把 enabled 改为 true，并给下面两个钩子赋上平台实现：
    *   interstitial: async () => void   插屏，仅在「结算屏 → 再来一局」之间调用
-   *   rewarded:     async () => bool   激励，仅在结算屏「看广告补道具」按钮调用
+   *   rewarded:     async () => bool   激励（预留钩子）：当前界面没有任何入口，
+   *                                     不会被调用；如需接入请在结算屏自行添加真实入口
    * 游戏进行中不存在任何广告调用。
    * ============================================================ */
   const AdAdapter = {
@@ -385,6 +395,7 @@
     { id: "bread",  name: "面包", emoji: "🍞", coin: 7 },
   ];
   const WISH_TEXT = { flower: "我想要一束 🌸", tea: "想喝杯热 🍵", bread: "好想吃 🍞 呀" };
+  const WISH_NAME = { flower: "鲜花🌸", tea: "热茶🍵", bread: "面包🍞" };
   const ITEMS = [
     { id: "courier", name: "快递小哥", emoji: "🛵" },
     { id: "lamp",    name: "暖灯",     emoji: "💡" },
@@ -400,7 +411,7 @@
   const timerEl = $("timer"), statCoins = $("statCoins"), statWarmth = $("statWarmth"), statLeft = $("statLeft");
   const itemsEl = $("items"), productsEl = $("products");
   const startOverlay = $("startOverlay"), resultOverlay = $("resultOverlay");
-  const rewardBtn = $("rewardBtn"), restartBtn = $("restartBtn");
+  const restartBtn = $("restartBtn");
 
   /* ── 状态 ── */
   let state = null;
@@ -409,11 +420,9 @@
   // 供自动化测试 / 调试读取当前状态
   window.__cozyDebug = () => state;
 
-  function newState(carry) {
+  function newState() {
     const items = {};
-    for (const it of ITEMS) {
-      items[it.id] = Math.min(ITEM_CAP, ITEM_START + (carry && carry[it.id] ? carry[it.id] : 0));
-    }
+    for (const it of ITEMS) items[it.id] = ITEM_START;
     return {
       running: false,
       timeLeft: GAME_SECONDS,
@@ -421,8 +430,8 @@
       sinceRestock: 0,
       customers: [],
       nextCid: 1,
+      selectedId: null, // 当前点选中的顾客
       items,
-      carry: { courier: 0, lamp: 0, teapot: 0 }, // 激励广告补的道具，仅对下一局生效
       nextSpawnIn: 0.6,
     };
   }
@@ -478,7 +487,7 @@
       const n = state ? state.items[it.id] : ITEM_START;
       btn.querySelector(".count").textContent = "×" + n;
       btn.classList.toggle("empty", n <= 0);
-      btn.disabled = !state || !state.running || n <= 0;
+      btn.disabled = !state || !state.running; // 数量为 0 仍可点击，点击时文字说明原因
     });
   }
   function renderHUD() {
@@ -500,23 +509,35 @@
       drain: 1 / rand(PATIENCE_MIN, PATIENCE_MAX),
       el: null,
     };
-    const card = document.createElement("div");
+    const card = document.createElement("button");
     card.className = "customer";
+    card.setAttribute("aria-label", c.emoji + " 想要" + WISH_NAME[c.wish] + "，点按选中");
     card.innerHTML =
       '<div class="avatar"></div>' +
-      '<div class="info"><div class="bubble"></div><div class="patience"><div class="patience-fill"></div></div></div>';
+      '<div class="info"><div class="bubble"></div>' +
+      '<div class="patience-row"><div class="patience"><div class="patience-fill"></div></div><div class="ptime"></div></div></div>';
     card.querySelector(".avatar").textContent = c.emoji;
     card.querySelector(".bubble").textContent = WISH_TEXT[c.wish];
+    card.addEventListener("click", () => toggleSelect(c));
     const hint = queueEl.querySelector(".empty-hint");
     if (hint) hint.remove();
     queueEl.appendChild(card);
     c.el = card;
     state.customers.push(c);
   }
+  function toggleSelect(c) {
+    if (!state || !state.running) return;
+    state.selectedId = state.selectedId === c.id ? null : c.id;
+    renderSelection();
+  }
+  function renderSelection() {
+    for (const c of state.customers) c.el.classList.toggle("selected", c.id === state.selectedId);
+  }
   function removeCustomer(c, mood) {
     const list = state.customers;
     const i = list.indexOf(c);
     if (i >= 0) list.splice(i, 1);
+    if (state.selectedId === c.id) { state.selectedId = null; renderSelection(); }
     if (!c.el) return;
     c.el.classList.add("leaving", mood);
     setTimeout(() => c.el && c.el.remove(), 320);
@@ -543,7 +564,8 @@
     state.served += 1;
     state.coins += c.coin;
     state.warmth += SERVE_WARMTH;
-    floatNote(c.el, "💗+" + SERVE_WARMTH + " 🪙+" + c.coin);
+    floatNote(c.el, "+" + c.coin); // 在顾客卡片上飘出对应金额
+    if (state.selectedId === c.id) { state.selectedId = null; renderSelection(); }
     removeCustomer(c, "happy");
     state.sinceRestock += 1;
     if (state.sinceRestock >= RESTOCK_EVERY) {
@@ -560,6 +582,14 @@
   }
   function onTapProduct(p, btn) {
     if (!state || !state.running) return;
+    const sel = state.customers.find((c) => c.id === state.selectedId);
+    if (sel) {
+      // 已选中顾客：想要该商品就直接服务，想要别的则明确提示
+      if (sel.wish === p.id) { serveSuccess(sel); return; }
+      shakeEl(btn);
+      toast(sel.emoji + " 想要的是" + WISH_NAME[sel.wish] + "哦～");
+      return;
+    }
     const c = pickCustomer(p.id);
     if (!c) {
       shakeEl(btn);
@@ -568,20 +598,32 @@
     }
     serveSuccess(c);
   }
+  // 道具目标：优先选中的顾客，否则最着急的一位
+  function pickTarget() {
+    const sel = state.customers.find((c) => c.id === state.selectedId);
+    if (sel) return sel;
+    return state.customers.reduce((a, b) => (a.patience <= b.patience ? a : b));
+  }
   function onTapItem(id, btn) {
-    if (!state || !state.running || state.items[id] <= 0) return;
+    if (!state || !state.running) return;
+    const it = ITEMS.find((x) => x.id === id);
+    if (state.items[id] <= 0) {
+      shakeEl(btn);
+      toast(it.emoji + " " + it.name + "已用完，每成功服务 5 单随机补 1 个");
+      return;
+    }
     if (!state.customers.length) {
       shakeEl(btn);
-      toast("现在没有等待的顾客");
+      toast("⏳ 还没有顾客进店，" + it.emoji + " 先留着吧～");
       return;
     }
     state.items[id] -= 1;
     if (id === "courier") {
-      const c = pickCustomer(null);
+      const c = pickTarget();
       toast("🛵 快递小哥帮忙送出！");
       serveSuccess(c);
     } else if (id === "lamp") {
-      const c = pickCustomer(null);
+      const c = pickTarget();
       c.patience = Math.min(1, c.patience + 0.5);
       floatNote(c.el, "💡 耐心恢复了");
       toast("💡 暖灯亮起，" + c.emoji + " 的耐心大幅恢复");
@@ -622,6 +664,7 @@
         renderHUD();
       } else {
         c.el.querySelector(".patience-fill").style.width = (c.patience * 100).toFixed(1) + "%";
+        c.el.querySelector(".ptime").textContent = Math.ceil(c.patience / c.drain) + "s";
         c.el.classList.toggle("urgent", c.patience < 0.35);
       }
     }
@@ -635,8 +678,8 @@
   }
 
   /* ── 开始 / 结束 / 再来一局 ── */
-  function startGame(carry) {
-    state = newState(carry);
+  function startGame() {
+    state = newState();
     queueEl.querySelectorAll(".customer").forEach((el) => el.remove());
     let hint = queueEl.querySelector(".empty-hint");
     if (!hint) {
@@ -648,6 +691,7 @@
     resultOverlay.classList.add("hidden");
     startOverlay.classList.add("hidden");
     renderHUD();
+    state.running = true; // 先置运行态，道具开局即可点用
     renderItems();
     renderTimer();
     state.running = true;
@@ -664,50 +708,17 @@
     $("resCoins").textContent = state.coins;
     $("resWarmth").textContent = state.warmth;
     $("resLeft").textContent = state.left;
-    updateCarryLine();
-    updateRewardBtn();
     resultOverlay.classList.remove("hidden");
   }
-  function updateCarryLine() {
-    const parts = ITEMS.map((it) => it.emoji + "×" + Math.min(ITEM_CAP, ITEM_START + state.carry[it.id]));
-    $("carryLine").innerHTML = "下一局开局道具：" + parts.join("　");
-  }
-  function updateRewardBtn() {
-    const canAdd = ITEMS.some((it) => state.carry[it.id] < ITEM_CAP - ITEM_START);
-    rewardBtn.disabled = !canAdd;
-    rewardBtn.textContent = canAdd ? "📺 看广告补 1 个道具" : "道具已补满（上限 2 个）";
-  }
-
-  // 激励广告触发点：仅此按钮，且补的道具不超过上限
-  rewardBtn.addEventListener("click", async () => {
-    if (!state || rewardBtn.disabled) return;
-    rewardBtn.disabled = true;
-    const ok = await AdAdapter.showRewarded();
-    rewardBtn.disabled = false;
-    if (!ok) {
-      if (AdAdapter.enabled) toast("广告还没看完，下次再试试～");
-      else toast("当前为无广告模式，接入广告后可用");
-      updateRewardBtn();
-      return;
-    }
-    const lacking = ITEMS.filter((it) => state.carry[it.id] < ITEM_CAP - ITEM_START);
-    if (lacking.length) {
-      const it = lacking[Math.floor(Math.random() * lacking.length)];
-      state.carry[it.id] += 1;
-      toast("🎁 下一局 " + it.emoji + it.name + " +1");
-    }
-    updateCarryLine();
-    updateRewardBtn();
-  });
 
   // 插屏广告触发点：仅「结算屏 → 再来一局」之间
   restartBtn.addEventListener("click", async () => {
     restartBtn.disabled = true;
     await AdAdapter.showInterstitial();
     restartBtn.disabled = false;
-    startGame(state ? state.carry : null);
+    startGame();
   });
-  $("startBtn").addEventListener("click", () => startGame(null));
+  $("startBtn").addEventListener("click", () => startGame());
 
   renderItems();
 })();
