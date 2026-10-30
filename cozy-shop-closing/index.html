@@ -584,7 +584,7 @@
     const items = {};
     for (const it of ITEMS) items[it.id] = ITEM_START;
     return {
-      running: false, paused: false, gameEndsAt: 0,
+      running: false, paused: false, elapsedMs: 0,
       timeLeft: GAME_SECONDS,
       coins: 0, warmth: 0, served: 0, left: 0, combo: 0,
       sinceRestock: 0, spawned: 0, rareSpawned: 0,
@@ -599,10 +599,10 @@
     };
   }
 
-  /* ── 耐心：每位顾客以到店时刻 + 总秒数作为唯一的到期时间 ──
+  /* ── 耐心：每位顾客以到店时的游戏时间 + 总秒数作为唯一的到期时间 ──
    * 显示的剩余秒数与决定离开的判断取自同一个值，服务其他顾客、
    * 使用道具都不会改动这位顾客的到期时间，显示多少就剩多少。 */
-  function remainSec(c) { return Math.max(0, (c.endsAt - nowMs()) / 1000); }
+  function remainSec(c) { return Math.max(0, (c.endsAt - state.elapsedMs) / 1000); }
   function remainFrac(c) { return c.totalSec > 0 ? remainSec(c) / c.totalSec : 0; }
 
   /* ── 通用 UI ── */
@@ -728,7 +728,7 @@
       coin: product.coin,
       rare: rare,
       totalSec: totalSec,
-      endsAt: nowMs() + totalSec * 1000,
+      endsAt: state.elapsedMs + totalSec * 1000,
       el: null,
     };
     const card = document.createElement("button");
@@ -959,12 +959,12 @@
     } else if (id === "lamp") {
       const c = (snap && snap.customerId) ? (state.customers.find(function (x) { return x.id === snap.customerId; }) || pickTarget()) : pickTarget();
       if (!c) return;
-      c.endsAt = Math.min(c.endsAt + LAMP_SECONDS * 1000, nowMs() + c.totalSec * 1000);
+      c.endsAt = Math.min(c.endsAt + LAMP_SECONDS * 1000, state.elapsedMs + c.totalSec * 1000);
       floatNote(c.el, "💡 +6秒");
       toast("💡 暖灯亮起，" + c.name + "的耐心 +6 秒");
     } else {
       for (const c of state.customers) {
-        c.endsAt = Math.min(c.endsAt + HERB_SECONDS * 1000, nowMs() + c.totalSec * 1000);
+        c.endsAt = Math.min(c.endsAt + HERB_SECONDS * 1000, state.elapsedMs + c.totalSec * 1000);
         floatNote(c.el, "🌿 +3秒");
       }
       toast("🌿 清新香薰飘起，大家的耐心 +3 秒");
@@ -1015,14 +1015,14 @@
   });
   $("confirmNo").addEventListener("click", closeConfirm);
 
-  /* ── 主循环：每一局只跑一条循环，靠代号防止旧循环继续扣时间 ── */
+  /* ── 主循环：每一局只跑一条循环，靠代号防止旧循环继续扣时间；游戏时间只按帧推进（elapsedMs），隐藏、失焦或帧停跑时不推进，切页不丢时间 ── */
   function makeLoop(gen) {
     return function loop(ts) {
       if (gen !== loopGen) return;
       if (!state || !state.running || state.paused) return;
-      if (document.hidden) { if (!hiddenAt) hiddenAt = nowMs(); pauseGame(true); return; } if (!state || !state.running || state.paused) return; const _gapMs = lastTs ? ts - lastTs : 0; const dt = Math.min(0.1, Math.max(0, _gapMs / 1000));
-      lastTs = ts; if (_gapMs > 1500) { /* 帧间隔超 1.5 秒：循环曾停跑（切页/后台冻结），这段时间不计入游戏 */ if (state.gameEndsAt) state.gameEndsAt += _gapMs; state.customers.forEach(function (c) { c.endsAt += _gapMs; }); }
-      if (state.gameEndsAt) state.timeLeft = Math.max(0, (state.gameEndsAt - nowMs()) / 1000); else state.timeLeft -= dt;
+      if (document.hidden || !document.hasFocus()) { pauseGame(true); return; } if (!state || !state.running || state.paused) return; const _gapMs = lastTs ? ts - lastTs : 0; const dt = (_gapMs > 1500) ? 0 : Math.min(0.1, Math.max(0, _gapMs / 1000));
+      lastTs = ts; state.elapsedMs += dt * 1000;
+      state.timeLeft = Math.max(0, GAME_SECONDS - state.elapsedMs / 1000);
       if (state.timeLeft <= 0) {
         state.timeLeft = 0;
         renderTimer();
@@ -1056,8 +1056,8 @@
   /* ── 暂停 / 继续 ── */
   function pauseGame(auto) {
     if (!state || !state.running || state.paused) return;
-    var _now0 = nowMs(); if (lastTs && _now0 - lastTs > 1500) { /* 暂停晚触发（切页/后台冻结）：自上一帧已过去 1.5 秒以上，先把这段时间补回倒计时与顾客耐心，再快照 */ var _gap0 = _now0 - lastTs; if (state.gameEndsAt) state.gameEndsAt += _gap0; state.customers.forEach(function (c) { c.endsAt += _gap0; }); } lastTs = _now0; state.paused = true;
-    var _at = (hiddenAt && hiddenAt < nowMs()) ? hiddenAt : nowMs(); var _tl = state.gameEndsAt ? Math.max(0, (state.gameEndsAt - _at) / 1000) : state.timeLeft; pausedAt = _at; state.timeLeft = _tl; pauseSnapshot = { at: _at, timeLeft: _tl, gameEndsAt: state.gameEndsAt, nextSpawnIn: state.nextSpawnIn, customers: state.customers.map(function (c) { return { id: c.id, remainMs: Math.max(0, c.endsAt - _at) }; }) };
+    state.paused = true;
+    /* 不再快照：倒计时与顾客耐心都由游戏时间 elapsedMs 决定，暂停只是停住它，恢复时原样继续，不重算、不漂移。 */
     cancelAnimationFrame(rafId);
     $("pauseNote").textContent = auto ? "已自动暂停（你切走了页面），计时已停下，回来点继续～" : "计时已停下，慢慢来～";
     pauseOverlay.classList.remove("hidden");
@@ -1065,8 +1065,8 @@
   }
   function resumeGame() {
     if (!state || !state.running || !state.paused) return; if (document.hidden) return;
-    var _now = nowMs(); var _snap = pauseSnapshot; var _tl2 = _snap ? _snap.timeLeft : state.timeLeft; state.timeLeft = _tl2; state.gameEndsAt = _now + _tl2 * 1000; if (_snap) { state.nextSpawnIn = _snap.nextSpawnIn; state.customers.forEach(function (c) { var _s = _snap.customers.find(function (x) { return x.id === c.id; }); c.endsAt = _now + (_s ? _s.remainMs : Math.max(0, c.endsAt - pausedAt)); }); } else { var delta = _now - pausedAt; state.customers.forEach(function (c) { c.endsAt += delta; }); } pauseSnapshot = null; hiddenAt = 0;
-    /* 已按快照恢复每位顾客的剩余耐心，不再按 delta 再推 */
+    /* 恢复时不重算：elapsedMs 与顾客 endsAt 都原样保留，下一帧继续按 dt 推进，耐心不会多 1 秒也不会少 1 秒。 */
+    /* 暂停不产生时间差，恢复无需补偿。 */
     state.paused = false;
     pauseOverlay.classList.add("hidden");
     helpOverlay.classList.add("hidden");
@@ -1105,7 +1105,7 @@
     renderItems();
     renderSelection();
     renderTimer();
-    state.running = true; state.gameEndsAt = nowMs() + GAME_SECONDS * 1000; state.timeLeft = GAME_SECONDS; hiddenAt = 0; pauseSnapshot = null; renderItems();
+    state.running = true; state.timeLeft = GAME_SECONDS; hiddenAt = 0; pauseSnapshot = null; renderItems();
     lastTs = nowMs();
     rafId = requestAnimationFrame(makeLoop(loopGen));
   }
