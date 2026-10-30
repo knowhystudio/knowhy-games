@@ -523,7 +523,7 @@
   const HERB_SECONDS = 3;       // 清新香薰：全体顾客耐心 +3 秒
   const SPEED_BONUS = 2;        // 神速奖励：剩余耐心不低于一半时服务，多得 2 金币
   const SPEED_THRESHOLD = 0.5;
-  const WARMTH_MILESTONES = [30, 60]; // 暖心值满 30 / 60 各获赠 1 个随机道具
+  const WARMTH_MILESTONES = [30, 60]; // 暖心值满 30 / 60 只记一次，不再额外补道具（每 5 单只补 1 个）
   const EXCHANGE_COST = 15;     // 花 15 金币换 1 个随机道具
 
   const PRODUCTS = [
@@ -1065,7 +1065,7 @@
   }
   function resumeGame() {
     if (!state || !state.running || !state.paused) return; if (document.hidden) return;
-    var _now = nowMs(); var _snap = pauseSnapshot; var _tl2 = _snap ? _snap.timeLeft : state.timeLeft; state.timeLeft = _tl2; state.gameEndsAt = _now + _tl2 * 1000; if (_snap) { state.nextSpawnIn = _snap.nextSpawnIn; state.customers.forEach(function (c) { var _s = _snap.customers.find(function (x) { return x.id === c.id; }); c.endsAt = _now + (_s ? _s.remainMs : Math.max(0, c.endsAt - pausedAt)); }); } else { var delta = _now - pausedAt; state.customers.forEach(function (c) { c.endsAt += delta; }); state.customers.forEach(function (c) { c.endsAt += delta; }); } pauseSnapshot = null; hiddenAt = 0;
+    var _now = nowMs(); var _snap = pauseSnapshot; var _tl2 = _snap ? _snap.timeLeft : state.timeLeft; state.timeLeft = _tl2; state.gameEndsAt = _now + _tl2 * 1000; if (_snap) { state.nextSpawnIn = _snap.nextSpawnIn; state.customers.forEach(function (c) { var _s = _snap.customers.find(function (x) { return x.id === c.id; }); c.endsAt = _now + (_s ? _s.remainMs : Math.max(0, c.endsAt - pausedAt)); }); } else { var delta = _now - pausedAt; state.customers.forEach(function (c) { c.endsAt += delta; }); } pauseSnapshot = null; hiddenAt = 0;
     /* 已按快照恢复每位顾客的剩余耐心，不再按 delta 再推 */
     state.paused = false;
     pauseOverlay.classList.add("hidden");
