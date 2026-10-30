@@ -57,13 +57,11 @@ async function rollAttack(page) {
   await page.click('#action');
   await page.click('#action');
 }
-async function dialogClick(page, selector, accept, expected) {
-  const waiting = page.waitForEvent('dialog');
-  const clicking = page.click(selector);
-  const dialog = await waiting;
-  assert.match(dialog.message(), expected);
-  if (accept) await dialog.accept(); else await dialog.dismiss();
-  await clicking;
+async function modalClick(page, selector, accept, expected) {
+  await page.click(selector);
+  assert.match(await text(page, 'confirmText'), expected);
+  await page.click(accept ? '#confirmYes' : '#confirmNo');
+  assert.equal(await page.isVisible('#confirmModal'), false);
 }
 async function capture(page, filename) {
   if (!process.env.DD_SCREENSHOTS) return;
@@ -72,42 +70,42 @@ async function capture(page, filename) {
 }
 
 test('three rooms: selected rerolls, retained shield, potion, complete victory summary', async t => {
-  const page = await open(t, [die(2),die(3),die(3),die(3),0,
-    die(2),die(5),die(1),die(3),die(5),0.99,
+  const page = await open(t, [die(2),die(4),die(4),die(4),0,
+    die(2),die(5),die(1),die(5),die(5),0.99,
     die(1),die(1),die(2),die(2),die(1),die(1),0.5]);
   const trace = [];
   async function record(step) {trace.push({step,hp:await text(page,'hp'),log:await text(page,'log')})}
-  await contains(page, 'enemyAttack', '反击伤害：2 点');
+  await contains(page, 'enemyAttack', '反击伤害：3 点');
   await contains(page, 'potionEffect', '将浪费 4 点');
   assert.equal(await page.isDisabled('#potion'), true);
   await page.click('#help summary');
   await contains(page, 'help', '击杀一击不承受反击伤害');
   await page.click('#help summary');
-  await dialogClick(page, '#restartRun', false, /确定重开本局/);
+  await modalClick(page, '#restartRun', false, /确定重开本局/);
   await contains(page, 'hp', '20/20');
   await page.click('#action');
   assert.equal(await page.isDisabled('#reroll'), true);
   await page.click('[data-die="0"]');
   await contains(page, 'rerollTarget', '第 1 颗骰子（当前 2 点）');
   await page.click('#reroll');
-  await contains(page, 'rerollResult', '原值 2 → 新值 3');
+  await contains(page, 'rerollResult', '原值 2 → 新值 4');
   assert.equal(await page.isDisabled('#action'), true);
   await page.click('#acceptRoll');
-  await contains(page, 'hint', '攻击伤害：3 点');
+  await contains(page, 'hint', '攻击伤害：4 点');
   await page.click('#action');
-  await record('slime attack 1: accepted selected die 2→3');
+  await record('slime attack 1: accepted selected die 2→4');
   await rollAttack(page);
-  await contains(page, 'hp', '16/20');
+  await contains(page, 'hp', '14/20');
   await page.click('#action');
   await page.click('#shield');
   await contains(page, 'shieldStatus', '护盾已激活');
-  assert.equal(await page.isDisabled('#shield'), true);
+  assert.equal(await page.isDisabled('#shield'), false);
   await page.click('#action');
   await contains(page, 'shieldStatus', '护盾已激活');
   await record('slime killed on turn 3: shield retained');
   await contains(page, 'upgrade', '平均伤害 3.5 → 7.5 点');
   await page.click('[data-upgrade="dice"]');
-  await contains(page, 'enemyAttack', '反击伤害：3 点');
+  await contains(page, 'enemyAttack', '反击伤害：4 点');
   await contains(page, 'shieldStatus', '护盾已激活');
   await page.click('#action');
   await page.click('[data-die="1"]');
@@ -120,18 +118,18 @@ test('three rooms: selected rerolls, retained shield, potion, complete victory s
   assert.equal(await page.getAttribute('[data-die="0"]','aria-label'), '第 1 颗骰子，2 点');
   assert.equal(await page.getAttribute('[data-die="1"]','aria-label'), '第 2 颗骰子，5 点');
   await page.click('#action');
-  await contains(page, 'hp', '16/20');
+  await contains(page, 'hp', '14/20');
   await contains(page, 'shieldStatus', '护盾未激活');
-  await contains(page, 'log', '挡住了 3 点反击并已消耗');
-  await record('skeleton attack 1: worse second die rejected; shield blocked 3');
+  await contains(page, 'log', '挡住了 4 点反击并已消耗');
+  await record('skeleton attack 1: worse second die rejected; shield blocked 4');
   await page.click('#potion');
-  await contains(page, 'hp', '20/20');
+  await contains(page, 'hp', '18/20');
   await contains(page, 'log', '恢复 4 点生命');
   await record('potion +4');
   await rollAttack(page);
   await page.click('[data-upgrade="power"]');
   await contains(page, 'enemyName', '宝箱守卫');
-  await contains(page, 'enemyAttack', '反击伤害：3 点');
+  await contains(page, 'enemyAttack', '反击伤害：4 点');
   await page.click('#action');
   await contains(page, 'hint', '攻击伤害：7 点');
   await page.click('#action');
@@ -141,10 +139,10 @@ test('three rooms: selected rerolls, retained shield, potion, complete victory s
   await rollAttack(page);
   await contains(page, 'endTitle', '冒险胜利');
   await contains(page, 'endText', '回合数：8');
-  await contains(page, 'endText', '总伤害：47 点');
-  await contains(page, 'endText', '剩余生命值：14 / 20');
+  await contains(page, 'endText', '总伤害：52 点');
+  await contains(page, 'endText', '剩余生命值：10 / 20');
   await contains(page, 'endText', '重掷 0/2、药水 1/2、护盾 1/2');
-  await record('victory: 8 turns, 47 damage, reroll 0, potion 1, shield 1');
+  await record('victory: 8 turns, 52 damage, reroll 0, potion 1, shield 1');
   await capture(page, 'victory.png');
   assert.equal(await page.evaluate(() => document.documentElement.scrollWidth), 375);
   await page.setViewportSize({width:1280,height:900});
@@ -155,15 +153,15 @@ test('three rooms: selected rerolls, retained shield, potion, complete victory s
 test('partial healing announces waste; cancel keeps item; confirm applies only actual healing', async t => {
   const page = await open(t, die(1));
   await rollAttack(page);
-  await contains(page, 'hp', '18/20');
-  await contains(page, 'potionEffect', '将浪费 2 点');
-  await dialogClick(page, '#potion', false, /将浪费 2 点/);
-  await contains(page, 'hp', '18/20');
+  await contains(page, 'hp', '17/20');
+  await contains(page, 'potionEffect', '将浪费 1 点');
+  await modalClick(page, '#potion', false, /将浪费 1 点/);
+  await contains(page, 'hp', '17/20');
   await contains(page, 'potion', '1/2');
-  await dialogClick(page, '#potion', true, /将浪费 2 点/);
+  await modalClick(page, '#potion', true, /将浪费 1 点/);
   await contains(page, 'hp', '20/20');
   await contains(page, 'potion', '0/2');
-  await contains(page, 'log', '已确认浪费 2 点');
+  await contains(page, 'log', '已确认浪费 1 点');
 });
 
 test('confirmed mid-run restart resets an unresolved reroll without invoking ads', async t => {
@@ -172,11 +170,13 @@ test('confirmed mid-run restart resets an unresolved reroll without invoking ads
   await page.click('#action');
   await page.click('[data-die="0"]');
   await page.click('#reroll');
-  await dialogClick(page, '#restartRun', false, /进行了 1 回合/);
+  await modalClick(page, '#restartRun', false, /进行了 1 回合/);
   assert.equal(await page.isVisible('#rerollPreview'), true);
-  await contains(page, 'hp', '18/20');
-  await dialogClick(page, '#restartRun', true, /本局进度和道具将重置/);
+  await contains(page, 'hp', '17/20');
+  await modalClick(page, '#restartRun', true, /本局进度和道具将重置/);
   await contains(page, 'hp', '20/20');
+  await contains(page, 'turns', '0');
+  await contains(page, 'enemyHp', '11 / 11');
   await contains(page, 'roomLabel', '房间 1 / 3');
   for(const item of ['reroll','potion','shield']) await contains(page, item, '1/2');
   assert.equal(await page.isVisible('#rerollPreview'), false);
@@ -196,7 +196,7 @@ for (const choice of ['power','heal','dice']) {
     if(choice==='dice') await contains(page, 'diceCount', '2/3');
     while(await page.isVisible('#battle')) await rollAttack(page);
     await page.click(`[data-upgrade="${choice}"]`);
-    if(choice==='heal') await contains(page, 'hp', '22/28');
+    if(choice==='heal') await contains(page, 'hp', '20/28');
     if(choice==='power') {await contains(page, 'power', '每骰 +2'); await contains(page, 'power', '固定 +6')}
     if(choice==='dice') await contains(page, 'diceCount', '3/3');
     await page.click('#action');
@@ -210,7 +210,7 @@ for (const choice of ['power','heal','dice']) {
 test('upgrade restart, capped treasure/rewards and end restart keep the optional ad contract', async t => {
   const page = await open(t, 0.99, true);
   await rollAttack(page); await rollAttack(page);
-  await dialogClick(page, '#restartRun', false, /已通过 1\/3/);
+  await modalClick(page, '#restartRun', false, /已通过 1\/3/);
   await contains(page, 'treasure', '护盾 ×1（现有 2/2）');
   await page.click('#bonus'); await page.click('#bonus');
   await contains(page, 'bonus', '道具均已达 2/2');
@@ -226,13 +226,13 @@ test('upgrade restart, capped treasure/rewards and end restart keep the optional
   assert.deepEqual(await page.evaluate(() => window.adCalls), {rewarded:2,interstitial:1});
 });
 
-test('defeat also reports turns, damage and zero remaining health', async t => {
+test('defeat in room 1 reports turns, damage and zero remaining health', async t => {
   const page = await open(t, die(1));
   while(await page.isVisible('#battle')) await rollAttack(page);
-  await page.click('[data-upgrade="power"]');
-  while(await page.isVisible('#battle')) await rollAttack(page);
-  await contains(page, 'endTitle', '冒险结束');
-  await contains(page, 'endText', '回合数：11');
-  await contains(page, 'endText', '总伤害：19 点');
+  await contains(page, 'endTitle', '💔 失败 · 被击倒');
+  await contains(page, 'endText', '在第 1 间房被苔藓史莱姆击倒');
+  await contains(page, 'endText', '通过 0 / 3 个房间');
+  await contains(page, 'endText', '回合数：7');
+  await contains(page, 'endText', '总伤害：7 点');
   await contains(page, 'endText', '剩余生命值：0 / 20');
 });
