@@ -188,6 +188,7 @@
   }
   .empty-hint .lamps { font-size: 30px; }
   .customer {
+    flex-shrink: 0;
     position: relative;
     display: flex;
     align-items: center;
@@ -388,7 +389,24 @@
   .confirm-yes:disabled { opacity: 0.45; filter: grayscale(0.6); }
   .confirm-no { background: #f4e4ea; }
 
-  /* ── cozy- 组件：借自 µCSS 四组件 + 变量 token 风格，仅取结构，cozy- 前缀，粉彩重映射，未用变体已删（约 2.5KB）──
+  /* NEW-1: result overlay scrolls + safe centering; compact card on short screens */
+  #resultOverlay{overflow-y:auto;justify-content:flex-start}
+  #resultOverlay>*{flex-shrink:0}
+  #resultOverlay .result-card{margin-block-start:auto}
+  #resultOverlay #resultHomeBtn{margin-block-end:auto}
+  @media (max-height:700px){
+    #resultOverlay{padding:12px;gap:8px}
+    #resultOverlay .moon{font-size:34px}
+    #resultOverlay h1{font-size:18px}
+    #resultOverlay .result-card{gap:6px}
+    #resultOverlay .cozy-modal-card{padding:12px 16px}
+    #resultOverlay .stars{font-size:22px}
+    #resultOverlay .result-cell{padding:6px 4px}
+    #resultOverlay .result-lines{line-height:1.6}
+  }
+  
+  
+    /* ── cozy- 组件：借自 µCSS 四组件 + 变量 token 风格，仅取结构，cozy- 前缀，粉彩重映射，未用变体已删（约 2.5KB）──
    * modal：dialog 尺寸变体 + 关闭钮 → .cozy-modal（半透明遮罩 + 居中卡片，结算用；确认框沿用同款遮罩与卡片形制）
    * toast：固定定位通知容器 → .cozy-toast（本游戏改为独立行内提示条，取其 pill 形态）
    * progress：accent-color 色带 → .cozy-progress / .cozy-progress-fill（耐心条三色带）
@@ -766,8 +784,8 @@
    * 再受剩余游戏时间封顶），耐心条宽度仍封顶 100%。 */
   function remainSec(c) { return Math.max(0, (c.endsAt - state.elapsedMs) / 1000); }
   function remainFrac(c) { return c.totalSec > 0 ? remainSec(c) / c.totalSec : 0; }
-  function lampGain(c) { return Math.max(0, (Math.min(c.endsAt + LAMP_SECONDS * 1000, state.elapsedMs + state.timeLeft * 1000) - c.endsAt) / 1000); }
-  function herbGain(c) { return Math.max(0, (Math.min(c.endsAt + HERB_SECONDS * 1000, state.elapsedMs + state.timeLeft * 1000) - c.endsAt) / 1000); }
+  function lampGain(c) { return Math.max(0, (Math.min(c.baseEndsAt + LAMP_SECONDS * 1000, state.elapsedMs + state.timeLeft * 1000) - c.endsAt) / 1000); }
+  function herbGain(c) { return Math.max(0, (Math.min(c.baseEndsAt + HERB_SECONDS * 1000, state.elapsedMs + state.timeLeft * 1000) - c.endsAt) / 1000); }
 
   /* ── 通用 UI ── */
   function toast(msg) {
@@ -907,6 +925,7 @@
       rare: rare,
       totalSec: totalSec,
       endsAt: state.elapsedMs + totalSec * 1000,
+      baseEndsAt: state.elapsedMs + totalSec * 1000, // arrival expiry: lamp/herb cap base
       el: null,
       leaving: false,
     };
@@ -1177,7 +1196,7 @@
     } else if (id === "lamp") {
       const c = target;
       const gain = lampGain(c);
-      c.endsAt = Math.min(c.endsAt + LAMP_SECONDS * 1000, state.elapsedMs + state.timeLeft * 1000);
+      c.endsAt = Math.min(c.baseEndsAt + LAMP_SECONDS * 1000, state.elapsedMs + state.timeLeft * 1000);
       floatNote(c.el, "💡 +" + fmtSec(gain) + "秒", c.id);
       toast(t("toast.lampGain", { emoji: c.emoji, name: c.name, gain: fmtSec(gain) }));
     } else {
@@ -1185,7 +1204,7 @@
       for (const c of state.customers) {
         const gain = herbGain(c);
         if (gain > 0) {
-          c.endsAt = Math.min(c.endsAt + HERB_SECONDS * 1000, state.elapsedMs + state.timeLeft * 1000);
+          c.endsAt = Math.min(c.baseEndsAt + HERB_SECONDS * 1000, state.elapsedMs + state.timeLeft * 1000);
           floatNote(c.el, "🌿 +" + fmtSec(gain) + "秒", c.id);
           parts.push(c.emoji + c.name + " +" + fmtSec(gain) + "秒");
         }
