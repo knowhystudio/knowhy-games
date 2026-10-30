@@ -22,6 +22,13 @@
     --lavender: #e9e2f6;
     --danger: #e98a8a;
     --radius: 18px;
+    --tap: 44px;
+    --tap-lg: 48px;
+    --text-key: 13px;
+    --z-overlay: 100;
+    --z-confirm: 200;
+    --z-toast: 300;
+    --ease-spring: cubic-bezier(.34,1.56,.64,1);
   }
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   html, body { height: 100%; }
@@ -34,7 +41,7 @@
     user-select: none;
     -webkit-user-select: none;
   }
-  button { font-family: inherit; color: inherit; border: none; cursor: pointer; }
+  button { font-family: inherit; color: inherit; border: none; cursor: pointer; min-height: var(--tap); }
   button:disabled { cursor: default; }
 
   #app {
@@ -99,11 +106,11 @@
   }
   #toast.show { opacity: 1; } #serveLog { min-height: 18px; text-align: center; font-size: 13px; font-weight: 700; color: var(--ink); line-height: 1.4; }
 
-  /* ── 店内布景：窗、灯、货架、柜台 ── */
+  /* ── 店内布景：窗、灯、货架、柜台（可压缩，56–72px）── */
   #scenery {
     position: relative;
-    flex: 1;
-    min-height: 118px;
+    flex: 0 1 72px;
+    min-height: 56px;
     border-radius: var(--radius);
     background: linear-gradient(180deg, #fdeef3 0%, #fdf6ee 55%, #eef7f0 100%);
     border: 1px solid rgba(255, 255, 255, 0.8);
@@ -113,33 +120,35 @@
     pointer-events: none;
   }
   .win {
-    position: absolute; top: 10px; left: 14px;
-    width: 74px; height: 58px;
-    border-radius: 37px 37px 8px 8px;
+    position: absolute; top: 6px; left: 14px;
+    width: 56px; height: 36px;
+    border-radius: 28px 28px 8px 8px;
     background: linear-gradient(180deg, #8fa8d8, #c9b8e0);
     border: 4px solid #fff;
     box-shadow: 0 3px 8px rgba(107, 85, 96, 0.18);
     display: flex; align-items: center; justify-content: center;
-    font-size: 26px;
+    font-size: 19px;
   }
-  .win::after { content: "✦ ⋆ ✦"; position: absolute; top: 4px; right: 6px; font-size: 9px; color: #fff; }
+  .win::after { content: "✦ ⋆ ✦"; position: absolute; top: 3px; right: 5px; font-size: 9px; color: #fff; }
   .lamp {
-    position: absolute; top: 6px; left: 50%; transform: translateX(-50%);
-    font-size: 30px; line-height: 1;
+    position: absolute; top: 4px; left: 50%; transform: translateX(-50%);
+    font-size: 22px; line-height: 1;
     filter: drop-shadow(0 0 8px rgba(240, 202, 130, 0.9));
   }
   .shelf {
-    position: absolute; top: 12px; right: 12px;
+    position: absolute; top: 6px; right: 12px;
     background: #fff;
     border-radius: 10px;
-    padding: 6px 10px;
-    font-size: 20px;
+    padding: 4px 8px;
+    font-size: 17px;
     box-shadow: 0 3px 8px rgba(107, 85, 96, 0.15);
   }
-  .floor-line { position: absolute; left: 0; right: 0; bottom: 44px; height: 3px; background: rgba(255, 255, 255, 0.7); } .frame { position: absolute; left: 50%; transform: translateX(-50%); top: 42%; font-size: 28px; line-height: 1; filter: drop-shadow(0 2px 2px rgba(107, 85, 96, .25)); } .clock { position: absolute; right: 14px; top: 44%; font-size: 25px; line-height: 1; background: #fff; border: 1px solid #f3d9df; border-radius: 10px; padding: 4px 8px; box-shadow: 0 3px 8px rgba(107, 85, 96, 0.15); }
+  .floor-line { position: absolute; left: 0; right: 0; bottom: 30px; height: 3px; background: rgba(255, 255, 255, 0.7); }
+  .frame { position: absolute; left: 50%; transform: translateX(-50%); top: 34%; font-size: 22px; line-height: 1; filter: drop-shadow(0 2px 2px rgba(107, 85, 96, .25)); }
+  .clock { position: absolute; right: 14px; top: 34%; font-size: 20px; line-height: 1; background: #fff; border: 1px solid #f3d9df; border-radius: 10px; padding: 3px 6px; box-shadow: 0 3px 8px rgba(107, 85, 96, 0.15); }
   .counter {
     position: absolute; left: 0; right: 0; bottom: 0;
-    height: 44px;
+    height: 30px;
     background: linear-gradient(180deg, #e8b07f, #d99a63);
     display: flex; align-items: center; justify-content: center; gap: 10px;
   }
@@ -151,16 +160,21 @@
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
     white-space: nowrap;
   }
-  .counter .deco { font-size: 20px; }
+  .counter .deco { font-size: 18px; }
 
-  /* ── 顾客队列 ── */
+  /* ── 顾客队列：可滚动，挤压时先缩这里 ── */
   #queue {
     display: flex;
     flex-direction: column;
     gap: 8px;
     padding: 2px 0 8px;
     position: relative;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    scrollbar-width: none;
   }
+  #queue::-webkit-scrollbar { display: none; }
   .empty-hint {
     text-align: center;
     color: var(--ink-soft);
@@ -254,6 +268,7 @@
   /* ── 新手引导 ── */
   #guide {
     display: none;
+    flex: none;
     background: #fff8ec;
     border: 2px dashed var(--butter-deep);
     border-radius: 14px;
@@ -265,13 +280,14 @@
   #guide.show { display: block; }
   #guide b { color: #c98a2e; }
 
-  /* ── 道具 ── */
+  /* ── 底部操作栏：固定在最下方，永不移动 ── */
+  #actionBar { flex: none; display: flex; flex-direction: column; }
   .item-legend { font-size: 12px; color: var(--ink-soft); margin: 0 2px 6px; line-height: 1.5; }
-  #items { display: flex; gap: 8px; margin-bottom: 8px; }
+  #items { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
   .item-btn {
-    flex: 1;
+    flex: 1 1 30%;
     min-width: 0;
-    height: 62px;
+    min-height: 64px;
     border-radius: 14px;
     background: var(--lavender);
     display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
@@ -290,19 +306,11 @@
   }
   .item-btn .ieffect { font-size: 11px; color: var(--ink-soft); white-space: nowrap; }
   .item-btn.shake { animation: shake 0.3s ease; }
-  #exchangeBtn {
-    width: 100%; height: 34px; border-radius: 12px;
-    background: var(--card);
-    font-size: 13px; font-weight: 700;
-    box-shadow: 0 3px 10px rgba(214, 158, 180, 0.12);
-    margin-bottom: 8px;
-  }
-  #exchangeBtn:disabled { opacity: 0.45; filter: grayscale(0.6); font-weight: 400; }
 
   /* ── 商品 ── */
-  #products { display: flex; gap: 8px; }
+  #products { display: flex; gap: 8px; flex-wrap: wrap; }
   .product-btn {
-    flex: 1; height: 74px; border-radius: var(--radius);
+    flex: 1; min-height: 68px; border-radius: var(--radius);
     display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
     font-size: 13px; font-weight: 700;
     box-shadow: 0 4px 12px rgba(214, 158, 180, 0.2);
@@ -402,10 +410,11 @@
       <div class="empty-hint"><div class="lamps">🪟🕯️🧸</div>小店很安静，顾客马上就来…</div>
     </main>
     <div id="guide"></div>
-    <div class="item-legend">🛵 立即完成 1 位 · 💡 一位耐心 +6 秒 · 🌿 全体耐心 +3 秒</div>
-    <div id="items"></div>
-    <button id="exchangeBtn">🪙 花 15 金币换 1 个随机道具</button>
-    <div id="products"></div>
+    <footer id="actionBar">
+      <div class="item-legend">🛵 立即完成 1 位 · 💡 一位耐心 +6 秒 · 🌿 全体耐心 +3 秒</div>
+      <div id="items"></div>
+      <div id="products"></div>
+    </footer>
   </div>
 
   <!-- 开始界面 -->
@@ -524,7 +533,7 @@
   const SPEED_BONUS = 2;        // 神速奖励：剩余耐心不低于一半时服务，多得 2 金币
   const SPEED_THRESHOLD = 0.5;
   const WARMTH_MILESTONES = [30, 60]; // 暖心值满 30 / 60 只记一次，不再额外补道具（每 5 单只补 1 个）
-  const EXCHANGE_COST = 15;     // 花 15 金币换 1 个随机道具
+  // 金币没有消费出口：金币只是结算分数与历史最佳纪录，不设任何兑换。
 
   const PRODUCTS = [
     { id: "flower", name: "鲜花", emoji: "🌸", coin: 8 },
@@ -556,14 +565,14 @@
   const itemsEl = $("items"), productsEl = $("products"), guideEl = $("guide");
   const startOverlay = $("startOverlay"), resultOverlay = $("resultOverlay");
   const pauseOverlay = $("pauseOverlay"), helpOverlay = $("helpOverlay"), confirmOverlay = $("confirmOverlay");
-  const restartBtn = $("restartBtn"), exchangeBtn = $("exchangeBtn");
+  const restartBtn = $("restartBtn");
 
   /* ── 状态 ── */
   let state = null;
   let rafId = 0, lastTs = 0, loopGen = 0;
   let toastTimer = 0, toastGen = 0;
   let pausedAt = 0; let hiddenAt = 0; let pauseSnapshot = null;
-  let pendingConfirm = null; // {kind:"item", id} | {kind:"restart"} | {kind:"exchange"}
+  let pendingConfirm = null; // {kind:"item", id} | {kind:"restart"}
   let guideDone = false;
   try { guideDone = localStorage.getItem("cozyShopGuideDone") === "1"; } catch (e) {}
   // 供调试读取当前状态：每位顾客的剩余秒数与显示秒数取自同一值
@@ -661,7 +670,6 @@
     itemsEl.appendChild(btn);
     itemBtns[it.id] = btn;
   });
-  exchangeBtn.addEventListener("click", onTapExchange);
 
   function renderItems() {
     ITEMS.forEach(function (it) {
@@ -672,14 +680,6 @@
       btn.classList.toggle("empty", n <= 0);
       btn.disabled = !state || !state.running || state.paused || n <= 0;
     });
-    renderExchange();
-  }
-  function renderExchange() {
-    if (!state || !state.running || state.paused) { exchangeBtn.disabled = true; return; }
-    const allFull = ITEMS.every(function (it) { return state.items[it.id] >= ITEM_CAP; });
-    exchangeBtn.disabled = state.coins < EXCHANGE_COST || allFull;
-    exchangeBtn.textContent = allFull ? "🪙 道具都满了，暂时不用换"
-      : "🪙 花 " + EXCHANGE_COST + " 金币换 1 个随机道具（现有 " + state.coins + " 金币）";
   }
   function renderHUD(bumpCoins) {
     if (!state) return;
@@ -971,26 +971,8 @@
     }
     renderItems();
   }
-  function onTapExchange() {
-    if (!state || !state.running || state.paused) return;
-    if (state.coins < EXCHANGE_COST) { toast("🪙 金币不够，攒到 15 金币再来换～"); return; }
-    const allFull = ITEMS.every(function (it) { return state.items[it.id] >= ITEM_CAP; });
-    if (allFull) { toast("🪙 道具都满了，暂时不用换"); return; }
-    openConfirm({ kind: "exchange", title: "花金币换道具？", body: "花 " + EXCHANGE_COST + " 金币，随机换 1 个道具（上限 2 个/种）。现在有 " + state.coins + " 金币。" });
-  }
-  function applyExchange() {
-    if (!state || state.coins < EXCHANGE_COST) return;
-    const lacking = ITEMS.filter(function (it) { return state.items[it.id] < ITEM_CAP; });
-    if (!lacking.length) return;
-    state.coins -= EXCHANGE_COST;
-    const it = lacking[Math.floor(Math.random() * lacking.length)];
-    state.items[it.id] += 1;
-    toast("🪙 花了 " + EXCHANGE_COST + " 金币，换到了 1 个 " + it.emoji + it.name);
-    renderHUD();
-    renderItems();
-  }
 
-  /* ── 确认框：点道具 / 换道具 / 重开前先确认，同时暂停计时 ── */
+  /* ── 确认框：点道具 / 重开前先确认，同时暂停计时 ── */
   function openConfirm(cfg) {
     pendingConfirm = cfg; if (cfg.kind === "item") { var _t = pickTarget(); if (_t) { var _f = remainFrac(_t); cfg.snapshot = { customerId: _t.id, frac: _f, pct: Math.round(_f * 100), remainSec: remainSec(_t), totalSec: _t.totalSec }; if (cfg.id === "courier") cfg.body = cfg.body + "（确认时目标：" + _t.name + "，耐心剩 " + Math.round(_f * 100) + "%" + (_f >= SPEED_THRESHOLD ? "，高于一半，确认后神速+2" : "，不足一半，无神速") + "，以这个快照结算）"; } }
     $("confirmTitle").textContent = cfg.title;
@@ -1010,7 +992,6 @@
     if (!cfg) { if (state && state.running && state.paused) resumeGame(); return; }
     if (cfg.kind === "restart") { startGame(); return; }
     if (state && state.running && state.paused) resumeGame(); if (cfg.kind === "item") applyItem(cfg.id, cfg.snapshot);
-    else if (cfg.kind === "exchange") applyExchange();
     if (state && state.running && state.paused) resumeGame();
   });
   $("confirmNo").addEventListener("click", closeConfirm);
@@ -1135,7 +1116,7 @@
   function pickTip() {
     if (state.left >= 3) return "耐心条变红并出现 ⚠️ 时，先服务那位客人，别让他等到归零。";
     if (state.served < 8) return "点顾客卡片选中他再服务，暖心值翻倍；剩余耐心一半以上服务，还能多得 +2 金币。";
-    if (state.coins >= EXCHANGE_COST) return "金币攒到 15 就能换 1 个随机道具，关键时刻能救一位快没耐心的客人。";
+    if (state.served >= 8) return "每服务 5 单补 1 个道具，暖心值满 30/60 不再额外补";
     return "保持这个节奏，下一局争取 12 单以上，冲击五颗星！";
   }
   function endGame() {
