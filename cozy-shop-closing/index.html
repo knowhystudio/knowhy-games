@@ -97,7 +97,7 @@
     text-align: center;
     line-height: 1.4;
   }
-  #toast.show { opacity: 1; }
+  #toast.show { opacity: 1; } #serveLog { min-height: 18px; text-align: center; font-size: 13px; font-weight: 700; color: var(--ink); line-height: 1.4; }
 
   /* ── 店内布景：窗、灯、货架、柜台 ── */
   #scenery {
@@ -247,7 +247,7 @@
     border-radius: 999px; padding: 3px 10px;
     font-size: 15px; font-weight: 700; white-space: nowrap;
     box-shadow: 0 3px 10px rgba(214, 158, 180, 0.35);
-    animation: floatUp 0.95s ease forwards;
+    animation: floatUp 2.6s ease forwards;
     pointer-events: none; z-index: 3;
   }
 
@@ -367,7 +367,7 @@
   .confirm-no { background: #f4e4ea; }
 
   @keyframes pop { from { opacity: 0; transform: translateY(10px) scale(0.97); } to { opacity: 1; transform: none; } }
-  @keyframes floatUp { from { opacity: 1; transform: translate(-50%, -50%); } to { opacity: 0; transform: translate(-50%, -160%); } }
+  @keyframes floatUp { 0% { opacity: 1; transform: translate(-50%, -50%); } 70% { opacity: 1; transform: translate(-50%, -130%); } 100% { opacity: 0; transform: translate(-50%, -170%); } }
   @keyframes beat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
   @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
   @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
@@ -390,7 +390,7 @@
       <div class="stat">💗 暖心<b id="statWarmth">0</b></div>
       <div class="stat">🚶 离开<b id="statLeft">0</b></div>
     </div>
-    <div class="toast-bar"><div id="toast" role="status"></div></div>
+    <div class="toast-bar"><div id="toast" role="status"></div></div> <div id="serveLog" aria-live="polite"></div>
     <div id="scenery" aria-hidden="true">
       <div class="win">🌙</div>
       <div class="lamp">💡</div><div class="frame">🖼️</div><div class="clock">🕰️</div>
@@ -439,10 +439,10 @@
     <div class="rules">
       👆 点顾客卡片可选中（高亮），选中后再服务，<b>暖心值翻倍</b><br />
       🎯 没选中时，自动服务最着急的、想要该商品的客人<br />
-      ⚡ 剩余耐心一半以上时服务，<b>多得 +2 金币</b><br />
-      🦄 稀客偶尔光临，服务他<b>金币翻倍</b><br />
+      ⚡ 剩余耐心一半以上时服务，<b>多得 +2 金币</b>；不足一半时没有神速奖励，快递小哥送出时同样按此规则结算<br />
+      🦄 稀客偶尔光临，每局最多 1 位，服务他<b>金币翻倍</b><br />
       ⏳ 耐心归零会失望离开；耐心条变红并出现 ⚠️ 时要抓紧<br />
-      🛵 快递小哥：立即完成 1 位 · 💡 暖灯：一位 +6 秒<br />
+      🛵 快递小哥：立即完成 1 位（按服务成功结算，含神速奖励） · 💡 暖灯：一位 +6 秒<br />
       🌿 清新香薰：全体 +3 秒 · 每服务 5 单补 1 个道具
     </div>
     <button class="primary-btn" id="helpCloseBtn">知道了</button>
@@ -509,7 +509,7 @@
   const QUEUE_MAX = 3;          // 同时等待的顾客上限
   const PATIENCE_MIN = 11;      // 顾客耐心区间（秒）
   const PATIENCE_MAX = 14;
-  const RARE_CHANCE = 0.12;     // 稀客出现概率
+  const RARE_CHANCE = 0.04;     // 稀客出现概率
   const RARE_MIN = 10;          // 稀客耐心区间（秒）
   const RARE_MAX = 12;
   const SPAWN_MIN = 2.8;        // 顾客到店间隔（秒）
@@ -572,7 +572,7 @@
     return {
       running: state.running, paused: state.paused, timeLeft: Math.ceil(state.timeLeft),
       coins: state.coins, warmth: state.warmth, served: state.served, left: state.left,
-      spawned: state.spawned,
+      spawned: state.spawned, rareSpawned: state.rareSpawned,
       customers: state.customers.map(function (c) {
         return { id: c.id, name: c.name, emoji: c.emoji, wish: c.wish, rare: !!c.rare,
           totalSec: c.totalSec, remainSec: Math.ceil(remainSec(c)) };
@@ -587,7 +587,7 @@
       running: false, paused: false,
       timeLeft: GAME_SECONDS,
       coins: 0, warmth: 0, served: 0, left: 0, combo: 0,
-      sinceRestock: 0, spawned: 0,
+      sinceRestock: 0, spawned: 0, rareSpawned: 0,
       customers: [],
       nextCid: 1,
       selectedId: null,
@@ -631,8 +631,8 @@
     const note = document.createElement("div");
     note.className = "float-note";
     note.textContent = text;
-    customerEl.appendChild(note);
-    setTimeout(function () { note.remove(); }, 1000);
+    const host = queueEl; const left = customerEl ? customerEl.offsetLeft + customerEl.offsetWidth / 2 : host.offsetWidth / 2; const noteTop = customerEl ? customerEl.offsetTop + 18 : 20; note.style.left = left + "px"; note.style.top = noteTop + "px"; host.appendChild(note);
+    setTimeout(function () { note.remove(); }, 2700);
   }
 
   /* ── 底部按钮 ── */
@@ -704,7 +704,7 @@
     if (!state || !state.running || state.paused) return;
     if (state.customers.length >= QUEUE_MAX) return;
     if (state.timeLeft < 5) return; // 打烊前最后几秒不再进新客，避免到店即超时
-    const rare = Math.random() < RARE_CHANCE;
+    const rare = state.rareSpawned === 0 && Math.random() < RARE_CHANCE;     if (rare) state.rareSpawned += 1;
     let totalSec = rare ? rand(RARE_MIN, RARE_MAX) : rand(PATIENCE_MIN, PATIENCE_MAX);
     totalSec = Math.min(totalSec, Math.max(4, state.timeLeft - 1)); // 耐心不超过剩余时间
     // 头像不重复：不在等候区出现，也不同于上一位顾客
@@ -865,9 +865,9 @@
       }
     });
   }
-  function serveSuccess(c) {
+  function serveSuccess(c, via) {
     if (!state || state.customers.indexOf(c) < 0) return;
-    const speed = remainFrac(c) >= SPEED_THRESHOLD;
+    const frac = remainFrac(c); const speed = frac >= SPEED_THRESHOLD; const pct = Math.round(frac * 100);
     const selected = state.selectedId === c.id;
     const base = c.coin * (c.rare ? 2 : 1);
     const gained = base + (speed ? SPEED_BONUS : 0);
@@ -891,10 +891,10 @@
     state.sinceRestock += 1;
     if (state.sinceRestock >= RESTOCK_EVERY) {
       state.sinceRestock = 0;
-      restockProp("🎁 服务满 5 单，补充了 1 个 ");
+      restockProp("🎁 服务满 " + state.served + " 单，补充了 1 个 ");
     }
     checkWarmthMilestones();
-    renderHUD(true);
+    renderHUD(true); const serveLine = (via === "courier" ? "🛵 快递送出 " : "") + "😊 " + c.name + "很开心 +" + gained + "🪙（耐心剩 " + pct + "%" + (speed ? "，神速+" + SPEED_BONUS : "，不足一半无神速") + (c.rare ? "，稀客翻倍" : "") + "）💗+" + warm; const serveLogEl = $("serveLog"); if (serveLogEl) serveLogEl.textContent = serveLine; toast(serveLine);
     renderItems();
     if (wasGuide) {
       finishGuide();
@@ -910,7 +910,7 @@
     card.querySelector(".bubble").textContent = "等太久了…💨";
     floatNote(card, "💨 失望走了");
     toast("😞 " + c.name + "等太久，失望离开了");
-    removeCustomer(c, "sad", 800);
+    removeCustomer(c, "sad", 300);
     if (state.customers.length < QUEUE_MAX) state.nextSpawnIn = Math.min(state.nextSpawnIn, 2.0);
     renderHUD();
   }
@@ -942,7 +942,7 @@
       return;
     }
     let body = "";
-    if (id === "courier") body = "立即完成一位等待的顾客，按服务成功结算（选中顾客优先）。现在有 " + state.items[id] + " 个。";
+    if (id === "courier") body = "立即完成一位等待的顾客，按服务成功结算：剩余耐心一半以上同样多得 +2 金币（优先送最着急的顾客，他通常耐心不足一半，所以通常没有神速奖励）。现在有 " + state.items[id] + " 个。";
     else if (id === "lamp") body = "让一位顾客的耐心 +6 秒（选中顾客优先，否则最着急的一位）。现在有 " + state.items[id] + " 个。";
     else body = "让所有等待顾客的耐心 +3 秒。现在有 " + state.items[id] + " 个。";
     openConfirm({ kind: "item", id: id, title: "使用" + it.emoji + it.name + "？", body: body });
@@ -955,7 +955,7 @@
       const c = pickTarget();
       if (!c) return;
       toast("🛵 快递小哥帮忙送出！");
-      serveSuccess(c);
+      serveSuccess(c, "courier");
     } else if (id === "lamp") {
       const c = pickTarget();
       if (!c) return;
@@ -1020,7 +1020,7 @@
     return function loop(ts) {
       if (gen !== loopGen) return;
       if (!state || !state.running || state.paused) return;
-      const dt = Math.min(0.1, Math.max(0, (ts - lastTs) / 1000));
+      if (document.hidden && state && state.running && !state.paused) pauseGame(true); if (!state || !state.running || state.paused) return; const dt = Math.min(0.1, Math.max(0, (ts - lastTs) / 1000));
       lastTs = ts;
       state.timeLeft -= dt;
       if (state.timeLeft <= 0) {
@@ -1064,7 +1064,7 @@
     renderItems();
   }
   function resumeGame() {
-    if (!state || !state.running || !state.paused) return;
+    if (!state || !state.running || !state.paused) return; if (document.hidden) return;
     const delta = nowMs() - pausedAt;
     state.customers.forEach(function (c) { c.endsAt += delta; });
     state.paused = false;
@@ -1074,7 +1074,7 @@
     rafId = requestAnimationFrame(makeLoop(loopGen));
     renderItems();
   }
-  document.addEventListener("visibilitychange", function () {
+  /* 自动暂停：切页、切窗口或应用、页面藏起时都暂停；回来后不自动继续，须点「继续营业」。另加 500 毫秒看门狗，防切换事件漏掉。 */ function autoPause() { if (state && state.running && !state.paused) pauseGame(true); } window.addEventListener("blur", autoPause); window.addEventListener("pagehide", autoPause); setInterval(function () { if (document.hidden) autoPause(); }, 500); document.addEventListener("visibilitychange", function () {
     if (document.hidden && state && state.running && !state.paused) pauseGame(true);
   });
 
