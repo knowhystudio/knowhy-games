@@ -15,16 +15,16 @@
 <header><div><div class="tag">轻松冒险 · 一局三个房间</div><h1>🎲 骰子地牢小局</h1></div><span class="tag">单手可玩</span></header>
 <section class="panel" aria-label="冒险状态"><div class="stats"><div class="stat" id="hpStat">❤️ 生命 <strong id="hp"></strong></div><div class="stat">⚔️ 加成 <strong id="power"></strong></div><div class="stat">🎲 骰子 <strong id="diceCount"></strong></div><div class="stat">🔁 回合 <strong id="turns"></strong></div></div><p class="shield-status" id="shieldStatus" role="status"></p><div class="map" id="map" aria-label="房间进度"></div><p class="log" id="log" aria-live="polite"></p><button class="secondary" id="restartRun">重开本局</button></section>
 <section class="panel" id="battle"><div class="enemy"><div class="tag" id="roomLabel"></div><div class="monster" id="monster"></div><h2 id="enemyName"></h2><div class="health"><span id="enemyBar"></span></div><div class="small" id="enemyHp"></div><div id="enemyAttack"></div></div><div class="dice" id="dice" aria-label="点选要重掷的骰子"></div><div class="hint" id="hint"></div><div class="preview" id="rerollPreview" aria-live="polite" hidden><p id="rerollResult"></p><button class="secondary" id="keepRoll">保留原结果</button><button class="primary" id="acceptRoll">确认新结果</button></div><button class="primary" id="action"></button></section>
-<section class="panel" id="itemsPanel"><h2>冒险道具</h2><p class="small">每种最多 2 个。护盾抵挡下一次反击，跨房间保留；击杀不消耗，最多激活 1 面。</p><div class="items"><button id="reroll">🎲 重掷 <span></span><small>自选 1 颗 · 可保留原值</small></button><button id="potion">🧪 药水 <span></span><small>生命 +3 · 不超过上限</small></button><button id="shield">🛡️ 护盾 <span></span><small>抵挡 1 次反击 · 已激活时点按收回</small></button></div><p class="small" id="rerollTarget"></p><p class="small" id="potionEffect"></p></section>
-<section class="panel" id="upgrade" hidden><h2>✨ 房间通过！选择一项升级</h2><p class="small" id="treasure"></p><p class="small" id="upgradeItems"></p><button class="bonus" id="bonus" hidden>观看激励广告，获得一个道具</button><div class="choices"><button data-upgrade="power">⚔️ 加伤害：每颗骰子伤害 +1</button><button data-upgrade="heal">❤️ 回血：恢复 3 点生命</button><button data-upgrade="dice">🎲 多一颗骰子：每次攻击多掷一颗</button></div></section>
+<section class="panel" id="itemsPanel"><h2>冒险道具</h2><p class="small">每种最多 2 个。护盾抵挡下一次反击，跨房间保留；击杀不消耗，最多激活 1 面。</p><div class="items"><button id="reroll">🎲 重掷 <span></span><small>自选 1 颗 · 可保留原值</small></button><button id="potion">🧪 药水 <span></span><small>生命 +4 · 不超过上限</small></button><button id="shield">🛡️ 护盾 <span></span><small>抵挡 1 次反击 · 已激活时点按收回</small></button></div><p class="small" id="rerollTarget"></p><p class="small" id="potionEffect"></p></section>
+<section class="panel" id="upgrade" hidden><h2>✨ 房间通过！选择一项升级</h2><p class="small" id="treasure"></p><p class="small" id="upgradeItems"></p><button class="bonus" id="bonus" hidden>观看激励广告，获得一个道具</button><div class="choices"><button data-upgrade="power">⚔️ 加伤害：每颗骰子伤害 +1</button><button data-upgrade="heal">❤️ 回血：恢复 4 点生命</button><button data-upgrade="dice">🎲 多一颗骰子：每次攻击多掷一颗</button></div></section>
 <section class="panel" id="end" hidden><h2 id="endTitle"></h2><div id="endText"></div><button class="primary" id="restart">重新开始</button></section>
 <details class="panel rules" id="help"><summary>玩法与数值说明</summary><ul>
 <li>每颗骰子为六面骰（1–6）。掷骰后攻击，史莱姆反击 3 点、骷髅 4 点、守卫 4 点。击杀一击不承受反击伤害。</li>
 <li>点选要重掷的骰子，道具区下方会显示编号和原值。每次消耗 1 个重掷道具；新值出现后可保留原结果或确认新结果，保留原值也不退还道具。等待确认时，骰子与攻击预览显示新值。</li>
 <li>护盾抵挡下一次反击，跨房间保留，直到被消耗；击杀不消耗。最多激活 1 面，激活状态持续显示在顶部。已激活时再次点按护盾按钮可收回护盾，返还 1 个护盾道具。</li>
-<li>药水恢复 +3 点生命，不超过生命上限；满血时不可使用，部分溢出时需确认浪费。三种道具初始各 1 个、各上限 2 个；宝藏只补充未满道具，全部满时会提示。</li>
+<li>药水恢复 +4 点生命，不超过生命上限；满血时不可使用，部分溢出时需确认浪费。三种道具初始各 1 个、各上限 2 个；宝藏只补充未满道具，全部满时会提示。</li>
 <li>力量升级：每颗骰子伤害 +1，另加固定伤害 +3；最多 2 级（每骰 +2、固定 +6）。伤害 = 骰子点数之和 + 每骰加成 × 骰子数 + 固定加成。</li>
-<li>治疗升级：生命上限 +4，再恢复 +3；初始上限 20，最高 28。满血时仍可获得这 3 点生命（上限同时 +4）。</li>
+<li>治疗升级：生命上限 +4，再恢复 +4；初始上限 20，最高 28。即使满血也能完整获得这 4 点生命。</li>
 <li>额外骰子：每次攻击多掷 1 颗六面骰，初始 1 颗、最多 3 颗。升级旁显示未重掷时的平均伤害：力量更稳定，额外骰子波动更大，治疗增加生存空间。</li>
 <li>每次攻击计 1 回合，回合数显示在顶部状态栏。结算总伤害包含超过怪物剩余生命的溢出伤害。局中重开需确认，会清空本局进度。</li>
 </ul></details>
@@ -39,8 +39,8 @@ const $ = id => document.getElementById(id);
 const names = {reroll:'重掷',potion:'药水',shield:'护盾'};
 const enemies = [{name:'苔藓史莱姆',icon:'🟢',hp:11,attack:3},{name:'小骷髅',icon:'💀',hp:16,attack:4},{name:'宝箱守卫',icon:'👾',hp:23,attack:4}];
 const limits = {items:2, power:2, dice:3, hp:28};
-const POTION_HEAL = 3;
-const HEAL_UPGRADE = 3;
+const POTION_HEAL = 4;
+const HEAL_UPGRADE = 4;
 let game, busy = false, confirmOpen = false, confirmResolve = null;
 function start(){
   game={room:0,hp:20,maxHp:20,power:0,diceCount:1,items:{reroll:1,potion:1,shield:1},shielded:false,rolls:[],selectedDie:null,rerollChoice:null,phase:'roll',enemyHp:enemies[0].hp,cleared:0,turns:0,totalDamage:0,justRolled:false};
