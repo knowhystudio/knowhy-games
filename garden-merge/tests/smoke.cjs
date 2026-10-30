@@ -93,12 +93,12 @@ const { chromium } = require('playwright');
     results.tools = {};
     for (const [key, target] of [['shovel', 10], ['sun', 0], ['water', 9]]) {
       const before = await page.evaluate(key => inventory[key], key);
-      await page.locator('#' + key).tap();
+      await page.locator('#' + key).tap(); await page.locator(`[data-index="${target}"]`).tap(); assert.equal(await page.evaluate(key => inventory[key], key), before);
       if (key !== 'shovel') {
         assert.ok(await page.locator('.tool-preview').count() > 0);
         assert.ok(await page.locator('.preview-level').count() > 0);
       }
-      await page.locator(`[data-index="${target}"]`).tap();
+      if (key === 'shovel') assert.ok(await page.locator('.tool-pending').count() > 0); await page.locator(`[data-index="${target}"]`).tap();
       const after = await page.evaluate(key => inventory[key], key);
       results.tools[key] = { before, after }; assert.equal(before, 1); assert.equal(after, 0);
       assert.match(await page.locator('#' + key).innerText(), /剩余 0 \/ 上限 2/);
@@ -141,7 +141,7 @@ const { chromium } = require('playwright');
       fixture([[0, 0]]); document.getElementById('hint').click();
       return { remaining: hintsLeft, message: document.getElementById('message').textContent };
     });
-    assert.equal(results.noMoveHint.remaining, 2); assert.match(results.noMoveHint.message, /暂时没有/);
+    assert.equal(results.noMoveHint.remaining, 3); assert.match(results.noMoveHint.message, /暂时没有/);
 
     results.shortGame = await page.evaluate(async () => {
       seedRandom(20261028); start(); let moves = 0, spawnMoves = 0;
@@ -156,7 +156,7 @@ const { chromium } = require('playwright');
     const wonScore = await page.evaluate(() => score);
     await page.locator('#cancel-restart').tap(); assert.ok(await page.locator('#over').evaluate(el => el.open)); assert.equal(await page.evaluate(() => score), wonScore);
     await page.locator('#again').tap(); await page.locator('#confirm-restart').tap();
-    assert.equal(await page.evaluate(() => score), 0); assert.equal(await page.evaluate(() => hintsLeft), 3);
+    assert.equal(await page.evaluate(() => score), 0); assert.equal(await page.evaluate(() => hintsLeft), 3); assert.deepEqual(await page.evaluate(() => ({ ...inventory })), { shovel: 1, sun: 1, water: 1 });
     results.fullBoard = await page.evaluate(async () => {
       // Fill the final vacancy by a real no-clear move. A six-type pattern has no triples.
       board = Array.from({ length: 64 }, (_, i) => (Math.floor(i / 8) + 2 * (i % 8)) % 6); board[0] = null;
