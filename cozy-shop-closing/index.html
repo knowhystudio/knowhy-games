@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <meta name="description" content="治愈小店打烊前——60秒粉彩治愈系小店经营小游戏，竖屏单手游玩。" />
 <meta name="theme-color" content="#fdf3f6" />
+<!-- 内联 data-URI favicon：不发任何外部请求，消除 favicon.ico 404（N1） -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🌙%3C/text%3E%3C/svg%3E" />
 <title>治愈小店打烊前 · Cozy Shop Before Closing</title>
 <style>
   :root {
@@ -54,12 +56,12 @@
   }
 
   /* ── 顶栏 ── */
-  header { display: flex; align-items: center; gap: 6px; }
-  .shop-name { font-weight: 700; font-size: 16px; flex: 1; min-width: 0; white-space: nowrap; }
+  header { display: flex; align-items: center; gap: 4px; }
+  .shop-name { font-weight: 700; font-size: 16px; flex: 1; min-width: 0; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; }
   .timer {
     background: var(--card);
     border-radius: 999px;
-    padding: 7px 14px;
+    padding: 6px 10px;
     font-size: 20px;
     font-weight: 700;
     box-shadow: 0 3px 10px rgba(214, 158, 180, 0.15);
@@ -68,7 +70,7 @@
   .timer.low { color: var(--danger); animation: beat 1s ease-in-out infinite; }
   .icon-btn {
     flex: none;
-    width: 32px; height: 32px;
+    width: 44px; height: 44px;
     border-radius: 50%;
     background: var(--card);
     font-size: 15px;
@@ -89,7 +91,7 @@
   .stat b { display: block; font-size: 16px; color: var(--ink); }
   .stat.bump b { animation: bump 0.35s ease; }
 
-  /* ── 提示条：独立一行，绝不遮住顾客卡片 ── */
+  /* ── 提示条：独立一行，绝不遮住顾客卡片；服务行与提示行合并于此（P6）── */
   .toast-bar { min-height: 32px; display: flex; align-items: center; justify-content: center; padding: 3px 0; }
   #toast {
     background: rgba(107, 85, 96, 0.92);
@@ -103,8 +105,11 @@
     max-width: 100%;
     text-align: center;
     line-height: 1.4;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
-  #toast.show { opacity: 1; } #serveLog { min-height: 18px; text-align: center; font-size: 13px; font-weight: 700; color: var(--ink); line-height: 1.4; }
+  #toast.show { opacity: 1; }
 
   /* ── 店内布景：窗、灯、货架、柜台（可压缩，56–72px）── */
   #scenery {
@@ -156,7 +161,7 @@
     background: #fff8ec;
     border-radius: 999px;
     padding: 3px 12px;
-    font-size: 12px; font-weight: 700; color: #8a6a4f;
+    font-size: 13px; font-weight: 700; color: #8a6a4f;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
     white-space: nowrap;
   }
@@ -206,9 +211,10 @@
     outline: 3px solid #f0ca82;
     animation: guidePulse 1s ease-in-out infinite;
   }
+  .customer.pulse-once { animation: pulseOnce 0.35s var(--ease-spring); }
   .customer .avatar { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 46px; flex: none; }
   .customer .av-emoji { font-size: 30px; line-height: 1.1; }
-  .customer .cname { font-size: 11px; color: var(--ink-soft); margin-top: 1px; white-space: nowrap; }
+  .customer .cname { font-size: 13px; color: var(--ink-soft); margin-top: 1px; white-space: nowrap; }
   .customer .info { flex: 1; min-width: 0; }
   .demand { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; flex-wrap: wrap; }
   .bubble {
@@ -220,25 +226,27 @@
     font-weight: 600;
   }
   .mini-badge {
-    font-size: 11px; font-weight: 700; color: #fff;
+    font-size: 13px; font-weight: 700; color: #fff;
     background: var(--pink-deep);
-    border-radius: 999px; padding: 2px 8px;
+    border-radius: 999px; padding: 4px 9px;
     white-space: nowrap;
   }
   .mini-badge.rare { background: #b388e0; }
   .mini-badge:empty { display: none; }
-  .patience { height: 8px; background: #f4e4ea; border-radius: 4px; overflow: hidden; }
+  .patience { height: 10px; background: #f4e4ea; border-radius: 4px; overflow: hidden; }
   .patience-row { display: flex; align-items: center; gap: 8px; }
   .patience-row .patience { flex: 1; }
   .ptime {
     font-size: 14px; font-weight: 700; color: var(--ink-soft);
-    min-width: 52px; text-align: right; white-space: nowrap;
+    min-width: 3ch; padding-inline: 4px; text-align: right; white-space: nowrap;
   }
   .patience-fill {
     height: 100%; width: 100%; border-radius: 4px;
-    background: linear-gradient(90deg, var(--mint-deep), var(--pink-deep));
+    background: var(--mint-deep);
     transition: width 0.15s linear;
   }
+  .customer.p-mid .patience-fill { background: var(--butter-deep); }
+  .customer.p-low .patience-fill { background: var(--danger); }
   .customer.urgent .patience-fill { background: var(--danger); animation: blink 0.7s ease-in-out infinite; }
   .customer.urgent .ptime { color: var(--danger); font-size: 15px; }
   .customer.urgent .bubble { background: var(--pink); }
@@ -249,7 +257,7 @@
   .guide-tag {
     position: absolute; top: -11px; right: 12px;
     background: var(--butter-deep); color: #7a5a2e;
-    font-size: 12px; font-weight: 700;
+    font-size: 13px; font-weight: 700;
     border-radius: 999px; padding: 2px 10px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
     white-space: nowrap;
@@ -282,7 +290,7 @@
 
   /* ── 底部操作栏：固定在最下方，永不移动 ── */
   #actionBar { flex: none; display: flex; flex-direction: column; }
-  .item-legend { font-size: 12px; color: var(--ink-soft); margin: 0 2px 6px; line-height: 1.5; }
+  .item-legend { font-size: 13px; color: var(--ink-soft); margin: 0 2px 6px; line-height: 1.5; }
   #items { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
   .item-btn {
     flex: 1 1 30%;
@@ -291,20 +299,20 @@
     border-radius: 14px;
     background: var(--lavender);
     display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
-    padding: 6px 6px;
+    padding: 6px 4px;
     transition: transform 0.08s ease, opacity 0.2s ease;
   }
   .item-btn:active { transform: scale(0.95); }
   .item-btn.empty { opacity: 0.45; filter: grayscale(0.7); }
   .item-btn:disabled { opacity: 0.4; filter: grayscale(0.8); }
-  .item-btn .itop { display: flex; align-items: center; gap: 4px; }
+  .item-btn .itop { display: flex; align-items: center; flex-wrap: wrap; justify-content: center; gap: 3px; }
   .item-btn .big { font-size: 20px; }
-  .item-btn .iname { font-size: 13px; font-weight: 700; white-space: nowrap; }
+  .item-btn .iname { font-size: 13px; font-weight: 700; }
   .item-btn .count {
     background: var(--pink-deep); color: #fff;
-    font-size: 12px; line-height: 1; padding: 3px 7px; border-radius: 999px; white-space: nowrap;
+    font-size: 13px; line-height: 1; padding: 2px 6px; border-radius: 999px;
   }
-  .item-btn .ieffect { font-size: 11px; color: var(--ink-soft); white-space: nowrap; }
+  .item-btn .ieffect { font-size: 13px; color: var(--ink-soft); line-height: 1.3; text-align: center; }
   .item-btn.shake { animation: shake 0.3s ease; }
 
   /* ── 商品 ── */
@@ -328,7 +336,7 @@
 
   /* ── 覆盖层：开始 / 暂停 / 说明 / 确认 / 结算 ── */
   .overlay {
-    position: fixed; inset: 0; z-index: 20;
+    position: fixed; inset: 0; z-index: var(--z-overlay);
     background: #fdf3f6;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
     gap: 12px; padding: 24px; text-align: center;
@@ -365,13 +373,14 @@
   .stars { font-size: 26px; letter-spacing: 2px; }
   .rating-label { font-size: 16px; font-weight: 700; }
 
-  #confirmOverlay { background: rgba(253, 243, 246, 0.92); z-index: 30; }
-  .confirm-box { background: var(--card); border-radius: var(--radius); padding: 20px; width: 100%; max-width: 320px; box-shadow: 0 8px 24px rgba(214, 158, 180, 0.3); display: flex; flex-direction: column; gap: 12px; align-items: center; }
+  #confirmOverlay { background: rgba(107, 85, 96, 0.55); z-index: var(--z-confirm); }
+  .confirm-box { background: var(--card); border-radius: var(--radius); padding: 20px; width: 100%; max-width: min(320px, calc(100vw - 32px)); box-shadow: 0 8px 24px rgba(214, 158, 180, 0.3); display: flex; flex-direction: column; gap: 12px; align-items: center; }
   .confirm-box h2 { font-size: 17px; }
   .confirm-box p { font-size: 14px; line-height: 1.7; color: var(--ink); text-align: center; }
-  .confirm-box .row { display: flex; gap: 10px; width: 100%; }
-  .confirm-box .row button { flex: 1; height: 44px; border-radius: 999px; font-size: 15px; font-weight: 700; }
+  .confirm-box .row { display: flex; flex-direction: column; gap: 10px; width: 100%; }
+  .confirm-box .row button { flex: none; width: 100%; height: 48px; border-radius: 999px; font-size: 15px; font-weight: 700; }
   .confirm-yes { background: linear-gradient(90deg, var(--pink-deep), #f4b8cd); color: #fff; }
+  .confirm-yes:disabled { opacity: 0.45; filter: grayscale(0.6); }
   .confirm-no { background: #f4e4ea; }
 
   @keyframes pop { from { opacity: 0; transform: translateY(10px) scale(0.97); } to { opacity: 1; transform: none; } }
@@ -381,6 +390,7 @@
   @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
   @keyframes urgentShake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-2px); } 75% { transform: translateX(2px); } }
   @keyframes guidePulse { 0%, 100% { box-shadow: 0 0 0 3px rgba(240, 202, 130, 0.55); } 50% { box-shadow: 0 0 0 7px rgba(240, 202, 130, 0.15); } }
+  @keyframes pulseOnce { 0% { transform: scale(1); } 40% { transform: scale(1.05); } 100% { transform: scale(1); } }
   @keyframes bump { 0% { transform: scale(1); } 40% { transform: scale(1.25); } 100% { transform: scale(1); } }
 </style>
 </head>
@@ -398,7 +408,7 @@
       <div class="stat">💗 暖心<b id="statWarmth">0</b></div>
       <div class="stat">🚶 离开<b id="statLeft">0</b></div>
     </div>
-    <div class="toast-bar"><div id="toast" role="status"></div></div> <div id="serveLog" aria-live="polite"></div>
+    <div class="toast-bar"><div id="toast" role="status" aria-live="polite"></div></div>
     <div id="scenery" aria-hidden="true">
       <div class="win">🌙</div>
       <div class="lamp">💡</div><div class="frame">🖼️</div><div class="clock">🕰️</div>
@@ -411,7 +421,7 @@
     </main>
     <div id="guide"></div>
     <footer id="actionBar">
-      <div class="item-legend">🛵 立即完成 1 位 · 💡 一位耐心 +6 秒 · 🌿 全体耐心 +3 秒</div>
+      <div class="item-legend">🛵完成1位 · 💡+6秒 · 🌿全体+3秒</div>
       <div id="items"></div>
       <div id="products"></div>
     </footer>
@@ -424,7 +434,7 @@
     <div class="sub">Cozy Shop Before Closing</div>
     <div class="rules">
       ⏰ <b>60 秒</b>倒计时，打烊前尽量多服务几位客人<br />
-      👆 点顾客卡片选中他，再点下面对应的商品递给他<br />
+      👆 点顾客卡片选中他，再点下面对应的商品递给他（选中后只服务他）<br />
       ⏳ 耐心归零前没拿到，就会失望离开
     </div>
     <button class="primary-btn" id="startBtn">🔋 开始营业</button>
@@ -447,9 +457,10 @@
     <h1>玩法说明</h1>
     <div class="rules">
       👆 点顾客卡片可选中（高亮），选中后再服务，<b>暖心值翻倍</b><br />
-      🎯 没选中时，自动服务最着急的、想要该商品的客人<br />
+      🎯 选中后只服务他（点错商品也不会服务别人）；没选中时，自动服务最着急的、想要该商品的客人，服务时会告诉你服务了谁<br />
       ⚡ 剩余耐心一半以上时服务，<b>多得 +2 金币</b>；不足一半时没有神速奖励，快递小哥送出时同样按此规则结算<br />
       🦄 稀客偶尔光临，每局最多 1 位，服务他<b>金币翻倍</b><br />
+      💗 暖心值基础 +5：选中服务再 +5，稀客再 +5；满 30 / 60 只记一次，不额外补道具<br />
       ⏳ 耐心归零会失望离开；耐心条变红并出现 ⚠️ 时要抓紧<br />
       🛵 快递小哥：立即完成 1 位（按服务成功结算，含神速奖励） · 💡 暖灯：一位 +6 秒<br />
       🌿 清新香薰：全体 +3 秒 · 每服务 5 单补 1 个道具
@@ -458,13 +469,13 @@
   </div>
 
   <!-- 道具 / 重开确认 -->
-  <div class="overlay hidden" id="confirmOverlay">
+  <div class="overlay hidden" id="confirmOverlay" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
     <div class="confirm-box">
       <h2 id="confirmTitle">确认使用？</h2>
       <p id="confirmBody"></p>
       <div class="row">
         <button class="confirm-no" id="confirmNo">取消</button>
-        <button class="confirm-yes" id="confirmYes">确认</button>
+        <button class="confirm-yes" id="confirmYes">确认使用</button>
       </div>
     </div>
   </div>
@@ -524,7 +535,7 @@
   const SPAWN_MIN = 2.8;        // 顾客到店间隔（秒）
   const SPAWN_MAX = 4.2;
   const SPAWN_FIRST = 0.5;      // 第一位顾客到店时间（秒）
-  const SERVE_WARMTH = 5;       // 每单暖心值（选中 / 稀客各再 +5）
+  const SERVE_WARMTH = 5;       // 每单暖心值基础（选中 / 稀客各再 +5，无上限、无隐藏 cap）
   const RESTOCK_EVERY = 5;      // 每成功服务 N 单补 1 个随机道具
   const ITEM_CAP = 2;           // 道具上限
   const ITEM_START = 1;         // 每种道具开局数量
@@ -558,9 +569,10 @@
   const rand = (a, b) => a + Math.random() * (b - a);
   const $ = (id) => document.getElementById(id);
   const nowMs = () => performance.now();
+  function fmtSec(s) { const v = Math.round(s * 10) / 10; return v % 1 === 0 ? String(v) : String(v); }
 
   /* ── DOM 引用 ── */
-  const queueEl = $("queue"), toastEl = $("toast");
+  const appEl = $("app"), queueEl = $("queue"), toastEl = $("toast");
   const timerEl = $("timer"), statCoins = $("statCoins"), statWarmth = $("statWarmth"), statLeft = $("statLeft");
   const itemsEl = $("items"), productsEl = $("products"), guideEl = $("guide");
   const startOverlay = $("startOverlay"), resultOverlay = $("resultOverlay");
@@ -575,7 +587,7 @@
   let pendingConfirm = null; // {kind:"item", id} | {kind:"restart"}
   let guideDone = false;
   try { guideDone = localStorage.getItem("cozyShopGuideDone") === "1"; } catch (e) {}
-  // 供调试读取当前状态：每位顾客的剩余秒数与显示秒数取自同一值
+  // 供调试读取当前状态：每位顾客的剩余秒数与显示秒数取自同一值（向下取整，与界面一致）
   window.__cozyDebug = function () {
     if (!state) return null;
     return {
@@ -584,7 +596,7 @@
       spawned: state.spawned, rareSpawned: state.rareSpawned,
       customers: state.customers.map(function (c) {
         return { id: c.id, name: c.name, emoji: c.emoji, wish: c.wish, rare: !!c.rare,
-          totalSec: c.totalSec, remainSec: Math.ceil(remainSec(c)) };
+          totalSec: c.totalSec, remainSec: Math.floor(remainSec(c)) };
       }),
     };
   };
@@ -610,9 +622,13 @@
 
   /* ── 耐心：每位顾客以到店时的游戏时间 + 总秒数作为唯一的到期时间 ──
    * 显示的剩余秒数与决定离开的判断取自同一个值，服务其他顾客、
-   * 使用道具都不会改动这位顾客的到期时间，显示多少就剩多少。 */
+   * 使用道具都不会改动这位顾客的到期时间，显示多少就剩多少。
+   * 暖灯/香薰可以把到期时间推到原总时长之外（上限为到店到期 +6/+3 秒，
+   * 再受剩余游戏时间封顶），耐心条宽度仍封顶 100%。 */
   function remainSec(c) { return Math.max(0, (c.endsAt - state.elapsedMs) / 1000); }
   function remainFrac(c) { return c.totalSec > 0 ? remainSec(c) / c.totalSec : 0; }
+  function lampGain(c) { return Math.max(0, (Math.min(c.endsAt + LAMP_SECONDS * 1000, state.elapsedMs + state.timeLeft * 1000) - c.endsAt) / 1000); }
+  function herbGain(c) { return Math.max(0, (Math.min(c.endsAt + HERB_SECONDS * 1000, state.elapsedMs + state.timeLeft * 1000) - c.endsAt) / 1000); }
 
   /* ── 通用 UI ── */
   function toast(msg) {
@@ -636,11 +652,21 @@
     void el.offsetWidth;
     el.classList.add("shake");
   }
-  function floatNote(customerEl, text) {
+  function pulseCardOnce(c) {
+    if (!c.el) return;
+    c.el.classList.remove("pulse-once");
+    void c.el.offsetWidth;
+    c.el.classList.add("pulse-once");
+    setTimeout(function () { if (c.el) c.el.classList.remove("pulse-once"); }, 360);
+  }
+  function floatNote(customerEl, text, cid) {
+    // 每位顾客同时最多 1 条飘字；飘字从卡片下沿升起，不遮住上面的愿望气泡（N5）
+    queueEl.querySelectorAll(".float-note").forEach(function (n) { if (cid && n.dataset.cid === String(cid)) n.remove(); });
     const note = document.createElement("div");
     note.className = "float-note";
+    if (cid) note.dataset.cid = String(cid);
     note.textContent = text;
-    const host = queueEl; const left = customerEl ? customerEl.offsetLeft + customerEl.offsetWidth / 2 : host.offsetWidth / 2; const noteTop = customerEl ? customerEl.offsetTop + 18 : 20; note.style.left = left + "px"; note.style.top = noteTop + "px"; host.appendChild(note);
+    const host = queueEl; const left = customerEl ? customerEl.offsetLeft + customerEl.offsetWidth / 2 : host.offsetWidth / 2; const noteTop = customerEl ? customerEl.offsetTop + customerEl.offsetHeight - 6 : 20; note.style.left = left + "px"; note.style.top = noteTop + "px"; host.appendChild(note);
     setTimeout(function () { note.remove(); }, 2700);
   }
 
@@ -730,10 +756,12 @@
       totalSec: totalSec,
       endsAt: state.elapsedMs + totalSec * 1000,
       el: null,
+      leaving: false,
     };
     const card = document.createElement("button");
-    card.className = "customer";
+    card.className = "customer p-good";
     card.setAttribute("aria-label", c.name + "想要" + WISH_NAME[c.wish] + "，点按选中");
+    card.setAttribute("aria-pressed", "false");
     card.innerHTML =
       '<div class="avatar"><div class="av-emoji"></div><div class="cname"></div></div>' +
       '<div class="info"><div class="demand"><span class="bubble"></span><span class="mini-badge"></span></div>' +
@@ -743,7 +771,7 @@
     card.querySelector(".bubble").textContent = WISH_TEXT[c.wish] + (rare ? " ✨" : "");
     const badge = card.querySelector(".mini-badge");
     if (rare) { badge.textContent = "✨ 稀客 · 金币翻倍"; badge.classList.add("rare"); }
-    card.querySelector(".ptime").textContent = Math.ceil(totalSec) + "s";
+    card.querySelector(".ptime").textContent = Math.floor(totalSec) + "s";
     card.addEventListener("click", function () { toggleSelect(c); });
     const hint = queueEl.querySelector(".empty-hint");
     if (hint) hint.remove();
@@ -794,19 +822,23 @@
     state.selectedId = state.selectedId === c.id ? null : c.id;
     if (state.guideStage === 1 && state.selectedId === c.id) {
       state.guideStage = 2;
-      guideEl.innerHTML = "✅ 选好了！<b>第二步：</b>点下面发光的商品，把东西递给他";
+      guideEl.innerHTML = "✅ 选好了！<b>第二步：</b>点下面发光的商品递给他，只服务他";
       const tag = c.el.querySelector(".guide-tag");
       if (tag) tag.textContent = "② 点下面发光的商品";
     }
+    if (state.selectedId === c.id) toast("已选中 " + c.emoji + c.name + "：他想要" + WISH_NAME[c.wish]);
     renderSelection();
   }
   function renderSelection() {
     if (!state) return;
     const sel = state.customers.find(function (c) { return c.id === state.selectedId; }) || null;
     for (const c of state.customers) {
-      c.el.classList.toggle("selected", c.id === state.selectedId);
+      const isSel = c.id === state.selectedId;
+      c.el.classList.toggle("selected", isSel);
+      c.el.setAttribute("aria-pressed", isSel ? "true" : "false");
+      c.el.setAttribute("aria-selected", isSel ? "true" : "false");
       const badge = c.el.querySelector(".mini-badge");
-      if (c.id === state.selectedId) { badge.textContent = "✓ 已选中"; badge.classList.remove("rare"); }
+      if (isSel) { badge.textContent = "✓ 已选中"; badge.classList.remove("rare"); }
       else if (c.rare) { badge.textContent = "✨ 稀客 · 金币翻倍"; badge.classList.add("rare"); }
       else { badge.textContent = ""; badge.classList.remove("rare"); }
     }
@@ -818,6 +850,15 @@
     const list = state.customers;
     const i = list.indexOf(c);
     if (i >= 0) list.splice(i, 1);
+    c.leaving = true;
+    if (c.el) {
+      // 离开即清除选中/引导高亮与倒计时：淡出时不再显示选中框、⚠️ 与秒数（N5/N6）
+      c.el.classList.remove("selected", "guide-target", "urgent", "p-good", "p-mid", "p-low");
+      c.el.setAttribute("aria-pressed", "false");
+      c.el.removeAttribute("aria-selected");
+      const tag = c.el.querySelector(".guide-tag"); if (tag) tag.remove();
+      const pt = c.el.querySelector(".ptime"); if (pt) pt.textContent = "";
+    }
     if (state.selectedId === c.id) { state.selectedId = null; renderSelection(); }
     if (!c.el) return;
     const el = c.el;
@@ -844,6 +885,7 @@
     return pool.reduce(function (a, b) { return remainFrac(a) <= remainFrac(b) ? a : b; });
   }
   function pickTarget() {
+    if (!state.customers.length) return null;
     const sel = state.customers.find(function (c) { return c.id === state.selectedId; });
     if (sel) return sel;
     return state.customers.reduce(function (a, b) { return remainFrac(a) <= remainFrac(b) ? a : b; });
@@ -867,10 +909,12 @@
   }
   function serveSuccess(c, via, snap) {
     if (!state || state.customers.indexOf(c) < 0) return;
-    const frac = (snap && snap.customerId === c.id) ? snap.frac : remainFrac(c); const speed = frac >= SPEED_THRESHOLD; const pct = Math.round(frac * 100);
+    const frac = (snap && snap.customerId === c.id) ? snap.frac : remainFrac(c); const speed = frac >= SPEED_THRESHOLD;
     const selected = state.selectedId === c.id;
     const base = c.coin * (c.rare ? 2 : 1);
     const gained = base + (speed ? SPEED_BONUS : 0);
+    // 暖心值规则（N8 代码级结论）：基础 +5，选中再 +5，稀客再 +5；代码里没有任何暖心值上限，
+    // 所谓“+5 而不是 +10”就是一次未选中、非稀客的服务。服务行会用 ·选中/·稀客/·未选中写清原因。
     const warm = SERVE_WARMTH + (selected ? SERVE_WARMTH : 0) + (c.rare ? SERVE_WARMTH : 0);
     const wasGuide = state.guideStage !== 0;
     state.served += 1;
@@ -884,22 +928,24 @@
     if (speed) note += " ⚡神速+" + SPEED_BONUS;
     if (c.rare) note += " ✨稀客翻倍";
     note += " 💗+" + warm;
-    floatNote(card, note);
+    floatNote(card, note, c.id);
     if (state.selectedId === c.id) state.selectedId = null;
     removeCustomer(c, "happy", 650);
     renderSelection();
-    state.sinceRestock += 1; var restockInfo = null; state.milestoneNote = "";
+    state.sinceRestock += 1; var restockInfo = null;
     if (state.sinceRestock >= RESTOCK_EVERY) {
       state.sinceRestock = 0;
       restockInfo = restockProp("🎁 服务满 " + state.served + " 单，补充了 1 个 ");
     }
-    checkWarmthMilestones(); var milestoneNote = state.milestoneNote || ""; state.milestoneNote = "";
-    renderHUD(true); const serveLine = (via === "courier" ? "🛵 快递送出 " : "") + "😊 " + c.name + "很开心 +" + gained + "🪙（耐心剩 " + pct + "%" + (speed ? "，神速+" + SPEED_BONUS : "，不足一半无神速") + (c.rare ? "，稀客翻倍" : "") + "）💗+" + warm + (restockInfo ? " 🎁 满" + state.served + "单补1个" + restockInfo.emoji + restockInfo.name + "（道具 " + state.items.courier + "/" + state.items.lamp + "/" + state.items.herb + "）" : (state.sinceRestock === 0 ? " 🎁 道具已满，本次不补" : "")) + (milestoneNote ? " " + milestoneNote : ""); const serveLogEl = $("serveLog"); if (serveLogEl) serveLogEl.textContent = serveLine; clearToast();
+    checkWarmthMilestones();
+    renderHUD(true);
+    // 服务行就是唯一的提示行：写清是谁、得了什么、为什么（选中/稀客/未选中），保持单行；
+    // 不再同步清掉同一次交互里写好的提示（P6 根因：旧 serveSuccess 会清掉选人提示）。
+    let serveLine = (via === "courier" ? "🛵 " : "") + c.emoji + c.name + " +" + gained + "🪙" + (speed ? " ⚡" : "") + " 💗+" + warm + (selected ? "·选中" : "") + (c.rare ? "·稀客" : "") + (!selected && !c.rare ? "·未选中" : "") + (restockInfo ? " 🎁" + restockInfo.emoji : "");
+    if (wasGuide) serveLine += " 🎉首单完成！";
+    toast(serveLine);
     renderItems();
-    if (wasGuide) {
-      finishGuide();
-      toast("🎉 第一单完成！继续加油～");
-    }
+    if (wasGuide) finishGuide();
     if (state.customers.length < QUEUE_MAX) state.nextSpawnIn = Math.min(state.nextSpawnIn, 2.0);
   }
   function leaveCustomer(c) {
@@ -908,8 +954,8 @@
     const card = c.el;
     card.querySelector(".av-emoji").textContent = "😞";
     card.querySelector(".bubble").textContent = "等太久了…💨";
-    floatNote(card, "💨 失望走了");
-    toast("😞 " + c.name + "等太久，失望离开了");
+    floatNote(card, "💨 失望走了", c.id);
+    toast("😞 " + c.emoji + c.name + "：等太久，失望离开了");
     removeCustomer(c, "sad", 300);
     if (state.customers.length < QUEUE_MAX) state.nextSpawnIn = Math.min(state.nextSpawnIn, 2.0);
     renderHUD();
@@ -917,16 +963,21 @@
   function onTapProduct(p, btn) {
     if (!state || !state.running || state.paused) return;
     const sel = state.customers.find(function (c) { return c.id === state.selectedId; });
-    if (sel && sel.wish === p.id) { serveSuccess(sel); return; }
+    if (sel) {
+      // 选中后只服务他：点错商品绝不服务别人，只抖商品、提示、脉冲一次选中卡，保留选中。
+      if (sel.wish === p.id) { serveSuccess(sel); return; }
+      shakeEl(btn);
+      toast(sel.emoji + sel.name + "想要的是" + WISH_NAME[sel.wish] + "，不是" + p.name + p.emoji);
+      pulseCardOnce(sel);
+      return;
+    }
     const c = pickCustomer(p.id);
     if (!c) {
       shakeEl(btn);
       toast("暂时没有顾客想要" + p.name + "～");
       return;
     }
-    // 选中了别的顾客也不挡路：先服务最着急的这位，选中状态保留
-    if (sel) toast(sel.name + "想要的是" + WISH_NAME[sel.wish] + "，先服务了最着急的" + c.name);
-    serveSuccess(c);
+    serveSuccess(c); // 服务行会写清服务了谁
   }
   function onTapItem(id, btn) {
     if (!state || !state.running || state.paused) return;
@@ -941,60 +992,131 @@
       toast("⏳ 还没有顾客进店，" + it.emoji + " 先留着吧～");
       return;
     }
-    let body = "";
-    if (id === "courier") body = "立即完成一位等待的顾客，按服务成功结算：剩余耐心一半以上同样多得 +2 金币（优先送最着急的顾客，他通常耐心不足一半，所以通常没有神速奖励）。现在有 " + state.items[id] + " 个。";
-    else if (id === "lamp") body = "让一位顾客的耐心 +6 秒（选中顾客优先，否则最着急的一位）。现在有 " + state.items[id] + " 个。";
-    else body = "让所有等待顾客的耐心 +3 秒。现在有 " + state.items[id] + " 个。";
-    openConfirm({ kind: "item", id: id, title: "使用" + it.emoji + it.name + "？", body: body });
+    // 暖灯/香薰先按实际增益预检：满耐心时直接提示，不扣道具、不弹窗。
+    if (id === "lamp") {
+      const t = pickTarget();
+      if (t && lampGain(t) <= 0) { shakeEl(btn); toast(t.emoji + t.name + "现在耐心是满的，先留着吧"); return; }
+    } else if (id === "herb") {
+      if (state.customers.every(function (c) { return herbGain(c) <= 0; })) { shakeEl(btn); toast("大家的耐心都是满的，先留着吧"); return; }
+    }
+    openConfirm({ kind: "item", id: id });
   }
   function applyItem(id, snap) {
-    if (!state || state.items[id] <= 0) return;
+    if (!state) return;
+    // 先校验、后扣道具：道具还在、顾客还在、实际增益 > 0，任一不满足都不扣。
+    if (state.items[id] <= 0) { toast("道具已用完，先留着吧～"); return; }
     if (!state.customers.length) { toast("⏳ 还没有顾客进店，道具先留着吧～"); return; }
+    let target = null;
+    if (id === "lamp") {
+      target = (snap && snap.customerId) ? (state.customers.find(function (x) { return x.id === snap.customerId; }) || pickTarget()) : pickTarget();
+      if (!target) return;
+      if (lampGain(target) <= 0) { toast(target.emoji + target.name + "现在耐心是满的，先留着吧"); return; }
+    } else if (id === "herb") {
+      if (state.customers.every(function (c) { return herbGain(c) <= 0; })) { toast("大家的耐心都是满的，先留着吧"); return; }
+    }
     state.items[id] -= 1;
     if (id === "courier") {
       const c = (snap && snap.customerId) ? (state.customers.find(function (x) { return x.id === snap.customerId; }) || pickTarget()) : pickTarget();
       if (!c) return;
-      toast("🛵 快递小哥帮忙送出！");
       serveSuccess(c, "courier", snap);
     } else if (id === "lamp") {
-      const c = (snap && snap.customerId) ? (state.customers.find(function (x) { return x.id === snap.customerId; }) || pickTarget()) : pickTarget();
-      if (!c) return;
-      c.endsAt = Math.min(c.endsAt + LAMP_SECONDS * 1000, state.elapsedMs + c.totalSec * 1000);
-      floatNote(c.el, "💡 +6秒");
-      toast("💡 暖灯亮起，" + c.name + "的耐心 +6 秒");
+      const c = target;
+      const gain = lampGain(c);
+      c.endsAt = Math.min(c.endsAt + LAMP_SECONDS * 1000, state.elapsedMs + state.timeLeft * 1000);
+      floatNote(c.el, "💡 +" + fmtSec(gain) + "秒", c.id);
+      toast("💡 " + c.emoji + c.name + "：耐心 +" + fmtSec(gain) + "秒");
     } else {
+      const parts = [];
       for (const c of state.customers) {
-        c.endsAt = Math.min(c.endsAt + HERB_SECONDS * 1000, state.elapsedMs + c.totalSec * 1000);
-        floatNote(c.el, "🌿 +3秒");
+        const gain = herbGain(c);
+        if (gain > 0) {
+          c.endsAt = Math.min(c.endsAt + HERB_SECONDS * 1000, state.elapsedMs + state.timeLeft * 1000);
+          floatNote(c.el, "🌿 +" + fmtSec(gain) + "秒", c.id);
+          parts.push(c.emoji + c.name + " +" + fmtSec(gain) + "秒");
+        }
       }
-      toast("🌿 清新香薰飘起，大家的耐心 +3 秒");
+      toast("🌿 清新香薰：" + parts.join("、"));
     }
     renderItems();
   }
 
-  /* ── 确认框：点道具 / 重开前先确认，同时暂停计时 ── */
+  /* ── 确认框：文案在打开时按实时状态生成；点道具 / 重开前先确认，只停时钟，不显示暂停界面 ── */
+  function buildConfirm(cfg) {
+    if (cfg.kind === "restart") return { title: "重新开始？", body: "当前这局的进度会清空，重新开始 60 秒营业。", yesLabel: "重新开始", disabled: false };
+    const it = ITEMS.find(function (x) { return x.id === cfg.id; });
+    const target = pickTarget();
+    if (!target) return { title: "使用" + it.emoji + it.name + "？", body: "⏳ 还没有顾客进店，" + it.emoji + " 先留着吧～", yesLabel: "确认使用", disabled: true };
+    if (cfg.id === "courier") {
+      const frac = remainFrac(target);
+      const speed = frac >= SPEED_THRESHOLD;
+      const coins = target.coin * (target.rare ? 2 : 1) + (speed ? SPEED_BONUS : 0);
+      const warm = SERVE_WARMTH + (state.selectedId === target.id ? SERVE_WARMTH : 0) + (target.rare ? SERVE_WARMTH : 0);
+      // 快照只用于结算神速奖励：确认期间时钟已停，打开时与确认时的 frac 相同，所以沿用打开时的快照。
+      cfg.snapshot = { customerId: target.id, frac: frac, pct: Math.round(frac * 100), remainSec: remainSec(target), totalSec: target.totalSec };
+      return { title: "使用🛵快递小哥？", body: "🛵 送出 " + target.emoji + target.name + "（想要" + WISH_NAME[target.wish] + "，剩 " + Math.floor(remainSec(target)) + "秒，" + (speed ? "耐心过半" : "耐心不足一半") + "）：+" + coins + "🪙" + (speed ? "（+2神速）" : "") + " 💗+" + warm, yesLabel: "确认使用", disabled: false };
+    }
+    if (cfg.id === "lamp") {
+      const gain = lampGain(target);
+      cfg.snapshot = { customerId: target.id, frac: remainFrac(target), pct: Math.round(remainFrac(target) * 100), remainSec: remainSec(target), totalSec: target.totalSec };
+      if (gain <= 0) return { title: "使用💡暖灯？", body: target.emoji + target.name + "现在耐心是满的，先留着吧", yesLabel: "确认使用", disabled: true };
+      return { title: "使用💡暖灯？", body: "💡 给 " + target.emoji + target.name + "（想要" + WISH_NAME[target.wish] + "，剩 " + Math.floor(remainSec(target)) + "秒）的耐心 +" + fmtSec(gain) + " 秒", yesLabel: "确认使用", disabled: false };
+    }
+    const parts = [];
+    for (const c of state.customers) { const g = herbGain(c); if (g > 0) parts.push(c.emoji + c.name + " +" + fmtSec(g) + "秒"); }
+    cfg.snapshot = { herb: true };
+    if (!parts.length) return { title: "使用🌿清新香薰？", body: "大家的耐心都是满的，先留着吧", yesLabel: "确认使用", disabled: true };
+    return { title: "使用🌿清新香薰？", body: "🌿 清新香薰：" + parts.join("、"), yesLabel: "确认使用", disabled: false };
+  }
   function openConfirm(cfg) {
-    pendingConfirm = cfg; if (cfg.kind === "item") { var _t = pickTarget(); if (_t) { var _f = remainFrac(_t); cfg.snapshot = { customerId: _t.id, frac: _f, pct: Math.round(_f * 100), remainSec: remainSec(_t), totalSec: _t.totalSec }; if (cfg.id === "courier") cfg.body = cfg.body + "（确认时目标：" + _t.name + "，耐心剩 " + Math.round(_f * 100) + "%" + (_f >= SPEED_THRESHOLD ? "，高于一半，确认后神速+2" : "，不足一半，无神速") + "，以这个快照结算）"; } }
-    $("confirmTitle").textContent = cfg.title;
-    $("confirmBody").textContent = cfg.body;
+    pendingConfirm = cfg;
+    const text = buildConfirm(cfg);
+    cfg.confirmText = text;
+    $("confirmTitle").textContent = text.title;
+    $("confirmBody").textContent = text.body;
+    const yesBtn = $("confirmYes");
+    yesBtn.textContent = text.yesLabel;
+    yesBtn.disabled = !!text.disabled;
     confirmOverlay.classList.remove("hidden");
-    pauseGame(false);
+    appEl.inert = true;
+    appEl.setAttribute("aria-hidden", "true");
+    stopClock(); // 只停时钟，不显示暂停界面
+    $("confirmNo").focus();
   }
   function closeConfirm() {
     pendingConfirm = null;
     confirmOverlay.classList.add("hidden");
+    appEl.inert = false;
+    appEl.removeAttribute("aria-hidden");
     if (state && state.running && state.paused) resumeGame();
   }
   $("confirmYes").addEventListener("click", function () {
     const cfg = pendingConfirm;
     pendingConfirm = null;
     confirmOverlay.classList.add("hidden");
+    appEl.inert = false;
+    appEl.removeAttribute("aria-hidden");
     if (!cfg) { if (state && state.running && state.paused) resumeGame(); return; }
     if (cfg.kind === "restart") { startGame(); return; }
-    if (state && state.running && state.paused) resumeGame(); if (cfg.kind === "item") applyItem(cfg.id, cfg.snapshot);
+    if (!state || !state.running) return;
+    // 确认时重新校验：道具还在、目标还在队里；目标走了就用 pickTarget 重挑并重算，否则不扣道具直接取消。
+    if (state.items[cfg.id] <= 0) { toast("道具已用完，先留着吧～"); if (state.paused) resumeGame(); return; }
+    if (!state.customers.length) { toast("⏳ 还没有顾客进店，道具先留着吧～"); if (state.paused) resumeGame(); return; }
+    const fresh = buildConfirm(cfg);
+    if (fresh.disabled) { toast(fresh.body); if (state.paused) resumeGame(); return; }
+    applyItem(cfg.id, cfg.snapshot);
     if (state && state.running && state.paused) resumeGame();
   });
   $("confirmNo").addEventListener("click", closeConfirm);
+  confirmOverlay.addEventListener("click", function (e) { if (e.target === confirmOverlay) closeConfirm(); });
+  confirmOverlay.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") { e.preventDefault(); closeConfirm(); return; }
+    if (e.key !== "Tab") return;
+    const btns = [$("confirmNo"), $("confirmYes")].filter(function (b) { return !b.disabled; });
+    if (!btns.length) return;
+    const i = btns.indexOf(document.activeElement);
+    if (e.shiftKey && i <= 0) { e.preventDefault(); btns[btns.length - 1].focus(); }
+    else if (!e.shiftKey && i === btns.length - 1) { e.preventDefault(); btns[0].focus(); }
+  });
 
   /* ── 主循环：每一局只跑一条循环，靠代号防止旧循环继续扣时间；游戏时间只按帧推进（elapsedMs），隐藏、失焦或帧停跑时不推进，切页不丢时间 ── */
   function makeLoop(gen) {
@@ -1017,6 +1139,7 @@
       }
       if (state.customers.length === 0) state.nextSpawnIn = Math.min(state.nextSpawnIn, 1.2);
       for (const c of state.customers.slice()) {
+        if (c.leaving) continue;
         const rem = remainSec(c);
         if (rem <= 0) {
           leaveCustomer(c);
@@ -1025,8 +1148,11 @@
           const fill = c.el.querySelector(".patience-fill");
           if (fill) fill.style.width = Math.min(100, frac * 100).toFixed(1) + "%";
           const pt = c.el.querySelector(".ptime");
-          if (pt) pt.textContent = (frac < 0.35 ? "⚠️ " : "") + Math.ceil(rem) + "s";
+          if (pt) pt.textContent = (frac < 0.35 ? "⚠️ " : "") + Math.floor(rem) + "s";
           c.el.classList.toggle("urgent", frac < 0.35);
+          c.el.classList.toggle("p-good", frac >= 0.5);
+          c.el.classList.toggle("p-mid", frac >= 0.35 && frac < 0.5);
+          c.el.classList.toggle("p-low", frac < 0.35);
         }
       }
       renderTimer();
@@ -1034,15 +1160,26 @@
     };
   }
 
-  /* ── 暂停 / 继续 ── */
-  function pauseGame(auto) {
+  /* ── 暂停 / 继续：停时钟与显示暂停界面是两步；确认框只停时钟，不显示暂停界面 ──
+   * N9 代码核查结论：stopClock 在点击处理里同步设置 paused 并取消 rAF，主循环入口遇 paused 即返回，
+   * 游戏时间（elapsedMs）只在主循环里推进，所以暂停后不可能再走字；帮助打开时 56→55 是采样与点击之间
+   * 跨过整数边界的刻度竞争（ceil 显示），不是泄漏——此处仍在停表时立即重绘一次计时器，把冻结值钉死。 */
+  function stopClock() {
     if (!state || !state.running || state.paused) return;
     state.paused = true;
     /* 不再快照：倒计时与顾客耐心都由游戏时间 elapsedMs 决定，暂停只是停住它，恢复时原样继续，不重算、不漂移。 */
     cancelAnimationFrame(rafId);
+    renderTimer();
+    renderItems();
+  }
+  function showPauseUI(auto) {
     $("pauseNote").textContent = auto ? "已自动暂停（你切走了页面），计时已停下，回来点继续～" : "计时已停下，慢慢来～";
     pauseOverlay.classList.remove("hidden");
-    renderItems();
+  }
+  function pauseGame(auto) {
+    if (!state || !state.running || state.paused) return;
+    stopClock();
+    showPauseUI(auto);
   }
   function resumeGame() {
     if (!state || !state.running || !state.paused) return; if (document.hidden) return;
@@ -1064,6 +1201,8 @@
     loopGen += 1;
     cancelAnimationFrame(rafId);
     state = newState();
+    appEl.inert = false;
+    appEl.removeAttribute("aria-hidden");
     queueEl.querySelectorAll(".customer").forEach(function (el) { el.remove(); });
     let hint = queueEl.querySelector(".empty-hint");
     if (!hint) {
@@ -1159,7 +1298,7 @@
   });
   $("headerRestartBtn").addEventListener("click", function () {
     if (!state || !state.running) return;
-    openConfirm({ kind: "restart", title: "重新开始？", body: "当前这局的进度会清空，重新开始 60 秒营业。" });
+    openConfirm({ kind: "restart" });
   });
   $("helpBtn").addEventListener("click", function () {
     if (state && state.running && !state.paused) pauseGame(false);
