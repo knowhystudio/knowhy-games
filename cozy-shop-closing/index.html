@@ -1020,8 +1020,8 @@
     return function loop(ts) {
       if (gen !== loopGen) return;
       if (!state || !state.running || state.paused) return;
-      if (document.hidden) { if (!hiddenAt) hiddenAt = nowMs(); pauseGame(true); return; } if (!state || !state.running || state.paused) return; const dt = Math.min(0.1, Math.max(0, (ts - lastTs) / 1000));
-      lastTs = ts;
+      if (document.hidden) { if (!hiddenAt) hiddenAt = nowMs(); pauseGame(true); return; } if (!state || !state.running || state.paused) return; const _gapMs = lastTs ? ts - lastTs : 0; const dt = Math.min(0.1, Math.max(0, _gapMs / 1000));
+      lastTs = ts; if (_gapMs > 1500) { /* 帧间隔超 1.5 秒：循环曾停跑（切页/后台冻结），这段时间不计入游戏 */ if (state.gameEndsAt) state.gameEndsAt += _gapMs; state.customers.forEach(function (c) { c.endsAt += _gapMs; }); }
       if (state.gameEndsAt) state.timeLeft = Math.max(0, (state.gameEndsAt - nowMs()) / 1000); else state.timeLeft -= dt;
       if (state.timeLeft <= 0) {
         state.timeLeft = 0;
@@ -1056,7 +1056,7 @@
   /* ── 暂停 / 继续 ── */
   function pauseGame(auto) {
     if (!state || !state.running || state.paused) return;
-    state.paused = true;
+    var _now0 = nowMs(); if (lastTs && _now0 - lastTs > 1500) { /* 暂停晚触发（切页/后台冻结）：自上一帧已过去 1.5 秒以上，先把这段时间补回倒计时与顾客耐心，再快照 */ var _gap0 = _now0 - lastTs; if (state.gameEndsAt) state.gameEndsAt += _gap0; state.customers.forEach(function (c) { c.endsAt += _gap0; }); } lastTs = _now0; state.paused = true;
     var _at = (hiddenAt && hiddenAt < nowMs()) ? hiddenAt : nowMs(); var _tl = state.gameEndsAt ? Math.max(0, (state.gameEndsAt - _at) / 1000) : state.timeLeft; pausedAt = _at; state.timeLeft = _tl; pauseSnapshot = { at: _at, timeLeft: _tl, gameEndsAt: state.gameEndsAt, nextSpawnIn: state.nextSpawnIn, customers: state.customers.map(function (c) { return { id: c.id, remainMs: Math.max(0, c.endsAt - _at) }; }) };
     cancelAnimationFrame(rafId);
     $("pauseNote").textContent = auto ? "已自动暂停（你切走了页面），计时已停下，回来点继续～" : "计时已停下，慢慢来～";
