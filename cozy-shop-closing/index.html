@@ -1107,7 +1107,7 @@
     renderHUD();
     // 服务行就是唯一的提示行：写清是谁、得了什么、为什么（选中/稀客/未选中），保持单行；
     // 不再同步清掉同一次交互里写好的提示（P6 根因：旧 serveSuccess 会清掉选人提示）。
-    let serveLine = t("toast.served", { courier: via === "courier" ? "🛵 " : "", emoji: c.emoji, name: c.name, coins: gained, speed: speed ? " ⚡" : "", warm: warm, selTag: selected ? "·选中" : "", rareTag: c.rare ? "·稀客" : "", noSelTag: (!selected && !c.rare) ? "·未选中" : "", restock: restockInfo ? " 🎁" + restockInfo.emoji : "" });
+    let serveLine = t("toast.served", { courier: via === "courier" ? "🛵 " : "", emoji: c.emoji, name: c.name, coins: gained, speed: speed ? " ⚡" : "", warm: warm, selTag: selected ? "·选中" : "", rareTag: c.rare ? "·稀客" : "", noSelTag: (!selected && !c.rare) ? "·未选中" : "", restock: restockInfo ? " 🎁补了 1 个 " + restockInfo.emoji + restockInfo.name : "" });
     if (wasGuide) serveLine += " " + t("toast.firstOrder");
     toast(serveLine);
     renderItems();
