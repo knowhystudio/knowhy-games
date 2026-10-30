@@ -116,7 +116,29 @@ const { chromium } = require('playwright');
     assert.equal(new Set(results.growth.colors).size, 4); assert.ok(results.growth.sizes.every((v, i, a) => i === 0 || v > a[i - 1]));
     results.caps = await page.evaluate(() => { for (const k of ['shovel', 'sun', 'water']) for (let i = 0; i < 4; i++) addTool(k); render(); return { ...inventory }; });
     assert.deepEqual(results.caps, { shovel: 2, sun: 2, water: 2 });
+    // 里程碑奖励：只在未满道具中选取；三道具全满时播报里程碑而非静默消耗。
+    // 直接调用 clearLines 越线，不经过 move 的补种，使结果不受补种随机性影响。
+    results.milestone = {};
+    for (const [key, preset] of [['oneCapped', { shovel: 2, sun: 1, water: 1 }], ['allCapped', { shovel: 2, sun: 2, water: 2 }]]) {
+      results.milestone[key] = await page.evaluate(async preset => {
+        fixture([[0, 0], [1, 0], [2, 0]]);
+        score = 20; inventory = { ...preset };
+        const before = { ...inventory };
+        await clearLines('move');
+        return { score, before, after: { ...inventory }, message: document.getElementById('message').textContent, reward50: window['reward_50'] };
+      }, preset);
+    }
+    assert.equal(results.milestone.oneCapped.score, 50);
+    assert.equal(results.milestone.oneCapped.after.shovel, 2);
+    const milestoneGain = ['sun', 'water'].filter(k => results.milestone.oneCapped.after[k] === results.milestone.oneCapped.before[k] + 1);
+    assert.equal(milestoneGain.length, 1);
+    assert.ok(results.milestone.oneCapped.message.includes('（' + (milestoneGain[0] === 'sun' ? '阳光' : '浇水壶') + ' +1）'));
+    assert.equal(results.milestone.allCapped.score, 50);
+    assert.deepEqual(results.milestone.allCapped.after, { shovel: 2, sun: 2, water: 2 });
+    assert.match(results.milestone.allCapped.message, /50 分里程碑：道具已满/);
+    assert.equal(results.milestone.allCapped.reward50, true);
 
+    
     results.warning = [];
     for (const spaces of [11, 10, 9, 0]) {
       results.warning.push(await page.evaluate(spaces => {
