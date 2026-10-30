@@ -562,7 +562,7 @@
   let state = null;
   let rafId = 0, lastTs = 0, loopGen = 0;
   let toastTimer = 0, toastGen = 0;
-  let pausedAt = 0;
+  let pausedAt = 0; let hiddenAt = 0; let pauseSnapshot = null;
   let pendingConfirm = null; // {kind:"item", id} | {kind:"restart"} | {kind:"exchange"}
   let guideDone = false;
   try { guideDone = localStorage.getItem("cozyShopGuideDone") === "1"; } catch (e) {}
@@ -571,7 +571,7 @@
     if (!state) return null;
     return {
       running: state.running, paused: state.paused, timeLeft: Math.ceil(state.timeLeft),
-      coins: state.coins, warmth: state.warmth, served: state.served, left: state.left,
+      coins: state.coins, warmth: state.warmth, served: state.served, left: state.left, items: { courier: state.items.courier, lamp: state.items.lamp, herb: state.items.herb },
       spawned: state.spawned, rareSpawned: state.rareSpawned,
       customers: state.customers.map(function (c) {
         return { id: c.id, name: c.name, emoji: c.emoji, wish: c.wish, rare: !!c.rare,
@@ -584,7 +584,7 @@
     const items = {};
     for (const it of ITEMS) items[it.id] = ITEM_START;
     return {
-      running: false, paused: false,
+      running: false, paused: false, gameEndsAt: 0,
       timeLeft: GAME_SECONDS,
       coins: 0, warmth: 0, served: 0, left: 0, combo: 0,
       sinceRestock: 0, spawned: 0, rareSpawned: 0,
@@ -594,7 +594,7 @@
       items: items,
       nextSpawnIn: SPAWN_FIRST,
       lastAvatar: null,
-      milestonesHit: [],
+      milestonesHit: [], milestoneNote: "",
       guideStage: 0,
     };
   }
@@ -852,22 +852,22 @@
   /* ── 服务 / 道具 ── */
   function restockProp(prefix) {
     const lacking = ITEMS.filter(function (it) { return state.items[it.id] < ITEM_CAP; });
-    if (!lacking.length) { toast("🎁 道具都满了，这次没有补充"); return; }
+    if (!lacking.length) { return null; }
     const it = lacking[Math.floor(Math.random() * lacking.length)];
     state.items[it.id] += 1;
-    toast(prefix + it.emoji + it.name);
+    return { id: it.id, emoji: it.emoji, name: it.name, text: prefix + it.emoji + it.name };
   }
   function checkWarmthMilestones() {
     WARMTH_MILESTONES.forEach(function (m) {
       if (state.warmth >= m && state.milestonesHit.indexOf(m) < 0) {
         state.milestonesHit.push(m);
-        restockProp("💗 暖心值满 " + m + "，口碑传开，获赠 1 个 ");
+        state.milestoneNote = "💗 暖心值满 " + m + "（不额外补道具，每 5 单只补 1 个）";
       }
     });
   }
-  function serveSuccess(c, via) {
+  function serveSuccess(c, via, snap) {
     if (!state || state.customers.indexOf(c) < 0) return;
-    const frac = remainFrac(c); const speed = frac >= SPEED_THRESHOLD; const pct = Math.round(frac * 100);
+    const frac = (snap && snap.customerId === c.id) ? snap.frac : remainFrac(c); const speed = frac >= SPEED_THRESHOLD; const pct = Math.round(frac * 100);
     const selected = state.selectedId === c.id;
     const base = c.coin * (c.rare ? 2 : 1);
     const gained = base + (speed ? SPEED_BONUS : 0);
@@ -888,13 +888,13 @@
     if (state.selectedId === c.id) state.selectedId = null;
     removeCustomer(c, "happy", 650);
     renderSelection();
-    state.sinceRestock += 1;
+    state.sinceRestock += 1; var restockInfo = null; state.milestoneNote = "";
     if (state.sinceRestock >= RESTOCK_EVERY) {
       state.sinceRestock = 0;
-      restockProp("🎁 服务满 " + state.served + " 单，补充了 1 个 ");
+      restockInfo = restockProp("🎁 服务满 " + state.served + " 单，补充了 1 个 ");
     }
-    checkWarmthMilestones();
-    renderHUD(true); const serveLine = (via === "courier" ? "🛵 快递送出 " : "") + "😊 " + c.name + "很开心 +" + gained + "🪙（耐心剩 " + pct + "%" + (speed ? "，神速+" + SPEED_BONUS : "，不足一半无神速") + (c.rare ? "，稀客翻倍" : "") + "）💗+" + warm; const serveLogEl = $("serveLog"); if (serveLogEl) serveLogEl.textContent = serveLine; toast(serveLine);
+    checkWarmthMilestones(); var milestoneNote = state.milestoneNote || ""; state.milestoneNote = "";
+    renderHUD(true); const serveLine = (via === "courier" ? "🛵 快递送出 " : "") + "😊 " + c.name + "很开心 +" + gained + "🪙（耐心剩 " + pct + "%" + (speed ? "，神速+" + SPEED_BONUS : "，不足一半无神速") + (c.rare ? "，稀客翻倍" : "") + "）💗+" + warm + (restockInfo ? " 🎁 满" + state.served + "单补1个" + restockInfo.emoji + restockInfo.name + "（道具 " + state.items.courier + "/" + state.items.lamp + "/" + state.items.herb + "）" : (state.sinceRestock === 0 ? " 🎁 道具已满，本次不补" : "")) + (milestoneNote ? " " + milestoneNote : ""); const serveLogEl = $("serveLog"); if (serveLogEl) serveLogEl.textContent = serveLine; clearToast();
     renderItems();
     if (wasGuide) {
       finishGuide();
@@ -947,17 +947,17 @@
     else body = "让所有等待顾客的耐心 +3 秒。现在有 " + state.items[id] + " 个。";
     openConfirm({ kind: "item", id: id, title: "使用" + it.emoji + it.name + "？", body: body });
   }
-  function applyItem(id) {
+  function applyItem(id, snap) {
     if (!state || state.items[id] <= 0) return;
     if (!state.customers.length) { toast("⏳ 还没有顾客进店，道具先留着吧～"); return; }
     state.items[id] -= 1;
     if (id === "courier") {
-      const c = pickTarget();
+      const c = (snap && snap.customerId) ? (state.customers.find(function (x) { return x.id === snap.customerId; }) || pickTarget()) : pickTarget();
       if (!c) return;
       toast("🛵 快递小哥帮忙送出！");
-      serveSuccess(c, "courier");
+      serveSuccess(c, "courier", snap);
     } else if (id === "lamp") {
-      const c = pickTarget();
+      const c = (snap && snap.customerId) ? (state.customers.find(function (x) { return x.id === snap.customerId; }) || pickTarget()) : pickTarget();
       if (!c) return;
       c.endsAt = Math.min(c.endsAt + LAMP_SECONDS * 1000, nowMs() + c.totalSec * 1000);
       floatNote(c.el, "💡 +6秒");
@@ -992,7 +992,7 @@
 
   /* ── 确认框：点道具 / 换道具 / 重开前先确认，同时暂停计时 ── */
   function openConfirm(cfg) {
-    pendingConfirm = cfg;
+    pendingConfirm = cfg; if (cfg.kind === "item") { var _t = pickTarget(); if (_t) { var _f = remainFrac(_t); cfg.snapshot = { customerId: _t.id, frac: _f, pct: Math.round(_f * 100), remainSec: remainSec(_t), totalSec: _t.totalSec }; if (cfg.id === "courier") cfg.body = cfg.body + "（确认时目标：" + _t.name + "，耐心剩 " + Math.round(_f * 100) + "%" + (_f >= SPEED_THRESHOLD ? "，高于一半，确认后神速+2" : "，不足一半，无神速") + "，以这个快照结算）"; } }
     $("confirmTitle").textContent = cfg.title;
     $("confirmBody").textContent = cfg.body;
     confirmOverlay.classList.remove("hidden");
@@ -1009,7 +1009,7 @@
     confirmOverlay.classList.add("hidden");
     if (!cfg) { if (state && state.running && state.paused) resumeGame(); return; }
     if (cfg.kind === "restart") { startGame(); return; }
-    if (cfg.kind === "item") applyItem(cfg.id);
+    if (state && state.running && state.paused) resumeGame(); if (cfg.kind === "item") applyItem(cfg.id, cfg.snapshot);
     else if (cfg.kind === "exchange") applyExchange();
     if (state && state.running && state.paused) resumeGame();
   });
@@ -1020,9 +1020,9 @@
     return function loop(ts) {
       if (gen !== loopGen) return;
       if (!state || !state.running || state.paused) return;
-      if ((document.hidden || !document.hasFocus()) && state && state.running && !state.paused) pauseGame(true); if (!state || !state.running || state.paused) return; const dt = Math.min(0.1, Math.max(0, (ts - lastTs) / 1000));
+      if (document.hidden) { if (!hiddenAt) hiddenAt = nowMs(); pauseGame(true); return; } if (!state || !state.running || state.paused) return; const dt = Math.min(0.1, Math.max(0, (ts - lastTs) / 1000));
       lastTs = ts;
-      state.timeLeft -= dt;
+      if (state.gameEndsAt) state.timeLeft = Math.max(0, (state.gameEndsAt - nowMs()) / 1000); else state.timeLeft -= dt;
       if (state.timeLeft <= 0) {
         state.timeLeft = 0;
         renderTimer();
@@ -1057,7 +1057,7 @@
   function pauseGame(auto) {
     if (!state || !state.running || state.paused) return;
     state.paused = true;
-    pausedAt = nowMs();
+    var _at = (hiddenAt && hiddenAt < nowMs()) ? hiddenAt : nowMs(); var _tl = state.gameEndsAt ? Math.max(0, (state.gameEndsAt - _at) / 1000) : state.timeLeft; pausedAt = _at; state.timeLeft = _tl; pauseSnapshot = { at: _at, timeLeft: _tl, gameEndsAt: state.gameEndsAt, nextSpawnIn: state.nextSpawnIn, customers: state.customers.map(function (c) { return { id: c.id, remainMs: Math.max(0, c.endsAt - _at) }; }) };
     cancelAnimationFrame(rafId);
     $("pauseNote").textContent = auto ? "已自动暂停（你切走了页面），计时已停下，回来点继续～" : "计时已停下，慢慢来～";
     pauseOverlay.classList.remove("hidden");
@@ -1065,8 +1065,8 @@
   }
   function resumeGame() {
     if (!state || !state.running || !state.paused) return; if (document.hidden) return;
-    const delta = nowMs() - pausedAt;
-    state.customers.forEach(function (c) { c.endsAt += delta; });
+    var _now = nowMs(); var _snap = pauseSnapshot; var _tl2 = _snap ? _snap.timeLeft : state.timeLeft; state.timeLeft = _tl2; state.gameEndsAt = _now + _tl2 * 1000; if (_snap) { state.nextSpawnIn = _snap.nextSpawnIn; state.customers.forEach(function (c) { var _s = _snap.customers.find(function (x) { return x.id === c.id; }); c.endsAt = _now + (_s ? _s.remainMs : Math.max(0, c.endsAt - pausedAt)); }); } else { var delta = _now - pausedAt; state.customers.forEach(function (c) { c.endsAt += delta; }); state.customers.forEach(function (c) { c.endsAt += delta; }); } pauseSnapshot = null; hiddenAt = 0;
+    /* 已按快照恢复每位顾客的剩余耐心，不再按 delta 再推 */
     state.paused = false;
     pauseOverlay.classList.add("hidden");
     helpOverlay.classList.add("hidden");
@@ -1074,7 +1074,7 @@
     rafId = requestAnimationFrame(makeLoop(loopGen));
     renderItems();
   }
-  /* 自动暂停：切页、切窗口或应用、页面藏起时都暂停；回来后不自动继续，须点「继续营业」。另加 250 毫秒看门狗，页面隐藏或失去焦点即暂停，防切换事件漏掉。 */ function autoPause() { if (state && state.running && !state.paused) pauseGame(true); } window.addEventListener("blur", autoPause); window.addEventListener("pagehide", autoPause); setInterval(function () { if (document.hidden || !document.hasFocus()) autoPause(); }, 250); document.addEventListener("visibilitychange", function () {
+  /* 自动暂停：切页、切窗口或应用、页面藏起时都暂停；回来后不自动继续，须点「继续营业」。另加 250 毫秒看门狗，页面隐藏或失去焦点即暂停，防切换事件漏掉。 */ function autoPause() { if (document.hidden && !hiddenAt) hiddenAt = nowMs(); if (state && state.running && !state.paused) pauseGame(true); } function markHidden() { if (document.hidden && !hiddenAt) hiddenAt = nowMs(); } window.addEventListener("blur", autoPause); window.addEventListener("pagehide", function () { markHidden(); autoPause(); }); document.addEventListener("visibilitychange", function () { markHidden(); autoPause(); }); setInterval(function () { if (document.hidden) markHidden(); if (document.hidden || !document.hasFocus()) autoPause(); }, 250); document.addEventListener("visibilitychange", function () {
     if ((document.hidden || !document.hasFocus()) && state && state.running && !state.paused) pauseGame(true);
   });
 
@@ -1105,7 +1105,7 @@
     renderItems();
     renderSelection();
     renderTimer();
-    state.running = true; renderItems();
+    state.running = true; state.gameEndsAt = nowMs() + GAME_SECONDS * 1000; state.timeLeft = GAME_SECONDS; hiddenAt = 0; pauseSnapshot = null; renderItems();
     lastTs = nowMs();
     rafId = requestAnimationFrame(makeLoop(loopGen));
   }
@@ -1140,7 +1140,7 @@
   }
   function endGame() {
     if (!state) return;
-    state.running = false;
+    state.running = false; hiddenAt = 0; pauseSnapshot = null;
     state.paused = false;
     cancelAnimationFrame(rafId);
     const waiting = state.customers.length;
