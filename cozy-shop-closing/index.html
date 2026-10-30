@@ -136,7 +136,7 @@
     font-size: 20px;
     box-shadow: 0 3px 8px rgba(107, 85, 96, 0.15);
   }
-  .floor-line { position: absolute; left: 0; right: 0; bottom: 44px; height: 3px; background: rgba(255, 255, 255, 0.7); }
+  .floor-line { position: absolute; left: 0; right: 0; bottom: 44px; height: 3px; background: rgba(255, 255, 255, 0.7); } .frame { position: absolute; left: 50%; transform: translateX(-50%); top: 42%; font-size: 28px; line-height: 1; filter: drop-shadow(0 2px 2px rgba(107, 85, 96, .25)); } .clock { position: absolute; right: 14px; top: 44%; font-size: 25px; line-height: 1; background: #fff; border: 1px solid #f3d9df; border-radius: 10px; padding: 4px 8px; box-shadow: 0 3px 8px rgba(107, 85, 96, 0.15); }
   .counter {
     position: absolute; left: 0; right: 0; bottom: 0;
     height: 44px;
@@ -393,7 +393,7 @@
     <div class="toast-bar"><div id="toast" role="status"></div></div>
     <div id="scenery" aria-hidden="true">
       <div class="win">🌙</div>
-      <div class="lamp">💡</div>
+      <div class="lamp">💡</div><div class="frame">🖼️</div><div class="clock">🕰️</div>
       <div class="shelf">🫙 🌸 🍵</div>
       <div class="floor-line"></div>
       <div class="counter"><span class="deco">🧸</span><span class="sign">🌙 打烊前 · 欢迎光临</span><span class="deco">🪴</span></div>
@@ -1105,7 +1105,7 @@
     renderItems();
     renderSelection();
     renderTimer();
-    state.running = true;
+    state.running = true; renderItems();
     lastTs = nowMs();
     rafId = requestAnimationFrame(makeLoop(loopGen));
   }
