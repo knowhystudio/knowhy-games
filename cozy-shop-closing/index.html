@@ -43,21 +43,31 @@
     margin: 0 auto;
     display: flex;
     flex-direction: column;
-    padding: calc(10px + env(safe-area-inset-top)) 12px calc(10px + env(safe-area-inset-bottom));
+    padding: calc(8px + env(safe-area-inset-top)) 12px calc(8px + env(safe-area-inset-bottom));
   }
 
   /* ── 顶栏 ── */
-  header { display: flex; justify-content: space-between; align-items: center; }
-  .shop-name { font-weight: 700; font-size: 16px; }
+  header { display: flex; align-items: center; gap: 6px; }
+  .shop-name { font-weight: 700; font-size: 16px; flex: 1; min-width: 0; white-space: nowrap; }
   .timer {
     background: var(--card);
     border-radius: 999px;
-    padding: 7px 16px;
+    padding: 7px 14px;
     font-size: 20px;
     font-weight: 700;
     box-shadow: 0 3px 10px rgba(214, 158, 180, 0.15);
+    white-space: nowrap;
   }
   .timer.low { color: var(--danger); animation: beat 1s ease-in-out infinite; }
+  .icon-btn {
+    flex: none;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: var(--card);
+    font-size: 15px;
+    box-shadow: 0 3px 10px rgba(214, 158, 180, 0.15);
+  }
+  .icon-btn:active { transform: scale(0.92); }
   .stats { display: flex; gap: 8px; margin-top: 8px; }
   .stat {
     flex: 1;
@@ -70,235 +80,300 @@
     box-shadow: 0 3px 10px rgba(214, 158, 180, 0.1);
   }
   .stat b { display: block; font-size: 16px; color: var(--ink); }
+  .stat.bump b { animation: bump 0.35s ease; }
 
-  /* ── 顾客队列 ── */
-  #queue {
-    flex: 1;
-    min-height: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end; /* 顾客卡片贴近底部商品区，压缩中间空隙 */
-    gap: 8px;
-    padding: 6px 0 8px;
-    position: relative;
-  }
-  .empty-hint {
-    margin: auto;
-    text-align: center;
-    color: var(--ink-soft);
-    font-size: 13px;
-    line-height: 1.9;
-  }
-  .empty-hint .lamps { font-size: 34px; }
-  .customer {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    width: 100%;
-    text-align: left;
-    cursor: pointer;
-    background: var(--card);
-    border-radius: var(--radius);
-    padding: 10px 12px;
-    box-shadow: 0 4px 14px rgba(214, 158, 180, 0.16);
-    animation: pop 0.25s ease;
-  }
-  .customer.selected {
-    outline: 3px solid var(--pink-deep);
-    box-shadow: 0 6px 18px rgba(239, 157, 184, 0.45);
-    transform: scale(1.02);
-  }
-  .customer .avatar { font-size: 30px; width: 42px; text-align: center; flex: none; }
-  .customer .info { flex: 1; min-width: 0; }
-  .bubble {
-    display: inline-block;
-    background: var(--butter);
-    border-radius: 12px 12px 12px 4px;
-    padding: 3px 10px;
-    font-size: 13px;
-    margin-bottom: 6px;
-  }
-  .patience {
-    height: 6px;
-    background: #f4e4ea;
-    border-radius: 3px;
-    overflow: hidden;
-  }
-  .patience-row { display: flex; align-items: center; gap: 8px; }
-  .patience-row .patience { flex: 1; }
-  .ptime {
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--ink-soft);
-    min-width: 30px;
-    text-align: right;
-  }
-  .patience-fill {
-    height: 100%;
-    width: 100%;
-    border-radius: 3px;
-    background: linear-gradient(90deg, var(--mint-deep), var(--pink-deep));
-    transition: width 0.15s linear;
-  }
-  .customer.urgent .patience-fill {
-    background: var(--danger);
-    animation: blink 0.7s ease-in-out infinite;
-  }
-  .customer.urgent .ptime { color: var(--danger); }
-  .customer.urgent .bubble { background: var(--pink); }
-  .customer.leaving { transition: opacity 0.3s ease, transform 0.3s ease; pointer-events: none; }
-  .customer.leaving.happy { opacity: 0; transform: translateY(-14px) scale(0.96); }
-  .customer.leaving.sad { opacity: 0; transform: translateY(10px) scale(0.96); filter: grayscale(0.8); }
-  .float-note {
-    position: absolute;
-    left: 50%;
-    top: 30%;
-    transform: translateX(-50%);
-    font-size: 15px;
-    font-weight: 700;
-    white-space: nowrap;
-    animation: floatUp 0.9s ease forwards;
-    pointer-events: none;
-    z-index: 2;
-  }
-
-  /* ── 提示条 ── */
+  /* ── 提示条：独立一行，绝不遮住顾客卡片 ── */
+  .toast-bar { min-height: 32px; display: flex; align-items: center; justify-content: center; padding: 3px 0; }
   #toast {
-    position: absolute;
-    bottom: 6px; /* 悬在道具按钮正上方，就近说明原因 */
-    left: 50%;
-    transform: translateX(-50%);
     background: rgba(107, 85, 96, 0.92);
     color: #fff;
     font-size: 13px;
     border-radius: 999px;
     padding: 6px 14px;
-    white-space: nowrap;
     opacity: 0;
     transition: opacity 0.25s ease;
     pointer-events: none;
-    z-index: 5;
     max-width: 100%;
+    text-align: center;
+    line-height: 1.4;
   }
   #toast.show { opacity: 1; }
 
-  /* ── 道具 ── */
-  .item-legend { font-size: 13px; color: var(--ink-soft); margin: 0 2px 4px; }
-  #items { display: flex; gap: 8px; margin-bottom: 8px; }
-  .item-btn {
+  /* ── 店内布景：窗、灯、货架、柜台 ── */
+  #scenery {
     position: relative;
     flex: 1;
-    height: 56px;
-    border-radius: 14px;
-    background: var(--lavender);
-    font-size: 14px;
+    min-height: 118px;
+    border-radius: var(--radius);
+    background: linear-gradient(180deg, #fdeef3 0%, #fdf6ee 55%, #eef7f0 100%);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    box-shadow: inset 0 2px 8px rgba(214, 158, 180, 0.12);
+    overflow: hidden;
+    margin-bottom: 8px;
+    pointer-events: none;
+  }
+  .win {
+    position: absolute; top: 10px; left: 14px;
+    width: 74px; height: 58px;
+    border-radius: 37px 37px 8px 8px;
+    background: linear-gradient(180deg, #8fa8d8, #c9b8e0);
+    border: 4px solid #fff;
+    box-shadow: 0 3px 8px rgba(107, 85, 96, 0.18);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px;
+  }
+  .win::after { content: "✦ ⋆ ✦"; position: absolute; top: 4px; right: 6px; font-size: 9px; color: #fff; }
+  .lamp {
+    position: absolute; top: 6px; left: 50%; transform: translateX(-50%);
+    font-size: 30px; line-height: 1;
+    filter: drop-shadow(0 0 8px rgba(240, 202, 130, 0.9));
+  }
+  .shelf {
+    position: absolute; top: 12px; right: 12px;
+    background: #fff;
+    border-radius: 10px;
+    padding: 6px 10px;
+    font-size: 20px;
+    box-shadow: 0 3px 8px rgba(107, 85, 96, 0.15);
+  }
+  .floor-line { position: absolute; left: 0; right: 0; bottom: 44px; height: 3px; background: rgba(255, 255, 255, 0.7); }
+  .counter {
+    position: absolute; left: 0; right: 0; bottom: 0;
+    height: 44px;
+    background: linear-gradient(180deg, #e8b07f, #d99a63);
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+  }
+  .counter .sign {
+    background: #fff8ec;
+    border-radius: 999px;
+    padding: 3px 12px;
+    font-size: 12px; font-weight: 700; color: #8a6a4f;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+    white-space: nowrap;
+  }
+  .counter .deco { font-size: 20px; }
+
+  /* ── 顾客队列 ── */
+  #queue {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 2px 0 8px;
+    position: relative;
+  }
+  .empty-hint {
+    text-align: center;
+    color: var(--ink-soft);
+    font-size: 13px;
+    line-height: 1.9;
+    padding: 6px 0;
+  }
+  .empty-hint .lamps { font-size: 30px; }
+  .customer {
+    position: relative;
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 4px;
+    gap: 10px;
+    width: 100%;
+    text-align: left;
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 9px 12px;
+    box-shadow: 0 4px 14px rgba(214, 158, 180, 0.16);
+    animation: pop 0.25s ease;
+  }
+  .customer.selected {
+    outline: 3px solid var(--pink-deep);
+    background: #fff5f8;
+    box-shadow: 0 0 0 5px rgba(239, 157, 184, 0.28), 0 8px 20px rgba(239, 157, 184, 0.5);
+    transform: scale(1.02);
+  }
+  .customer.guide-target {
+    outline: 3px solid #f0ca82;
+    animation: guidePulse 1s ease-in-out infinite;
+  }
+  .customer .avatar { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 46px; flex: none; }
+  .customer .av-emoji { font-size: 30px; line-height: 1.1; }
+  .customer .cname { font-size: 11px; color: var(--ink-soft); margin-top: 1px; white-space: nowrap; }
+  .customer .info { flex: 1; min-width: 0; }
+  .demand { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; flex-wrap: wrap; }
+  .bubble {
+    display: inline-block;
+    background: var(--butter);
+    border-radius: 12px 12px 12px 4px;
+    padding: 4px 10px;
+    font-size: 15px;
+    font-weight: 600;
+  }
+  .mini-badge {
+    font-size: 11px; font-weight: 700; color: #fff;
+    background: var(--pink-deep);
+    border-radius: 999px; padding: 2px 8px;
+    white-space: nowrap;
+  }
+  .mini-badge.rare { background: #b388e0; }
+  .mini-badge:empty { display: none; }
+  .patience { height: 8px; background: #f4e4ea; border-radius: 4px; overflow: hidden; }
+  .patience-row { display: flex; align-items: center; gap: 8px; }
+  .patience-row .patience { flex: 1; }
+  .ptime {
+    font-size: 14px; font-weight: 700; color: var(--ink-soft);
+    min-width: 52px; text-align: right; white-space: nowrap;
+  }
+  .patience-fill {
+    height: 100%; width: 100%; border-radius: 4px;
+    background: linear-gradient(90deg, var(--mint-deep), var(--pink-deep));
+    transition: width 0.15s linear;
+  }
+  .customer.urgent .patience-fill { background: var(--danger); animation: blink 0.7s ease-in-out infinite; }
+  .customer.urgent .ptime { color: var(--danger); font-size: 15px; }
+  .customer.urgent .bubble { background: var(--pink); }
+  .customer.urgent .patience-row { animation: urgentShake 0.45s ease-in-out infinite; }
+  .customer.leaving { transition: opacity 0.32s ease, transform 0.32s ease, filter 0.32s ease; pointer-events: none; }
+  .customer.leaving.happy { opacity: 0; transform: translateY(-14px) scale(0.96); }
+  .customer.leaving.sad { opacity: 0; transform: translateY(10px) scale(0.96); filter: grayscale(0.9); }
+  .guide-tag {
+    position: absolute; top: -11px; right: 12px;
+    background: var(--butter-deep); color: #7a5a2e;
+    font-size: 12px; font-weight: 700;
+    border-radius: 999px; padding: 2px 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    white-space: nowrap;
+  }
+  .float-note {
+    position: absolute; left: 50%; top: 38%;
+    transform: translate(-50%, -50%);
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 999px; padding: 3px 10px;
+    font-size: 15px; font-weight: 700; white-space: nowrap;
+    box-shadow: 0 3px 10px rgba(214, 158, 180, 0.35);
+    animation: floatUp 0.95s ease forwards;
+    pointer-events: none; z-index: 3;
+  }
+
+  /* ── 新手引导 ── */
+  #guide {
+    display: none;
+    background: #fff8ec;
+    border: 2px dashed var(--butter-deep);
+    border-radius: 14px;
+    padding: 8px 12px;
+    font-size: 13px; line-height: 1.6;
+    margin-bottom: 8px;
+    text-align: center;
+  }
+  #guide.show { display: block; }
+  #guide b { color: #c98a2e; }
+
+  /* ── 道具 ── */
+  .item-legend { font-size: 12px; color: var(--ink-soft); margin: 0 2px 6px; line-height: 1.5; }
+  #items { display: flex; gap: 8px; margin-bottom: 8px; }
+  .item-btn {
+    flex: 1;
+    min-width: 0;
+    height: 62px;
+    border-radius: 14px;
+    background: var(--lavender);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+    padding: 6px 6px;
     transition: transform 0.08s ease, opacity 0.2s ease;
   }
-  .item-btn .big { font-size: 22px; }
   .item-btn:active { transform: scale(0.95); }
-  .item-btn.empty { opacity: 0.45; }
+  .item-btn.empty { opacity: 0.45; filter: grayscale(0.7); }
+  .item-btn:disabled { opacity: 0.4; filter: grayscale(0.8); }
+  .item-btn .itop { display: flex; align-items: center; gap: 4px; }
+  .item-btn .big { font-size: 20px; }
+  .item-btn .iname { font-size: 13px; font-weight: 700; white-space: nowrap; }
   .item-btn .count {
-    position: absolute;
-    top: -8px;
-    right: -6px;
-    background: var(--pink-deep);
-    color: #fff;
-    font-size: 14px;
-    line-height: 1;
-    padding: 4px 8px;
-    border-radius: 999px;
+    background: var(--pink-deep); color: #fff;
+    font-size: 12px; line-height: 1; padding: 3px 7px; border-radius: 999px; white-space: nowrap;
   }
+  .item-btn .ieffect { font-size: 11px; color: var(--ink-soft); white-space: nowrap; }
   .item-btn.shake { animation: shake 0.3s ease; }
+  #exchangeBtn {
+    width: 100%; height: 34px; border-radius: 12px;
+    background: var(--card);
+    font-size: 13px; font-weight: 700;
+    box-shadow: 0 3px 10px rgba(214, 158, 180, 0.12);
+    margin-bottom: 8px;
+  }
+  #exchangeBtn:disabled { opacity: 0.45; filter: grayscale(0.6); font-weight: 400; }
 
   /* ── 商品 ── */
   #products { display: flex; gap: 8px; }
   .product-btn {
-    flex: 1;
-    height: 74px;
-    border-radius: var(--radius);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 2px;
-    font-size: 13px;
-    font-weight: 700;
+    flex: 1; height: 74px; border-radius: var(--radius);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+    font-size: 13px; font-weight: 700;
     box-shadow: 0 4px 12px rgba(214, 158, 180, 0.2);
-    transition: transform 0.08s ease;
+    transition: transform 0.08s ease, box-shadow 0.2s ease;
   }
   .product-btn:active { transform: scale(0.95); }
   .product-btn .big { font-size: 26px; }
   .product-btn .coin { font-weight: 400; font-size: 13px; color: var(--ink-soft); }
+  .product-btn.match { box-shadow: 0 0 0 3px var(--pink-deep), 0 4px 12px rgba(239, 157, 184, 0.5); }
+  .product-btn.guide-pulse { animation: guidePulse 1s ease-in-out infinite; }
   .p-flower { background: var(--pink); }
   .p-tea { background: var(--mint); }
   .p-bread { background: var(--butter); }
   .product-btn.shake { animation: shake 0.3s ease; }
 
-  /* ── 覆盖层：开始 / 结算 ── */
+  /* ── 覆盖层：开始 / 暂停 / 说明 / 确认 / 结算 ── */
   .overlay {
-    position: fixed;
-    inset: 0;
-    z-index: 20;
-    background: rgba(253, 243, 246, 0.97);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 14px;
-    padding: 24px;
-    text-align: center;
+    position: fixed; inset: 0; z-index: 20;
+    background: #fdf3f6;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 12px; padding: 24px; text-align: center;
   }
   .overlay.hidden { display: none; }
   .overlay .moon { font-size: 52px; }
   .overlay h1 { font-size: 21px; }
   .overlay .sub { font-size: 13px; color: var(--ink-soft); }
   .overlay .rules {
-    font-size: 13px;
-    line-height: 2;
-    color: var(--ink);
-    background: var(--card);
-    border-radius: var(--radius);
-    padding: 12px 18px;
-    box-shadow: 0 4px 14px rgba(214, 158, 180, 0.16);
-    text-align: left;
+    font-size: 13px; line-height: 2; color: var(--ink);
+    background: var(--card); border-radius: var(--radius);
+    padding: 12px 18px; box-shadow: 0 4px 14px rgba(214, 158, 180, 0.16);
+    text-align: left; max-width: 340px;
   }
   .primary-btn {
-    min-width: 220px;
-    height: 48px;
-    border-radius: 999px;
+    min-width: 220px; height: 48px; border-radius: 999px;
     background: linear-gradient(90deg, var(--pink-deep), #f4b8cd);
-    color: #fff;
-    font-size: 16px;
-    font-weight: 700;
+    color: #fff; font-size: 16px; font-weight: 700;
     box-shadow: 0 6px 16px rgba(239, 157, 184, 0.45);
     transition: transform 0.08s ease;
   }
   .primary-btn:active { transform: scale(0.96); }
-  .result-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    width: 100%;
-    max-width: 300px;
+  .secondary-btn {
+    min-width: 220px; height: 44px; border-radius: 999px;
+    background: var(--card); font-size: 15px; font-weight: 700;
+    box-shadow: 0 4px 12px rgba(214, 158, 180, 0.2);
   }
-  .result-cell {
-    background: var(--card);
-    border-radius: 14px;
-    padding: 10px 4px;
-    box-shadow: 0 4px 12px rgba(214, 158, 180, 0.14);
-  }
+  .secondary-btn:active { transform: scale(0.96); }
+  .result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; max-width: 300px; }
+  .result-cell { background: var(--card); border-radius: 14px; padding: 10px 4px; box-shadow: 0 4px 12px rgba(214, 158, 180, 0.14); }
   .result-cell b { display: block; font-size: 22px; }
   .result-cell span { font-size: 13px; color: var(--ink-soft); }
+  .result-lines { width: 100%; max-width: 320px; font-size: 13px; line-height: 1.9; text-align: left; background: var(--card); border-radius: 14px; padding: 10px 14px; box-shadow: 0 4px 12px rgba(214, 158, 180, 0.14); }
+  .stars { font-size: 26px; letter-spacing: 2px; }
+  .rating-label { font-size: 16px; font-weight: 700; }
+
+  #confirmOverlay { background: rgba(253, 243, 246, 0.92); z-index: 30; }
+  .confirm-box { background: var(--card); border-radius: var(--radius); padding: 20px; width: 100%; max-width: 320px; box-shadow: 0 8px 24px rgba(214, 158, 180, 0.3); display: flex; flex-direction: column; gap: 12px; align-items: center; }
+  .confirm-box h2 { font-size: 17px; }
+  .confirm-box p { font-size: 14px; line-height: 1.7; color: var(--ink); text-align: center; }
+  .confirm-box .row { display: flex; gap: 10px; width: 100%; }
+  .confirm-box .row button { flex: 1; height: 44px; border-radius: 999px; font-size: 15px; font-weight: 700; }
+  .confirm-yes { background: linear-gradient(90deg, var(--pink-deep), #f4b8cd); color: #fff; }
+  .confirm-no { background: #f4e4ea; }
 
   @keyframes pop { from { opacity: 0; transform: translateY(10px) scale(0.97); } to { opacity: 1; transform: none; } }
-  @keyframes floatUp { from { opacity: 1; transform: translate(-50%, 0); } to { opacity: 0; transform: translate(-50%, -34px); } }
+  @keyframes floatUp { from { opacity: 1; transform: translate(-50%, -50%); } to { opacity: 0; transform: translate(-50%, -160%); } }
   @keyframes beat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
   @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
   @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+  @keyframes urgentShake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-2px); } 75% { transform: translateX(2px); } }
+  @keyframes guidePulse { 0%, 100% { box-shadow: 0 0 0 3px rgba(240, 202, 130, 0.55); } 50% { box-shadow: 0 0 0 7px rgba(240, 202, 130, 0.15); } }
+  @keyframes bump { 0% { transform: scale(1); } 40% { transform: scale(1.25); } 100% { transform: scale(1); } }
 </style>
 </head>
 <body>
@@ -306,18 +381,30 @@
     <header>
       <div class="shop-name">🌙 治愈小店</div>
       <div class="timer" id="timer">⏰ 60s</div>
+      <button class="icon-btn" id="pauseBtn" aria-label="暂停">⏸️</button>
+      <button class="icon-btn" id="headerRestartBtn" aria-label="重新开始">🔁</button>
+      <button class="icon-btn" id="helpBtn" aria-label="玩法说明">❓</button>
     </header>
     <div class="stats">
       <div class="stat">🪙 金币<b id="statCoins">0</b></div>
       <div class="stat">💗 暖心<b id="statWarmth">0</b></div>
       <div class="stat">🚶 离开<b id="statLeft">0</b></div>
     </div>
+    <div class="toast-bar"><div id="toast" role="status"></div></div>
+    <div id="scenery" aria-hidden="true">
+      <div class="win">🌙</div>
+      <div class="lamp">💡</div>
+      <div class="shelf">🫙 🌸 🍵</div>
+      <div class="floor-line"></div>
+      <div class="counter"><span class="deco">🧸</span><span class="sign">🌙 打烊前 · 欢迎光临</span><span class="deco">🪴</span></div>
+    </div>
     <main id="queue">
       <div class="empty-hint"><div class="lamps">🪟🕯️🧸</div>小店很安静，顾客马上就来…</div>
-      <div id="toast"></div>
     </main>
-    <div class="item-legend">🛵 立即完成一位 · 💡 一位耐心大回复 · 🫖 全体耐心小回复</div>
+    <div id="guide"></div>
+    <div class="item-legend">🛵 立即完成 1 位 · 💡 一位耐心 +6 秒 · 🌿 全体耐心 +3 秒</div>
     <div id="items"></div>
+    <button id="exchangeBtn">🪙 花 15 金币换 1 个随机道具</button>
     <div id="products"></div>
   </div>
 
@@ -327,25 +414,65 @@
     <h1>治愈小店打烊前</h1>
     <div class="sub">Cozy Shop Before Closing</div>
     <div class="rules">
-      🕯️ 打烊倒计时 <b>60 秒</b>，能接待多少位客人？<br />
-      👆 点顾客卡片可选中（高亮），再点对应商品递给 TA<br />
-      🎯 未选中时，自动服务最着急的、想要该商品的顾客<br />
-      ⏳ 耐心条与秒数归零前没拿到就会失望离开<br />
-      🎁 每成功服务 5 单，随机补充 1 个道具（上限 2 个）
+      ⏰ <b>60 秒</b>倒计时，打烊前尽量多服务几位客人<br />
+      👆 点顾客卡片选中他，再点下面对应的商品递给他<br />
+      ⏳ 耐心归零前没拿到，就会失望离开
     </div>
     <button class="primary-btn" id="startBtn">🔋 开始营业</button>
+    <button class="secondary-btn" id="startHelpBtn">❓ 玩法与道具说明</button>
+  </div>
+
+  <!-- 暂停界面 -->
+  <div class="overlay hidden" id="pauseOverlay">
+    <div class="moon">⏸️</div>
+    <h1>已暂停</h1>
+    <div class="sub" id="pauseNote">计时已停下，慢慢来～</div>
+    <button class="primary-btn" id="resumeBtn">▶️ 继续营业</button>
+    <button class="secondary-btn" id="pauseRestartBtn">🔁 重新开始</button>
+    <button class="secondary-btn" id="pauseHelpBtn">❓ 玩法说明</button>
+  </div>
+
+  <!-- 玩法说明 -->
+  <div class="overlay hidden" id="helpOverlay">
+    <div class="moon">❓</div>
+    <h1>玩法说明</h1>
+    <div class="rules">
+      👆 点顾客卡片可选中（高亮），选中后再服务，<b>暖心值翻倍</b><br />
+      🎯 没选中时，自动服务最着急的、想要该商品的客人<br />
+      ⚡ 剩余耐心一半以上时服务，<b>多得 +2 金币</b><br />
+      🦄 稀客偶尔光临，服务他<b>金币翻倍</b><br />
+      ⏳ 耐心归零会失望离开；耐心条变红并出现 ⚠️ 时要抓紧<br />
+      🛵 快递小哥：立即完成 1 位 · 💡 暖灯：一位 +6 秒<br />
+      🌿 清新香薰：全体 +3 秒 · 每服务 5 单补 1 个道具
+    </div>
+    <button class="primary-btn" id="helpCloseBtn">知道了</button>
+  </div>
+
+  <!-- 道具 / 重开确认 -->
+  <div class="overlay hidden" id="confirmOverlay">
+    <div class="confirm-box">
+      <h2 id="confirmTitle">确认使用？</h2>
+      <p id="confirmBody"></p>
+      <div class="row">
+        <button class="confirm-no" id="confirmNo">取消</button>
+        <button class="confirm-yes" id="confirmYes">确认</button>
+      </div>
+    </div>
   </div>
 
   <!-- 结算界面 -->
   <div class="overlay hidden" id="resultOverlay">
     <div class="moon">🌙</div>
     <h1>打烊啦，今天辛苦了</h1>
+    <div class="stars" id="resStars">★★★★★</div>
+    <div class="rating-label" id="resRating">金牌店主</div>
     <div class="result-grid">
       <div class="result-cell"><b id="resServed">0</b><span>服务单数</span></div>
       <div class="result-cell"><b id="resCoins">0</b><span>金币</span></div>
       <div class="result-cell"><b id="resWarmth">0</b><span>暖心值</span></div>
       <div class="result-cell"><b id="resLeft">0</b><span>离开顾客</span></div>
     </div>
+    <div class="result-lines" id="resLines"></div>
     <button class="primary-btn" id="restartBtn">🔁 再来一局</button>
   </div>
 
@@ -382,12 +509,22 @@
   const QUEUE_MAX = 3;          // 同时等待的顾客上限
   const PATIENCE_MIN = 11;      // 顾客耐心区间（秒）
   const PATIENCE_MAX = 14;
-  const SPAWN_MIN = 3.5;        // 顾客到店间隔（秒）
-  const SPAWN_MAX = 5.5;
-  const SERVE_WARMTH = 5;       // 每单暖心值
+  const RARE_CHANCE = 0.12;     // 稀客出现概率
+  const RARE_MIN = 10;          // 稀客耐心区间（秒）
+  const RARE_MAX = 12;
+  const SPAWN_MIN = 2.8;        // 顾客到店间隔（秒）
+  const SPAWN_MAX = 4.2;
+  const SPAWN_FIRST = 0.5;      // 第一位顾客到店时间（秒）
+  const SERVE_WARMTH = 5;       // 每单暖心值（选中 / 稀客各再 +5）
   const RESTOCK_EVERY = 5;      // 每成功服务 N 单补 1 个随机道具
   const ITEM_CAP = 2;           // 道具上限
   const ITEM_START = 1;         // 每种道具开局数量
+  const LAMP_SECONDS = 6;       // 暖灯：一位顾客耐心 +6 秒
+  const HERB_SECONDS = 3;       // 清新香薰：全体顾客耐心 +3 秒
+  const SPEED_BONUS = 2;        // 神速奖励：剩余耐心不低于一半时服务，多得 2 金币
+  const SPEED_THRESHOLD = 0.5;
+  const WARMTH_MILESTONES = [30, 60]; // 暖心值满 30 / 60 各获赠 1 个随机道具
+  const EXCHANGE_COST = 15;     // 花 15 金币换 1 个随机道具
 
   const PRODUCTS = [
     { id: "flower", name: "鲜花", emoji: "🌸", coin: 8 },
@@ -397,51 +534,93 @@
   const WISH_TEXT = { flower: "我想要一束 🌸", tea: "想喝杯热 🍵", bread: "好想吃 🍞 呀" };
   const WISH_NAME = { flower: "鲜花🌸", tea: "热茶🍵", bread: "面包🍞" };
   const ITEMS = [
-    { id: "courier", name: "快递小哥", emoji: "🛵" },
-    { id: "lamp",    name: "暖灯",     emoji: "💡" },
-    { id: "teapot",  name: "招牌茶",   emoji: "🫖" },
+    { id: "courier", name: "快递小哥", emoji: "🛵", effect: "立即完成 1 位" },
+    { id: "lamp",    name: "暖灯",     emoji: "💡", effect: "一位耐心 +6 秒" },
+    { id: "herb",    name: "清新香薰", emoji: "🌿", effect: "全体耐心 +3 秒" },
   ];
-  const AVATARS = ["🐰", "🐱", "🧒", "👵", "🐻", "🦊", "🐼", "🐥"];
+  const AVATARS = [
+    { emoji: "🐰", name: "兔兔" }, { emoji: "🐱", name: "猫猫" },
+    { emoji: "🧒", name: "小朋友" }, { emoji: "👵", name: "奶奶" },
+    { emoji: "🐻", name: "熊熊" }, { emoji: "🦊", name: "狐狸" },
+    { emoji: "🐼", name: "熊猫" }, { emoji: "🐥", name: "小黄鸭" },
+  ];
+  const RARE = { emoji: "🦄", name: "独角兽稀客" };
 
   const rand = (a, b) => a + Math.random() * (b - a);
   const $ = (id) => document.getElementById(id);
+  const nowMs = () => performance.now();
 
   /* ── DOM 引用 ── */
   const queueEl = $("queue"), toastEl = $("toast");
   const timerEl = $("timer"), statCoins = $("statCoins"), statWarmth = $("statWarmth"), statLeft = $("statLeft");
-  const itemsEl = $("items"), productsEl = $("products");
+  const itemsEl = $("items"), productsEl = $("products"), guideEl = $("guide");
   const startOverlay = $("startOverlay"), resultOverlay = $("resultOverlay");
-  const restartBtn = $("restartBtn");
+  const pauseOverlay = $("pauseOverlay"), helpOverlay = $("helpOverlay"), confirmOverlay = $("confirmOverlay");
+  const restartBtn = $("restartBtn"), exchangeBtn = $("exchangeBtn");
 
   /* ── 状态 ── */
   let state = null;
-  let rafId = 0, lastTs = 0;
-  let toastTimer = 0;
-  // 供自动化测试 / 调试读取当前状态
-  window.__cozyDebug = () => state;
+  let rafId = 0, lastTs = 0, loopGen = 0;
+  let toastTimer = 0, toastGen = 0;
+  let pausedAt = 0;
+  let pendingConfirm = null; // {kind:"item", id} | {kind:"restart"} | {kind:"exchange"}
+  let guideDone = false;
+  try { guideDone = localStorage.getItem("cozyShopGuideDone") === "1"; } catch (e) {}
+  // 供调试读取当前状态：每位顾客的剩余秒数与显示秒数取自同一值
+  window.__cozyDebug = function () {
+    if (!state) return null;
+    return {
+      running: state.running, paused: state.paused, timeLeft: Math.ceil(state.timeLeft),
+      coins: state.coins, warmth: state.warmth, served: state.served, left: state.left,
+      spawned: state.spawned,
+      customers: state.customers.map(function (c) {
+        return { id: c.id, name: c.name, emoji: c.emoji, wish: c.wish, rare: !!c.rare,
+          totalSec: c.totalSec, remainSec: Math.ceil(remainSec(c)) };
+      }),
+    };
+  };
 
   function newState() {
     const items = {};
     for (const it of ITEMS) items[it.id] = ITEM_START;
     return {
-      running: false,
+      running: false, paused: false,
       timeLeft: GAME_SECONDS,
-      coins: 0, warmth: 0, served: 0, left: 0,
-      sinceRestock: 0,
+      coins: 0, warmth: 0, served: 0, left: 0, combo: 0,
+      sinceRestock: 0, spawned: 0,
       customers: [],
       nextCid: 1,
-      selectedId: null, // 当前点选中的顾客
-      items,
-      nextSpawnIn: 0.6,
+      selectedId: null,
+      items: items,
+      nextSpawnIn: SPAWN_FIRST,
+      lastAvatar: null,
+      milestonesHit: [],
+      guideStage: 0,
     };
   }
 
+  /* ── 耐心：每位顾客以到店时刻 + 总秒数作为唯一的到期时间 ──
+   * 显示的剩余秒数与决定离开的判断取自同一个值，服务其他顾客、
+   * 使用道具都不会改动这位顾客的到期时间，显示多少就剩多少。 */
+  function remainSec(c) { return Math.max(0, (c.endsAt - nowMs()) / 1000); }
+  function remainFrac(c) { return c.totalSec > 0 ? remainSec(c) / c.totalSec : 0; }
+
   /* ── 通用 UI ── */
   function toast(msg) {
+    const gen = ++toastGen;
     clearTimeout(toastTimer);
     toastEl.textContent = msg;
     toastEl.classList.add("show");
-    toastTimer = setTimeout(() => toastEl.classList.remove("show"), 1600);
+    toastTimer = setTimeout(function () {
+      if (gen !== toastGen) return;
+      toastEl.classList.remove("show");
+    }, 2400);
+  }
+  function clearToast() {
+    toastGen += 1;
+    clearTimeout(toastTimer);
+    toastEl.textContent = "";
+    toastEl.classList.remove("show");
   }
   function shakeEl(el) {
     el.classList.remove("shake");
@@ -453,160 +632,305 @@
     note.className = "float-note";
     note.textContent = text;
     customerEl.appendChild(note);
-    setTimeout(() => note.remove(), 950);
+    setTimeout(function () { note.remove(); }, 1000);
   }
 
   /* ── 底部按钮 ── */
-  PRODUCTS.forEach((p) => {
+  const productBtns = [];
+  PRODUCTS.forEach(function (p) {
     const btn = document.createElement("button");
     btn.className = "product-btn p-" + p.id;
     btn.innerHTML = '<span class="big"></span><span class="pname"></span><span class="coin"></span>';
     btn.querySelector(".big").textContent = p.emoji;
     btn.querySelector(".pname").textContent = p.name;
     btn.querySelector(".coin").textContent = "🪙+" + p.coin;
-    btn.addEventListener("click", () => onTapProduct(p, btn));
+    btn.addEventListener("click", function () { onTapProduct(p, btn); });
     productsEl.appendChild(btn);
+    productBtns.push(btn);
   });
   const itemBtns = {};
-  ITEMS.forEach((it) => {
+  ITEMS.forEach(function (it) {
     const btn = document.createElement("button");
     btn.className = "item-btn";
-    btn.title = it.name;
-    btn.setAttribute("aria-label", it.name);
-    btn.innerHTML = '<span class="big"></span><span class="iname"></span><span class="count"></span>';
+    btn.title = it.name + "：" + it.effect;
+    btn.setAttribute("aria-label", it.name + "：" + it.effect);
+    btn.innerHTML = '<span class="itop"><span class="big"></span><span class="iname"></span><span class="count"></span></span><span class="ieffect"></span>';
     btn.querySelector(".big").textContent = it.emoji;
     btn.querySelector(".iname").textContent = it.name;
-    btn.addEventListener("click", () => onTapItem(it.id, btn));
+    btn.addEventListener("click", function () { onTapItem(it.id, btn); });
     itemsEl.appendChild(btn);
     itemBtns[it.id] = btn;
   });
+  exchangeBtn.addEventListener("click", onTapExchange);
 
   function renderItems() {
-    ITEMS.forEach((it) => {
+    ITEMS.forEach(function (it) {
       const btn = itemBtns[it.id];
       const n = state ? state.items[it.id] : ITEM_START;
       btn.querySelector(".count").textContent = "×" + n;
+      btn.querySelector(".ieffect").textContent = n <= 0 ? "已用完 · 每 5 单补 1 个" : it.effect;
       btn.classList.toggle("empty", n <= 0);
-      btn.disabled = !state || !state.running; // 数量为 0 仍可点击，点击时文字说明原因
+      btn.disabled = !state || !state.running || state.paused || n <= 0;
     });
+    renderExchange();
   }
-  function renderHUD() {
+  function renderExchange() {
+    if (!state || !state.running || state.paused) { exchangeBtn.disabled = true; return; }
+    const allFull = ITEMS.every(function (it) { return state.items[it.id] >= ITEM_CAP; });
+    exchangeBtn.disabled = state.coins < EXCHANGE_COST || allFull;
+    exchangeBtn.textContent = allFull ? "🪙 道具都满了，暂时不用换"
+      : "🪙 花 " + EXCHANGE_COST + " 金币换 1 个随机道具（现有 " + state.coins + " 金币）";
+  }
+  function renderHUD(bumpCoins) {
     if (!state) return;
     statCoins.textContent = state.coins;
     statWarmth.textContent = state.warmth;
     statLeft.textContent = state.left;
+    if (bumpCoins) {
+      const cell = statCoins.parentElement;
+      cell.classList.remove("bump");
+      void cell.offsetWidth;
+      cell.classList.add("bump");
+    }
+  }
+  function renderTimer() {
+    const s = Math.ceil(state.timeLeft);
+    timerEl.textContent = "⏰ " + s + "s";
+    timerEl.classList.toggle("low", state.running && s <= 10);
   }
 
   /* ── 顾客 ── */
   function spawnCustomer() {
-    const product = PRODUCTS[Math.floor(Math.random() * PRODUCTS.length)];
+    if (!state || !state.running || state.paused) return;
+    if (state.customers.length >= QUEUE_MAX) return;
+    if (state.timeLeft < 5) return; // 打烊前最后几秒不再进新客，避免到店即超时
+    const rare = Math.random() < RARE_CHANCE;
+    let totalSec = rare ? rand(RARE_MIN, RARE_MAX) : rand(PATIENCE_MIN, PATIENCE_MAX);
+    totalSec = Math.min(totalSec, Math.max(4, state.timeLeft - 1)); // 耐心不超过剩余时间
+    // 头像不重复：不在等候区出现，也不同于上一位顾客
+    const used = {};
+    state.customers.forEach(function (c) { used[c.emoji] = true; });
+    if (state.lastAvatar) used[state.lastAvatar] = true;
+    let pool = AVATARS.filter(function (a) { return !used[a.emoji]; });
+    if (!pool.length) pool = AVATARS;
+    const av = rare ? RARE : pool[Math.floor(Math.random() * pool.length)];
+    // 想要的商品尽量错开，不让等候的客人都想要同一种
+    const taken = {};
+    state.customers.forEach(function (c) { taken[c.wish] = true; });
+    let wpool = PRODUCTS.filter(function (p) { return !taken[p.id]; });
+    if (!wpool.length) wpool = PRODUCTS;
+    const product = wpool[Math.floor(Math.random() * wpool.length)];
     const c = {
       id: state.nextCid++,
-      emoji: AVATARS[Math.floor(Math.random() * AVATARS.length)],
+      emoji: av.emoji,
+      name: av.name,
       wish: product.id,
       coin: product.coin,
-      patience: 1,
-      drain: 1 / rand(PATIENCE_MIN, PATIENCE_MAX),
+      rare: rare,
+      totalSec: totalSec,
+      endsAt: nowMs() + totalSec * 1000,
       el: null,
     };
     const card = document.createElement("button");
     card.className = "customer";
-    card.setAttribute("aria-label", c.emoji + " 想要" + WISH_NAME[c.wish] + "，点按选中");
+    card.setAttribute("aria-label", c.name + "想要" + WISH_NAME[c.wish] + "，点按选中");
     card.innerHTML =
-      '<div class="avatar"></div>' +
-      '<div class="info"><div class="bubble"></div>' +
+      '<div class="avatar"><div class="av-emoji"></div><div class="cname"></div></div>' +
+      '<div class="info"><div class="demand"><span class="bubble"></span><span class="mini-badge"></span></div>' +
       '<div class="patience-row"><div class="patience"><div class="patience-fill"></div></div><div class="ptime"></div></div></div>';
-    card.querySelector(".avatar").textContent = c.emoji;
-    card.querySelector(".bubble").textContent = WISH_TEXT[c.wish];
-    card.addEventListener("click", () => toggleSelect(c));
+    card.querySelector(".av-emoji").textContent = c.emoji;
+    card.querySelector(".cname").textContent = c.name;
+    card.querySelector(".bubble").textContent = WISH_TEXT[c.wish] + (rare ? " ✨" : "");
+    const badge = card.querySelector(".mini-badge");
+    if (rare) { badge.textContent = "✨ 稀客 · 金币翻倍"; badge.classList.add("rare"); }
+    card.querySelector(".ptime").textContent = Math.ceil(totalSec) + "s";
+    card.addEventListener("click", function () { toggleSelect(c); });
     const hint = queueEl.querySelector(".empty-hint");
     if (hint) hint.remove();
     queueEl.appendChild(card);
     c.el = card;
     state.customers.push(c);
+    state.spawned += 1;
+    state.lastAvatar = c.emoji;
+    if (!guideDone && state.guideStage === 0) startGuide(c);
+  }
+  function startGuide(c) {
+    state.guideStage = 1;
+    guideEl.innerHTML = "👆 <b>第一步：</b>点上面发光的顾客卡片，选中他";
+    guideEl.classList.add("show");
+    c.el.classList.add("guide-target");
+    const tag = document.createElement("span");
+    tag.className = "guide-tag";
+    tag.textContent = "① 点我选中";
+    c.el.appendChild(tag);
+    pulseProduct(c.wish);
+  }
+  function pulseProduct(wish) {
+    productBtns.forEach(function (btn, i) {
+      btn.classList.toggle("guide-pulse", PRODUCTS[i].id === wish);
+    });
+  }
+  function clearGuidePulse() {
+    productBtns.forEach(function (btn) { btn.classList.remove("guide-pulse"); });
+  }
+  function finishGuide() {
+    if (!state || state.guideStage === 0) return;
+    state.guideStage = 0;
+    guideDone = true;
+    try { localStorage.setItem("cozyShopGuideDone", "1"); } catch (e) {}
+    guideEl.classList.remove("show");
+    guideEl.textContent = "";
+    clearGuidePulse();
+    state.customers.forEach(function (c) {
+      if (!c.el) return;
+      c.el.classList.remove("guide-target");
+      const t = c.el.querySelector(".guide-tag");
+      if (t) t.remove();
+    });
   }
   function toggleSelect(c) {
-    if (!state || !state.running) return;
+    if (!state || !state.running || state.paused) return;
+    if (state.customers.indexOf(c) < 0) return;
     state.selectedId = state.selectedId === c.id ? null : c.id;
+    if (state.guideStage === 1 && state.selectedId === c.id) {
+      state.guideStage = 2;
+      guideEl.innerHTML = "✅ 选好了！<b>第二步：</b>点下面发光的商品，把东西递给他";
+      const tag = c.el.querySelector(".guide-tag");
+      if (tag) tag.textContent = "② 点下面发光的商品";
+    }
     renderSelection();
   }
   function renderSelection() {
-    for (const c of state.customers) c.el.classList.toggle("selected", c.id === state.selectedId);
+    if (!state) return;
+    const sel = state.customers.find(function (c) { return c.id === state.selectedId; }) || null;
+    for (const c of state.customers) {
+      c.el.classList.toggle("selected", c.id === state.selectedId);
+      const badge = c.el.querySelector(".mini-badge");
+      if (c.id === state.selectedId) { badge.textContent = "✓ 已选中"; badge.classList.remove("rare"); }
+      else if (c.rare) { badge.textContent = "✨ 稀客 · 金币翻倍"; badge.classList.add("rare"); }
+      else { badge.textContent = ""; badge.classList.remove("rare"); }
+    }
+    productBtns.forEach(function (btn, i) {
+      btn.classList.toggle("match", !!sel && PRODUCTS[i].id === sel.wish);
+    });
   }
-  function removeCustomer(c, mood) {
+  function removeCustomer(c, mood, holdMs) {
     const list = state.customers;
     const i = list.indexOf(c);
     if (i >= 0) list.splice(i, 1);
     if (state.selectedId === c.id) { state.selectedId = null; renderSelection(); }
     if (!c.el) return;
-    c.el.classList.add("leaving", mood);
-    setTimeout(() => c.el && c.el.remove(), 320);
+    const el = c.el;
+    // 先把表情与飘字留在卡片上看清楚，再淡出，避免“悄悄消失”
+    setTimeout(function () {
+      el.classList.add("leaving", mood);
+      setTimeout(function () { el.remove(); }, 340);
+    }, holdMs);
     if (state.customers.length === 0) {
-      setTimeout(() => {
-        if (state && state.customers.length === 0 && !queueEl.querySelector(".empty-hint")) {
+      setTimeout(function () {
+        if (state && state.running && state.customers.length === 0 && !queueEl.querySelector(".empty-hint")) {
           const hint = document.createElement("div");
           hint.className = "empty-hint";
           hint.innerHTML = '<div class="lamps">🪟🕯️🧸</div>小店很安静，顾客马上就来…';
           queueEl.appendChild(hint);
         }
-      }, 330);
+      }, holdMs + 360);
     }
   }
-  // 在等待顾客中挑一位：优先匹配愿望，其次耐心最低（最着急）
+  // 在等待顾客中挑一位：优先匹配愿望，其次剩余耐心最少（最着急）
   function pickCustomer(wish) {
-    const pool = state.customers.filter((c) => !wish || c.wish === wish);
+    const pool = state.customers.filter(function (c) { return !wish || c.wish === wish; });
     if (!pool.length) return null;
-    return pool.reduce((a, b) => (a.patience <= b.patience ? a : b));
+    return pool.reduce(function (a, b) { return remainFrac(a) <= remainFrac(b) ? a : b; });
+  }
+  function pickTarget() {
+    const sel = state.customers.find(function (c) { return c.id === state.selectedId; });
+    if (sel) return sel;
+    return state.customers.reduce(function (a, b) { return remainFrac(a) <= remainFrac(b) ? a : b; });
   }
 
   /* ── 服务 / 道具 ── */
+  function restockProp(prefix) {
+    const lacking = ITEMS.filter(function (it) { return state.items[it.id] < ITEM_CAP; });
+    if (!lacking.length) { toast("🎁 道具都满了，这次没有补充"); return; }
+    const it = lacking[Math.floor(Math.random() * lacking.length)];
+    state.items[it.id] += 1;
+    toast(prefix + it.emoji + it.name);
+  }
+  function checkWarmthMilestones() {
+    WARMTH_MILESTONES.forEach(function (m) {
+      if (state.warmth >= m && state.milestonesHit.indexOf(m) < 0) {
+        state.milestonesHit.push(m);
+        restockProp("💗 暖心值满 " + m + "，口碑传开，获赠 1 个 ");
+      }
+    });
+  }
   function serveSuccess(c) {
+    if (!state || state.customers.indexOf(c) < 0) return;
+    const speed = remainFrac(c) >= SPEED_THRESHOLD;
+    const selected = state.selectedId === c.id;
+    const base = c.coin * (c.rare ? 2 : 1);
+    const gained = base + (speed ? SPEED_BONUS : 0);
+    const warm = SERVE_WARMTH + (selected ? SERVE_WARMTH : 0) + (c.rare ? SERVE_WARMTH : 0);
+    const wasGuide = state.guideStage !== 0;
     state.served += 1;
-    state.coins += c.coin;
-    state.warmth += SERVE_WARMTH;
-    floatNote(c.el, "+" + c.coin); // 在顾客卡片上飘出对应金额
-    if (state.selectedId === c.id) { state.selectedId = null; renderSelection(); }
-    removeCustomer(c, "happy");
+    state.coins += gained;
+    state.warmth += warm;
+    state.combo += 1;
+    const card = c.el;
+    card.querySelector(".av-emoji").textContent = "😊";
+    card.querySelector(".bubble").textContent = "谢谢你！💗";
+    let note = "+" + gained + "🪙";
+    if (speed) note += " ⚡神速+" + SPEED_BONUS;
+    if (c.rare) note += " ✨稀客翻倍";
+    note += " 💗+" + warm;
+    floatNote(card, note);
+    if (state.selectedId === c.id) state.selectedId = null;
+    removeCustomer(c, "happy", 650);
+    renderSelection();
     state.sinceRestock += 1;
     if (state.sinceRestock >= RESTOCK_EVERY) {
       state.sinceRestock = 0;
-      const lacking = ITEMS.filter((it) => state.items[it.id] < ITEM_CAP);
-      if (lacking.length) {
-        const it = lacking[Math.floor(Math.random() * lacking.length)];
-        state.items[it.id] += 1;
-        toast("🎁 进度奖励：" + it.emoji + it.name + " ×" + state.items[it.id]);
-      }
+      restockProp("🎁 服务满 5 单，补充了 1 个 ");
     }
-    renderHUD();
+    checkWarmthMilestones();
+    renderHUD(true);
     renderItems();
+    if (wasGuide) {
+      finishGuide();
+      toast("🎉 第一单完成！继续加油～");
+    }
+    if (state.customers.length < QUEUE_MAX) state.nextSpawnIn = Math.min(state.nextSpawnIn, 2.0);
+  }
+  function leaveCustomer(c) {
+    state.left += 1;
+    state.combo = 0;
+    const card = c.el;
+    card.querySelector(".av-emoji").textContent = "😞";
+    card.querySelector(".bubble").textContent = "等太久了…💨";
+    floatNote(card, "💨 失望走了");
+    toast("😞 " + c.name + "等太久，失望离开了");
+    removeCustomer(c, "sad", 800);
+    if (state.customers.length < QUEUE_MAX) state.nextSpawnIn = Math.min(state.nextSpawnIn, 2.0);
+    renderHUD();
   }
   function onTapProduct(p, btn) {
-    if (!state || !state.running) return;
-    const sel = state.customers.find((c) => c.id === state.selectedId);
-    if (sel) {
-      // 已选中顾客：想要该商品就直接服务，想要别的则明确提示
-      if (sel.wish === p.id) { serveSuccess(sel); return; }
-      shakeEl(btn);
-      toast(sel.emoji + " 想要的是" + WISH_NAME[sel.wish] + "哦～");
-      return;
-    }
+    if (!state || !state.running || state.paused) return;
+    const sel = state.customers.find(function (c) { return c.id === state.selectedId; });
+    if (sel && sel.wish === p.id) { serveSuccess(sel); return; }
     const c = pickCustomer(p.id);
     if (!c) {
       shakeEl(btn);
       toast("暂时没有顾客想要" + p.name + "～");
       return;
     }
+    // 选中了别的顾客也不挡路：先服务最着急的这位，选中状态保留
+    if (sel) toast(sel.name + "想要的是" + WISH_NAME[sel.wish] + "，先服务了最着急的" + c.name);
     serveSuccess(c);
   }
-  // 道具目标：优先选中的顾客，否则最着急的一位
-  function pickTarget() {
-    const sel = state.customers.find((c) => c.id === state.selectedId);
-    if (sel) return sel;
-    return state.customers.reduce((a, b) => (a.patience <= b.patience ? a : b));
-  }
   function onTapItem(id, btn) {
-    if (!state || !state.running) return;
-    const it = ITEMS.find((x) => x.id === id);
+    if (!state || !state.running || state.paused) return;
+    const it = ITEMS.find(function (x) { return x.id === id; });
     if (state.items[id] <= 0) {
       shakeEl(btn);
       toast(it.emoji + " " + it.name + "已用完，每成功服务 5 单随机补 1 个");
@@ -617,70 +941,149 @@
       toast("⏳ 还没有顾客进店，" + it.emoji + " 先留着吧～");
       return;
     }
+    let body = "";
+    if (id === "courier") body = "立即完成一位等待的顾客，按服务成功结算（选中顾客优先）。现在有 " + state.items[id] + " 个。";
+    else if (id === "lamp") body = "让一位顾客的耐心 +6 秒（选中顾客优先，否则最着急的一位）。现在有 " + state.items[id] + " 个。";
+    else body = "让所有等待顾客的耐心 +3 秒。现在有 " + state.items[id] + " 个。";
+    openConfirm({ kind: "item", id: id, title: "使用" + it.emoji + it.name + "？", body: body });
+  }
+  function applyItem(id) {
+    if (!state || state.items[id] <= 0) return;
+    if (!state.customers.length) { toast("⏳ 还没有顾客进店，道具先留着吧～"); return; }
     state.items[id] -= 1;
     if (id === "courier") {
       const c = pickTarget();
+      if (!c) return;
       toast("🛵 快递小哥帮忙送出！");
       serveSuccess(c);
     } else if (id === "lamp") {
       const c = pickTarget();
-      c.patience = Math.min(1, c.patience + 0.5);
-      floatNote(c.el, "💡 耐心恢复了");
-      toast("💡 暖灯亮起，" + c.emoji + " 的耐心大幅恢复");
-      renderItems();
+      if (!c) return;
+      c.endsAt = Math.min(c.endsAt + LAMP_SECONDS * 1000, nowMs() + c.totalSec * 1000);
+      floatNote(c.el, "💡 +6秒");
+      toast("💡 暖灯亮起，" + c.name + "的耐心 +6 秒");
     } else {
       for (const c of state.customers) {
-        c.patience = Math.min(1, c.patience + 0.2);
-        floatNote(c.el, "🫖");
+        c.endsAt = Math.min(c.endsAt + HERB_SECONDS * 1000, nowMs() + c.totalSec * 1000);
+        floatNote(c.el, "🌿 +3秒");
       }
-      toast("🫖 招牌茶出炉，大家的耐心都恢复了");
-      renderItems();
+      toast("🌿 清新香薰飘起，大家的耐心 +3 秒");
     }
+    renderItems();
+  }
+  function onTapExchange() {
+    if (!state || !state.running || state.paused) return;
+    if (state.coins < EXCHANGE_COST) { toast("🪙 金币不够，攒到 15 金币再来换～"); return; }
+    const allFull = ITEMS.every(function (it) { return state.items[it.id] >= ITEM_CAP; });
+    if (allFull) { toast("🪙 道具都满了，暂时不用换"); return; }
+    openConfirm({ kind: "exchange", title: "花金币换道具？", body: "花 " + EXCHANGE_COST + " 金币，随机换 1 个道具（上限 2 个/种）。现在有 " + state.coins + " 金币。" });
+  }
+  function applyExchange() {
+    if (!state || state.coins < EXCHANGE_COST) return;
+    const lacking = ITEMS.filter(function (it) { return state.items[it.id] < ITEM_CAP; });
+    if (!lacking.length) return;
+    state.coins -= EXCHANGE_COST;
+    const it = lacking[Math.floor(Math.random() * lacking.length)];
+    state.items[it.id] += 1;
+    toast("🪙 花了 " + EXCHANGE_COST + " 金币，换到了 1 个 " + it.emoji + it.name);
+    renderHUD();
+    renderItems();
   }
 
-  /* ── 主循环 ── */
-  function loop(ts) {
-    if (!state || !state.running) return;
-    const dt = Math.min(0.1, (ts - lastTs) / 1000);
-    lastTs = ts;
-    state.timeLeft -= dt;
-    if (state.timeLeft <= 0) {
-      state.timeLeft = 0;
-      renderTimer();
-      endGame();
-      return;
-    }
-    state.nextSpawnIn -= dt;
-    if (state.nextSpawnIn <= 0 && state.customers.length < QUEUE_MAX) {
-      spawnCustomer();
-      state.nextSpawnIn = rand(SPAWN_MIN, SPAWN_MAX);
-    }
-    for (const c of state.customers.slice()) {
-      c.patience -= c.drain * dt;
-      if (c.patience <= 0) {
-        state.left += 1;
-        floatNote(c.el, "💨 失望走了");
-        removeCustomer(c, "sad");
-        renderHUD();
-      } else {
-        c.el.querySelector(".patience-fill").style.width = (c.patience * 100).toFixed(1) + "%";
-        c.el.querySelector(".ptime").textContent = Math.ceil(c.patience / c.drain) + "s";
-        c.el.classList.toggle("urgent", c.patience < 0.35);
+  /* ── 确认框：点道具 / 换道具 / 重开前先确认，同时暂停计时 ── */
+  function openConfirm(cfg) {
+    pendingConfirm = cfg;
+    $("confirmTitle").textContent = cfg.title;
+    $("confirmBody").textContent = cfg.body;
+    confirmOverlay.classList.remove("hidden");
+    pauseGame(false);
+  }
+  function closeConfirm() {
+    pendingConfirm = null;
+    confirmOverlay.classList.add("hidden");
+    if (state && state.running && state.paused) resumeGame();
+  }
+  $("confirmYes").addEventListener("click", function () {
+    const cfg = pendingConfirm;
+    pendingConfirm = null;
+    confirmOverlay.classList.add("hidden");
+    if (!cfg) { if (state && state.running && state.paused) resumeGame(); return; }
+    if (cfg.kind === "restart") { startGame(); return; }
+    if (cfg.kind === "item") applyItem(cfg.id);
+    else if (cfg.kind === "exchange") applyExchange();
+    if (state && state.running && state.paused) resumeGame();
+  });
+  $("confirmNo").addEventListener("click", closeConfirm);
+
+  /* ── 主循环：每一局只跑一条循环，靠代号防止旧循环继续扣时间 ── */
+  function makeLoop(gen) {
+    return function loop(ts) {
+      if (gen !== loopGen) return;
+      if (!state || !state.running || state.paused) return;
+      const dt = Math.min(0.1, Math.max(0, (ts - lastTs) / 1000));
+      lastTs = ts;
+      state.timeLeft -= dt;
+      if (state.timeLeft <= 0) {
+        state.timeLeft = 0;
+        renderTimer();
+        endGame();
+        return;
       }
-    }
-    renderTimer();
-    rafId = requestAnimationFrame(loop);
+      state.nextSpawnIn -= dt;
+      if (state.nextSpawnIn <= 0 && state.customers.length < QUEUE_MAX) {
+        if (state.timeLeft >= 5) spawnCustomer();
+        state.nextSpawnIn = rand(SPAWN_MIN, SPAWN_MAX);
+      }
+      if (state.customers.length === 0) state.nextSpawnIn = Math.min(state.nextSpawnIn, 1.2);
+      for (const c of state.customers.slice()) {
+        const rem = remainSec(c);
+        if (rem <= 0) {
+          leaveCustomer(c);
+        } else {
+          const frac = rem / c.totalSec;
+          const fill = c.el.querySelector(".patience-fill");
+          if (fill) fill.style.width = Math.min(100, frac * 100).toFixed(1) + "%";
+          const pt = c.el.querySelector(".ptime");
+          if (pt) pt.textContent = (frac < 0.35 ? "⚠️ " : "") + Math.ceil(rem) + "s";
+          c.el.classList.toggle("urgent", frac < 0.35);
+        }
+      }
+      renderTimer();
+      rafId = requestAnimationFrame(loop);
+    };
   }
-  function renderTimer() {
-    const s = Math.ceil(state.timeLeft);
-    timerEl.textContent = "⏰ " + s + "s";
-    timerEl.classList.toggle("low", state.running && s <= 10);
+
+  /* ── 暂停 / 继续 ── */
+  function pauseGame(auto) {
+    if (!state || !state.running || state.paused) return;
+    state.paused = true;
+    pausedAt = nowMs();
+    cancelAnimationFrame(rafId);
+    $("pauseNote").textContent = auto ? "已自动暂停（你切走了页面），计时已停下，回来点继续～" : "计时已停下，慢慢来～";
+    pauseOverlay.classList.remove("hidden");
+    renderItems();
   }
+  function resumeGame() {
+    if (!state || !state.running || !state.paused) return;
+    const delta = nowMs() - pausedAt;
+    state.customers.forEach(function (c) { c.endsAt += delta; });
+    state.paused = false;
+    pauseOverlay.classList.add("hidden");
+    helpOverlay.classList.add("hidden");
+    lastTs = nowMs();
+    rafId = requestAnimationFrame(makeLoop(loopGen));
+    renderItems();
+  }
+  document.addEventListener("visibilitychange", function () {
+    if (document.hidden && state && state.running && !state.paused) pauseGame(true);
+  });
 
   /* ── 开始 / 结束 / 再来一局 ── */
   function startGame() {
+    loopGen += 1;
+    cancelAnimationFrame(rafId);
     state = newState();
-    queueEl.querySelectorAll(".customer").forEach((el) => el.remove());
+    queueEl.querySelectorAll(".customer").forEach(function (el) { el.remove(); });
     let hint = queueEl.querySelector(".empty-hint");
     if (!hint) {
       hint = document.createElement("div");
@@ -688,37 +1091,119 @@
       hint.innerHTML = '<div class="lamps">🪟🕯️🧸</div>小店很安静，顾客马上就来…';
       queueEl.appendChild(hint);
     }
+    clearToast();
+    guideEl.classList.remove("show");
+    guideEl.textContent = "";
+    clearGuidePulse();
+    confirmOverlay.classList.add("hidden");
+    helpOverlay.classList.add("hidden");
+    pauseOverlay.classList.add("hidden");
     resultOverlay.classList.add("hidden");
     startOverlay.classList.add("hidden");
+    pendingConfirm = null;
     renderHUD();
-    state.running = true; // 先置运行态，道具开局即可点用
     renderItems();
+    renderSelection();
     renderTimer();
     state.running = true;
-    lastTs = performance.now();
-    cancelAnimationFrame(rafId);
-    rafId = requestAnimationFrame(loop);
+    lastTs = nowMs();
+    rafId = requestAnimationFrame(makeLoop(loopGen));
   }
-
+  function loadBest() {
+    try {
+      const raw = localStorage.getItem("cozyShopBest");
+      if (!raw) return { served: 0, coins: 0 };
+      const b = JSON.parse(raw);
+      return { served: b.served || 0, coins: b.coins || 0 };
+    } catch (e) { return { served: 0, coins: 0 }; }
+  }
+  function saveBest() {
+    const prev = loadBest();
+    const best = { served: Math.max(prev.served, state.served), coins: Math.max(prev.coins, state.coins) };
+    const isNew = state.served > prev.served || state.coins > prev.coins;
+    try { localStorage.setItem("cozyShopBest", JSON.stringify(best)); } catch (e) {}
+    return { best: best, newBest: isNew };
+  }
+  function rateGame() {
+    const s = state.served, l = state.left;
+    if (s >= 12 && l === 0) return { stars: 5, label: "金牌店主" };
+    if (s >= 10 && l <= 1) return { stars: 4, label: "暖心店主" };
+    if (s >= 7 && l <= 2) return { stars: 3, label: "熟练店员" };
+    if (s >= 4) return { stars: 2, label: "新手店主" };
+    return { stars: 1, label: "手忙脚乱" };
+  }
+  function pickTip() {
+    if (state.left >= 3) return "耐心条变红并出现 ⚠️ 时，先服务那位客人，别让他等到归零。";
+    if (state.served < 8) return "点顾客卡片选中他再服务，暖心值翻倍；剩余耐心一半以上服务，还能多得 +2 金币。";
+    if (state.coins >= EXCHANGE_COST) return "金币攒到 15 就能换 1 个随机道具，关键时刻能救一位快没耐心的客人。";
+    return "保持这个节奏，下一局争取 12 单以上，冲击五颗星！";
+  }
   function endGame() {
+    if (!state) return;
     state.running = false;
+    state.paused = false;
     cancelAnimationFrame(rafId);
+    const waiting = state.customers.length;
+    queueEl.querySelectorAll(".customer").forEach(function (el) { el.remove(); });
+    state.customers.length = 0;
+    let hint = queueEl.querySelector(".empty-hint");
+    if (!hint) {
+      hint = document.createElement("div");
+      hint.className = "empty-hint";
+      hint.innerHTML = '<div class="lamps">🪟🕯️🧸</div>小店很安静，顾客马上就来…';
+      queueEl.appendChild(hint);
+    }
     renderItems();
+    const r = rateGame();
+    $("resStars").textContent = "★".repeat(r.stars) + "☆".repeat(5 - r.stars);
+    $("resRating").textContent = r.label;
     $("resServed").textContent = state.served;
     $("resCoins").textContent = state.coins;
     $("resWarmth").textContent = state.warmth;
     $("resLeft").textContent = state.left;
+    const best = saveBest();
+    const lines = [];
+    lines.push("🏆 历史最佳：服务 " + best.best.served + " 单 · " + best.best.coins + " 金币" + (best.newBest ? " 🎉 新纪录！" : ""));
+    lines.push("🚶 离开的客人：耐心耗尽后失望离开，共 " + state.left + " 位。离开不等于失败，别让下次的客人等太久。");
+    if (waiting > 0) lines.push("🌙 打烊时还有 " + waiting + " 位客人在等待，他们随打烊散去了（不计入离开）。");
+    lines.push("💡 下次试试：" + pickTip());
+    $("resLines").innerHTML = lines.map(function (l) { return "<div>" + l + "</div>"; }).join("");
     resultOverlay.classList.remove("hidden");
   }
 
+  /* ── 按钮 ── */
+  $("pauseBtn").addEventListener("click", function () {
+    if (!state || !state.running) return;
+    if (state.paused) resumeGame(); else pauseGame(false);
+  });
+  $("headerRestartBtn").addEventListener("click", function () {
+    if (!state || !state.running) return;
+    openConfirm({ kind: "restart", title: "重新开始？", body: "当前这局的进度会清空，重新开始 60 秒营业。" });
+  });
+  $("helpBtn").addEventListener("click", function () {
+    if (state && state.running && !state.paused) pauseGame(false);
+    helpOverlay.classList.remove("hidden");
+  });
+  $("startHelpBtn").addEventListener("click", function () {
+    helpOverlay.classList.remove("hidden");
+  });
+  $("pauseHelpBtn").addEventListener("click", function () {
+    helpOverlay.classList.remove("hidden");
+  });
+  $("helpCloseBtn").addEventListener("click", function () {
+    helpOverlay.classList.add("hidden");
+  });
+  $("resumeBtn").addEventListener("click", function () { resumeGame(); });
+  $("pauseRestartBtn").addEventListener("click", function () { startGame(); });
+  $("startBtn").addEventListener("click", function () { startGame(); });
+
   // 插屏广告触发点：仅「结算屏 → 再来一局」之间
-  restartBtn.addEventListener("click", async () => {
+  restartBtn.addEventListener("click", async function () {
     restartBtn.disabled = true;
     await AdAdapter.showInterstitial();
     restartBtn.disabled = false;
     startGame();
   });
-  $("startBtn").addEventListener("click", () => startGame());
 
   renderItems();
 })();
