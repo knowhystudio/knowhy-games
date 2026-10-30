@@ -8,24 +8,24 @@
 body{padding:max(16px,env(safe-area-inset-top)) max(8px,env(safe-area-inset-right)) max(16px,env(safe-area-inset-bottom)) max(8px,env(safe-area-inset-left))}small,.stat span,.next,.footer{font-size:13px}.garden{padding:4px;border-width:3px}.board{gap:1px}.cell{border-radius:7px;min-width:0}.cell .level{position:absolute;bottom:1px;right:2px;font-size:13px;line-height:1;color:#405b47}.action,.tool{min-height:44px}.tools{display:flex;flex-wrap:wrap;gap:6px;margin:16px 0}.tool{border:0;border-radius:12px;background:#e1ecd5;color:#405b47;padding:6px 10px;font:inherit;font-size:13px;cursor:pointer}.tool[aria-pressed=true]{outline:3px solid #789d63}.tool:disabled{opacity:.55}.dialog-actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}.hint{outline:3px dashed #d4a34b;outline-offset:-3px}@media(max-width:400px){body{padding-left:max(4px,env(safe-area-inset-left));padding-right:max(4px,env(safe-area-inset-right))}.garden{padding:3px;border-width:2px}.board{gap:1px}}@media(prefers-reduced-motion:reduce){.cell.clearing{animation:none;opacity:.3}}
 </style>
 <style>
-.goal,.quick-rules{background:#ffffffa8;border-radius:14px;padding:10px 12px;margin:10px 0;font-size:14px}.goal label{display:flex;justify-content:space-between;gap:8px}progress{display:block;width:100%;height:14px;margin-top:6px;accent-color:#527c3e}.space-warning{color:#b42318;background:#fff0ed;border:2px solid #b42318;border-radius:10px;padding:8px;font-size:16px;font-weight:700}.quick-rules p{margin:3px 0}.quick-rules .next{display:flex;align-items:center;gap:10px}.next span{display:inline;margin:0;letter-spacing:3px}.below{justify-content:flex-end;margin-top:18px}.cell .plant{font-size:clamp(18px,4.6vw,28px);transition:font-size .15s}.cell[data-stage="1"]{background:#d5e9b9}.cell[data-stage="2"]{background:#b7d594}.cell[data-stage="3"]{background:#93bf72}.cell[data-stage="1"] .plant{font-size:clamp(21px,5.2vw,31px)}.cell[data-stage="2"] .plant{font-size:clamp(24px,5.8vw,35px)}.cell[data-stage="3"] .plant{font-size:clamp(27px,6.4vw,39px)}.cell .level{font-size:14px;font-weight:800;line-height:17px;min-width:17px;padding:0 2px;border-radius:4px;color:#244127;background:#fffffff0;bottom:1px;right:1px}.cell.hint-line{box-shadow:inset 0 0 0 3px #b47b16}.cell.hint-from,.cell.hint-to{outline:3px solid #96600c;outline-offset:-3px}.cell.hint-to{outline-style:dashed;background:#fff0b5}.cell.hint-from::after,.cell.hint-to::after{position:absolute;top:1px;left:1px;background:#754706;color:#fff;border-radius:4px;font:bold 14px/18px system-ui;min-width:18px;content:'1'}.cell.hint-to::after{content:'2'}.tutorial{font-weight:700;color:#754706}.growth-key{display:flex;align-items:center;gap:5px;font-size:13px;flex-wrap:wrap}.growth-key span{padding:3px 6px;border-radius:5px}.growth-key span:nth-child(1){background:#fff8e9}.growth-key span:nth-child(2){background:#d5e9b9}.growth-key span:nth-child(3){background:#b7d594}.growth-key span:nth-child(4){background:#93bf72}.tool-help,.hint-help{font-size:13px;line-height:1.6;margin:6px 0}.tool-preview{box-shadow:inset 0 0 0 3px #527c3e}.cell .preview-level{position:absolute;top:1px;right:1px;font:bold 13px/17px system-ui;background:#fff;color:#244127;border-radius:4px;padding:0 2px}.cell .preview-plant{font-size:clamp(21px,5.2vw,32px)}.tool-help{color:#405b47}
+.goal,.quick-rules{background:#ffffffa8;border-radius:14px;padding:10px 12px;margin:10px 0;font-size:14px}.goal label{display:flex;justify-content:space-between;gap:8px}progress{display:block;width:100%;height:14px;margin-top:6px;accent-color:#527c3e}.space-warning{color:#b42318;background:#fff0ed;border:2px solid #b42318;border-radius:10px;padding:8px;font-size:16px;font-weight:700}.quick-rules p{margin:3px 0}.quick-rules .next{display:flex;align-items:center;gap:10px}.next span{display:inline;margin:0;letter-spacing:3px}.below{justify-content:flex-end;margin-top:18px}.cell .plant{font-size:clamp(18px,4.6vw,28px);transition:font-size .15s}.cell[data-stage="1"]{background:#cfe8a8;box-shadow:inset 0 0 0 3px #8fae62}.cell[data-stage="2"]{background:#a8cf7d;box-shadow:inset 0 0 0 3px #6d9a3f}.cell[data-stage="3"]{background:#7fb84f;box-shadow:inset 0 0 0 4px #4c7a24}.cell[data-stage="1"] .plant{font-size:clamp(25px,5.9vw,36px)}.cell[data-stage="2"] .plant{font-size:clamp(31px,6.9vw,44px)}.cell[data-stage="3"] .plant{font-size:clamp(37px,7.9vw,52px)}.cell .level{font-size:14px;font-weight:800;line-height:17px;min-width:17px;padding:0 2px;border-radius:4px;color:#244127;background:#fffffff0;bottom:1px;right:1px}.cell[data-stage="1"] .level{font-size:15px;border:2px solid #6d9a3f}.cell[data-stage="2"] .level{font-size:17px;min-width:19px;line-height:19px;border:2px solid #4c7a24;background:#fffbe8}.cell[data-stage="3"] .level{font-size:19px;min-width:21px;line-height:21px;border:2px solid #2f5b14;background:#ffe082;color:#2f5b14}.cell.hint-line{box-shadow:inset 0 0 0 3px #b47b16}.cell.hint-from,.cell.hint-to{outline:3px solid #96600c;outline-offset:-3px}.cell.hint-to{outline-style:dashed;background:#fff0b5}.cell.hint-from::after,.cell.hint-to::after{position:absolute;top:1px;left:1px;background:#754706;color:#fff;border-radius:4px;font:bold 14px/18px system-ui;min-width:18px;content:'1'}.cell.hint-to::after{content:'2'}.tutorial{font-weight:700;color:#754706}.growth-key{display:flex;align-items:center;gap:5px;font-size:13px;flex-wrap:wrap}.growth-key span{padding:3px 6px;border-radius:5px}.growth-key span:nth-child(1){background:#fff8e9;font-size:13px}.growth-key span:nth-child(2){background:#cfe8a8;font-size:15px;border:2px solid #8fae62}.growth-key span:nth-child(3){background:#a8cf7d;font-size:17px;border:2px solid #6d9a3f}.growth-key span:nth-child(4){background:#7fb84f;font-size:19px;border:2px solid #4c7a24;color:#244127}.tool-help,.hint-help{font-size:13px;line-height:1.6;margin:6px 0}.tool-preview{box-shadow:inset 0 0 0 3px #527c3e}.cell.tool-pending{outline:3px solid #527c3e;outline-offset:-3px}.cell.tool-pending.shovel-pending{outline-color:#b42318;background:#ffe9e6}.cell.just-cleared{outline:2px dashed #b47b16;outline-offset:-2px}.cell .preview-level{position:absolute;top:1px;right:1px;font:bold 13px/17px system-ui;background:#fff;color:#244127;border-radius:4px;padding:0 2px}.cell .preview-plant{font-size:clamp(21px,5.2vw,32px)}.tool-help{color:#405b47}
 </style>
 </head>
 <body><main>
 <header><small>一方小园 · 一点闲暇</small><h1>🌷 花园三连</h1><p>移动植物，三连消除；名称随实际玩法，不设升级链。</p></header>
-<section class="stats" aria-label="游戏统计"><div class="stat"><span>花园得分</span><strong id="score">0</strong></div><div class="stat"><span>🌱 花园成长</span><strong id="growth">0</strong></div><div class="stat"><span>剩余空位</span><strong id="space">64</strong></div></section>
+<section class="stats" aria-label="游戏统计"><div class="stat"><span>花园得分</span><strong id="score">0</strong></div><div class="stat"><span>🌸 花园绽放</span><strong id="growth">0</strong></div><div class="stat"><span>剩余空位</span><strong id="space">64</strong></div></section>
 <section class="goal"><label for="goal-progress">目标 200 分 <strong id="goal-score">0 / 200 分</strong></label><progress id="goal-progress" max="200" value="0" aria-label="通关分数进度"></progress></section>
 <p id="space-warning" class="space-warning" role="status" hidden></p>
 <section class="quick-rules" aria-label="关键规则"><p>横、竖、<b>斜向也算三连</b> · 无消除时补 <b>3 株植物</b></p><p>先点植物，再点任意空格；也可拖动。</p><div class="next">下批植物预览 <span id="next"></span></div><p id="tutorial" class="tutorial"></p></section>
-<div class="growth-key" aria-label="植物成长外观"><span>0 级 · 幼苗</span>→<span>1 级 · 变大</span>→<span>2 级 · 更绿</span>→<span>3+ 级 · 茂盛</span></div>
+<div class="growth-key" aria-label="植物成长外观"><span>0 级 · 幼苗 🌱</span>→<span>1 级 · 变大 🌿</span>→<span>2 级 · 更绿 🌳</span>→<span>3+ 级 · 茂盛 🌺</span></div>
 <p id="tool-help" class="tool-help">阳光：一株成长 +1；浇水壶：所选及上下左右成长 +1。植物变大、底色加深，仅改变外观，不加分。</p>
 <div class="garden"><div id="board" class="board" role="group" aria-label="8 行 8 列花园棋盘"></div></div>
 <div class="below"><button class="action" id="restart">重新开始 ↻</button></div>
-<div class="tools" aria-label="花园工具"><button class="tool" id="shovel">铲子：剩余 1 / 上限 2</button><button class="tool" id="sun">阳光：剩余 1 / 上限 2</button><button class="tool" id="water">浇水壶：剩余 1 / 上限 2</button><button class="tool" id="hint" aria-describedby="hint-help">找三连：剩余 3 次</button><button class="tool" id="sound">音效：开</button><button class="tool" id="reward" hidden>看广告获得道具</button></div><p id="hint-help" class="hint-help">每局可找三连 3 次，显示起点、落点及成线格；查找无结果也计 1 次。</p><p class="message" id="message" role="status" aria-live="polite"></p>
-<section class="rules"><b>✿ 花园手记</b><p>拖动植物到任意空格，也可先点植物，再点空格。</p><p>横、竖或斜向连成 3 个及以上相同图案即可消除，每格 10 分（三格 +30），每次消除花园成长 +1。植物成长等级只改变大小和底色，不额外加分。</p><p>铲子清除一格；阳光让一株成长；浇水壶让所选植物及上下左右的植物成长。道具初始各 1 个，上限各 2 个。</p><p>移动后未消除，会长出 3 株新植物；新植物也能连线消除。达到 200 分通关；未通关时棋盘满了，本次养花结束。</p></section><p class="footer">慢慢来，花会开的。 ✿</p>
+<div class="tools" aria-label="花园工具"><button class="tool" id="shovel">铲子：剩余 1 / 上限 2</button><button class="tool" id="sun">阳光：剩余 1 / 上限 2</button><button class="tool" id="water">浇水壶：剩余 1 / 上限 2</button><button class="tool" id="hint" aria-describedby="hint-help">找三连：剩余 3 次</button><button class="tool" id="sound">音效：开</button><button class="tool" id="reward" hidden>看广告获得道具</button></div><p id="hint-help" class="hint-help">每局可找三连 3 次，显示起点、落点及成线格；没有走法时本次不扣次数。</p><p class="message" id="message" role="status" aria-live="polite"></p>
+<section class="rules"><b>✿ 花园手记</b><p>拖动植物到任意空格，也可先点植物，再点空格。</p><p>横、竖或斜向连成 3 个及以上相同图案即可消除，每格 10 分（三格 +30），每次消除花园绽放 +1。植物成长等级只改变大小和底色，不额外加分。</p><p>铲子铲除一格，需点两次确认；阳光让一株成长；浇水壶让所选植物及上下左右的植物成长，点两次确认。道具初始各 1 个，上限各 2 个。</p><p>移动后未消除，会长出 3 株新植物；新植物不会自己连成三连。达到 200 分通关；未通关时棋盘满了，本次养花结束。</p></section><p class="footer">慢慢来，花会开的。 ✿</p>
 </main>
 <dialog id="confirm"><h2>重新开始？</h2><p>当前花园的进度将清零。</p><div class="dialog-actions"><button class="tool" id="cancel-restart">继续游戏</button><button class="action" id="confirm-restart">重新开始</button></div></dialog>
-<dialog id="over" aria-labelledby="over-title"><div style="font-size:48px">💐</div><h2 id="over-title">花园已经开满啦</h2><p>收好这份春日的小小成果</p><strong id="final-score">0</strong><p id="final-growth"></p><button class="action" id="again">再来一局</button></dialog>
+<dialog id="over" aria-labelledby="over-title"><div style="font-size:48px">💐</div><h2 id="over-title">花园已经开满啦</h2><p id="over-sub">收好这份春日的小小成果</p><strong id="final-score">0</strong><p id="final-growth"></p><p id="final-detail"></p><button class="action" id="again">再来一局</button> <button class="tool" id="view-board">查看花园</button></dialog>
 <script>
 'use strict';
 const icons=['🌷','🌼','🌸','🌿','🌵','💧'];
@@ -37,9 +37,13 @@ const ads=window.gardenAdsAdapter || {enabled:false,interstitial:async()=>{},rew
 const TARGET_SCORE=200;
 let hintsLeft=3,firstClear=false,hintMove=null,previewCell=null,restartFromEnd=false;
 let audioContext;
-function playSound(){if(!soundOn)return;try{audioContext=audioContext||new (window.AudioContext||window.webkitAudioContext)();const osc=audioContext.createOscillator(), gain=audioContext.createGain();osc.frequency.value=520;gain.gain.setValueAtTime(.04,audioContext.currentTime);gain.gain.exponentialRampToValueAtTime(.001,audioContext.currentTime+.12);osc.connect(gain).connect(audioContext.destination);osc.start();osc.stop(audioContext.currentTime+.12);}catch(e){}}
-function addTool(name){inventory[name]=Math.min(2,inventory[name]+1);}
-
+let pendingTool=null;
+let lastClear=null,lastCleared=[];
+let totalClearEvents=0,totalClearedCells=0;
+const cellName=i=>`第 ${Math.floor(i/8)+1} 行第 ${i%8+1} 列`;
+const toolLabel=name=>({shovel:'铲子',sun:'阳光',water:'浇水壶'})[name];
+function playSound(){if(!soundOn)return;try{audioContext=audioContext||new (window.AudioContext||window.webkitAudioContext)();const osc=audioContext.createOscillator(),gain=audioContext.createGain();osc.frequency.value=520;gain.gain.setValueAtTime(.04,audioContext.currentTime);gain.gain.exponentialRampToValueAtTime(.001,audioContext.currentTime+.12);osc.connect(gain).connect(audioContext.destination);osc.start();osc.stop(audioContext.currentTime+.12);}catch(e){}}
+function addTool(name){if(inventory[name]>=2)return false;inventory[name]=Math.min(2,inventory[name]+1);return true;}
 const cells=Array.from({length:64},(_,i)=>{const el=document.createElement('button');el.type='button';el.className='cell';el.dataset.index=i;el.addEventListener('click',()=>activate(i));boardEl.append(el);return el;});
 const randomType=()=>Math.floor(Math.random()*icons.length);
 function affectedCells(i){return [[0,0],[-1,0],[1,0],[0,-1],[0,1]].flatMap(([dr,dc])=>{const r=Math.floor(i/8)+dr,c=i%8+dc;return r>=0&&r<8&&c>=0&&c<8&&board[r*8+c]!==null?[r*8+c]:[];});}
@@ -49,6 +53,8 @@ function render(){
   cells.forEach((el,i)=>{
     el.replaceChildren();
     el.className='cell'+(board[i]!==null?' filled':'')+(selected===i?' selected':'');
+    if(pendingTool&&pendingTool.cell===i){el.classList.add('tool-pending');if(pendingTool.tool==='shovel')el.classList.add('shovel-pending');}
+    if(lastCleared.includes(i))el.classList.add('just-cleared');
     el.dataset.stage=Math.min(3,levels[i]);
     if(board[i]!==null){
       const plantIcon=document.createElement('span');plantIcon.className='plant';plantIcon.textContent=icons[board[i]];el.append(plantIcon);
@@ -56,19 +62,19 @@ function render(){
       if(preview.includes(i)){el.classList.add('tool-preview');el.dataset.stage=Math.min(3,levels[i]+1);plantIcon.classList.add('preview-plant');const badge=document.createElement('span');badge.className='preview-level';badge.textContent='→'+(levels[i]+1);el.append(badge);}
     }
     if(guide){if(guide.line.includes(i))el.classList.add('hint-line');if(guide.from===i)el.classList.add('hint-from');if(guide.to===i)el.classList.add('hint-to');}
-    el.setAttribute('aria-label',`第 ${Math.floor(i/8)+1} 行第 ${i%8+1} 列，${board[i]===null?'空格':names[board[i]]+'，成长 '+levels[i]}${guide?.from===i?'，引导起点 1':guide?.to===i?'，引导落点 2':''}${preview.includes(i)?'，使用后成长 '+(levels[i]+1):''}`);
+    el.setAttribute('aria-label',`第 ${Math.floor(i/8)+1} 行第 ${i%8+1} 列，${board[i]===null?'空格':names[board[i]]+'，成长 '+levels[i]}${guide?.from===i?'，引导起点 1':guide?.to===i?'，引导落点 2':''}${preview.includes(i)?'，使用后成长 '+(levels[i]+1):''}${pendingTool&&pendingTool.cell===i?'，待确认使用道具':''}`);
     el.setAttribute('aria-pressed',String(selected===i));
   });
   document.getElementById('score').textContent=score;document.getElementById('growth').textContent=growth;
   const spaces=board.filter(v=>v===null).length;document.getElementById('space').textContent=spaces;
-  const warning=document.getElementById('space-warning');warning.hidden=spaces>10;warning.textContent=`空格不足！剩余 ${spaces} 格`;
+  const warning=document.getElementById('space-warning');warning.hidden=spaces>10;warning.textContent=`空格不足！剩余 ${spaces} 格——棋盘满了就会结束，未满 200 分算失败；快用铲子腾出空格，或连成三连消除。`;
   document.getElementById('goal-score').textContent=`${score} / ${TARGET_SCORE} 分`;document.getElementById('goal-progress').value=Math.min(score,TARGET_SCORE);
-  document.getElementById('tutorial').textContent=firstClear?'':guide?'第一步：把实线 1 的植物移到虚线 2，亮边三格就能消除。':'先移动或用铲子腾出空间，出现三连走法后会继续高亮。';
+  document.getElementById('tutorial').textContent=firstClear?'接下来：找三个相同图案排成横、竖或斜线就能消除；先点植物，再点空格。没有走法时点「找三连」看提示，或用铲子腾出空格。':guide?'第一步：把实线 1 的植物移到虚线 2——它会和亮边两格凑成三个相同图案，连成一线就消除。消除后继续找三连；没有走法时点「找三连」。':'先移动或用铲子腾出空间，出现三连走法后会继续高亮。';
   document.getElementById('next').textContent=next.map(v=>icons[v]).join('');
   for(const [key,label] of Object.entries({shovel:'铲子',sun:'阳光',water:'浇水壶'})){const b=document.getElementById(key);b.textContent=`${label}：剩余 ${inventory[key]} / 上限 2`;b.setAttribute('aria-pressed',String(tool===key));}
   const hint=document.getElementById('hint');hint.textContent=`找三连：剩余 ${hintsLeft} 次`;hint.disabled=hintsLeft===0||ended;
-  document.getElementById('hint-help').textContent=hintsLeft===0?'本局 3 次找三连已用完，重新开始后恢复。':'每局可找三连 3 次，显示起点、落点及成线格；查找无结果也计 1 次。';
-  document.getElementById('tool-help').textContent=tool==='sun'||tool==='water'?'绿框预览成长后的大小、底色及 → 等级；悬停或聚焦可换目标，点击使用。成长仅改变外观，不加分。':'阳光：一株成长 +1；浇水壶：所选及上下左右成长 +1。植物变大、底色加深，仅改变外观，不加分。';
+  document.getElementById('hint-help').textContent=hintsLeft===0?'本局 3 次找三连已用完，重新开始后恢复。':'每局可找三连 3 次，显示起点、落点及成线格；没有走法时本次不扣次数。';
+  document.getElementById('tool-help').textContent=tool==='shovel'?'铲子：点一株植物将它铲除，点中后需再点一次确认；删除后无法恢复。':tool==='water'&&pendingTool?'浇水壶：绿框标出将要成长的格子，再点一次确认使用；点其他格子可换目标。':tool==='sun'||tool==='water'?'绿框预览成长后的大小、底色及 → 等级；悬停或聚焦可换目标，点击使用。成长仅改变外观，不加分。':'阳光：一株成长 +1；浇水壶：所选及上下左右成长 +1。植物变大、底色加深，仅改变外观，不加分。';
   document.getElementById('reward').hidden=!ads.enabled;
 }
 function say(text){document.getElementById('message').textContent=text;}
@@ -85,9 +91,24 @@ function findMove(){
   }
   return null;
 }
+function noMoveAdvice(){
+  for(let i=0;i<64;i++){
+    if(board[i]===null)continue;
+    const r=Math.floor(i/8),c=i%8;
+    let hasSame=false,hasNeighbour=false;
+    for(const [dr,dc] of [[-1,0],[1,0],[0,-1],[0,1]]){
+      const nr=r+dr,nc=c+dc;
+      if(nr<0||nr>=8||nc<0||nc>=8||board[nr*8+nc]===null)continue;
+      hasNeighbour=true;
+      if(board[nr*8+nc]===board[i])hasSame=true;
+    }
+    if(hasNeighbour&&!hasSame)return `建议用铲子铲掉${cellName(i)}的${names[board[i]]}（它周围没有同类），腾出空格后再移动找三连。`;
+  }
+  const empty=board.findIndex(v=>v===null);
+  if(empty>=0)return `可以先把一株植物移到${cellName(empty)}的空格附近整理，再找三连。`;
+  return '棋盘已满。';
+}
 function opening(){
-  // Reserve a movable three: two adjacent plants, an empty landing cell,
-  // and the third plant just below it. Fill the other nine without matches.
   board=Array(64).fill(null);
   const row=Math.floor(Math.random()*7),col=Math.floor(Math.random()*6),a=row*8+col,to=a+2,from=to+8,type=randomType();
   board[a]=board[a+1]=board[from]=type;
@@ -100,39 +121,162 @@ function opening(){
 function finishIfNeeded(){
   const won=score>=TARGET_SCORE;
   if(!won&&!board.every(v=>v!==null))return;
-  ended=true;hintMove=null;
+  ended=true;hintMove=null;pendingTool=null;
+  const gap=TARGET_SCORE-score;
   document.getElementById('over-title').textContent=won?'花园三连，通关啦！':'花园已经开满啦';
+  document.getElementById('over-sub').textContent=won?'收好这份春日的小小成果，恭喜通关！':`未达到 200 分目标：${score} / 200 分，还差 ${gap} 分。棋盘已经开满，本次养花结束。`;
   document.getElementById('final-score').textContent=score+' 分';
-  document.getElementById('final-growth').textContent=won?`已达到 ${TARGET_SCORE} 分目标 · 花园成长 ${growth} 次`:`花园成长了 ${growth} 次`;
+  document.getElementById('final-growth').textContent=won?`已达到 ${TARGET_SCORE} 分目标 · 花园绽放 ${growth} 次`:`花园绽放了 ${growth} 次 · 还差 ${gap} 分到达 200 分目标`;
+  document.getElementById('final-detail').textContent=lastClear?`最后一消：清除了 ${lastClear.count} 格（${lastClear.cells.map(cellName).join('、')}），+${lastClear.points} 分${lastClear.source==='refill'?'（由补种触发）':''} · 本局共消除 ${totalClearedCells} 格（${totalClearEvents} 次）`:`本局共消除 ${totalClearedCells} 格（${totalClearEvents} 次）`;
   render();document.getElementById('over').showModal();
 }
-async function clearLines(){const line=matches();if(!line.length)return false;line.forEach(i=>cells[i].classList.add('clearing'));await new Promise(resolve=>setTimeout(resolve,300));line.forEach(i=>{board[i]=null;levels[i]=0;});const previousScore=score;score+=line.length*10;for(let n=Math.floor(previousScore/150);n<Math.floor(score/150);n++)addTool('sun');if(Math.random()<.2)addTool('shovel');growth++;firstClear=true;hintMove=null;playSound();render();say(`花开啦！消除 ${line.length} 格，+${line.length*10} 分 · 成长 +1 ✨`);return true;}
-function plant(types){for(const type of types){const empty=board.flatMap((v,i)=>v===null?[i]:[]);if(!empty.length)break;board[empty[Math.floor(Math.random()*empty.length)]]=type;}}
-async function move(from,to){if(busy||ended||from===to||board[from]===null||board[to]!==null)return;busy=true;selected=null;hintMove=null;previewCell=null;board[to]=board[from];levels[to]=levels[from];board[from]=null;levels[from]=0;render();try{if(!await clearLines()){plant(next);next=Array.from({length:3},randomType);render();if(!await clearLines())say('新植物探出头了，试试把相同图案连起来。');}finishIfNeeded();}finally{busy=false;}}
-function activate(i){if(busy||ended)return;if(tool){if(board[i]===null){say('请选择有植物的格子。');return;}if(!inventory[tool])return;hintMove=null;previewCell=null;inventory[tool]--;if(tool==='shovel'){board[i]=null;levels[i]=0;}else if(tool==='sun'){levels[i]++;}else{affectedCells(i).forEach(n=>levels[n]++);}tool=null;selected=null;playSound();render();say('道具使用成功。');return;}if(board[i]!==null){selected=selected===i?null:i;render();say(selected===null?'挑一株植物，开始整理小花园。':'已选中，点一个空格种下它。');}else if(selected!==null)void move(selected,i);}
+async function clearLines(source){
+  const line=matches();
+  if(!line.length)return false;
+  line.forEach(i=>cells[i].classList.add('clearing'));
+  await new Promise(resolve=>setTimeout(resolve,300));
+  line.forEach(i=>{board[i]=null;levels[i]=0;});
+  const previousScore=score;
+  score+=line.length*10;
+  const refills=[];
+  for(let n=Math.floor(previousScore/150);n<Math.floor(score/150);n++)if(addTool('sun'))refills.push('sun');
+  if(Math.random()<.2&&addTool('shovel'))refills.push('shovel');
+  growth++;firstClear=true;hintMove=null;lastCleared=[...line];
+  lastClear={count:line.length,cells:[...line],points:line.length*10,source};
+  totalClearEvents++;totalClearedCells+=line.length;
+  playSound();render();
+  const refillText=refills.length?'（'+refills.map(n=>n==='sun'?'☀️ 阳光 +1':'铲子 +1').join('，')+'）':'';
+  if(source==='refill')say(`补种消除：新长出的植物连成了 ${line.length} 格，+${line.length*10} 分 · 绽放 +1 ✨${refillText}`);
+  else say(`花开啦！消除 ${line.length} 格，+${line.length*10} 分 · 绽放 +1 ✨${refillText}`);
+  return true;
+}
+function wouldComplete(i,type){board[i]=type;const hit=matches().length>0;board[i]=null;return hit;}
+function placeRefillOne(type){
+  const empties=board.flatMap((v,i)=>v===null?[i]:[]);
+  for(let k=empties.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));const t=empties[k];empties[k]=empties[j];empties[j]=t;}
+  for(const i of empties){if(!wouldComplete(i,type)){board[i]=type;return i;}}
+  for(const i of empties){for(let t=0;t<icons.length;t++){if(t!==type&&!wouldComplete(i,t)){board[i]=t;return i;}}}
+  return null;
+}
+function plantRefill(types){const placed=[];for(const type of types){const i=placeRefillOne(type);if(i!==null)placed.push(i);}return placed;}
+function ensureMove(placed){
+  for(let attempt=0;attempt<12&&!findMove();attempt++){
+    placed.forEach(i=>{board[i]=null;});
+    const types=placed.map(()=>randomType());
+    placed.length=0;
+    for(const type of types){const i=placeRefillOne(type);if(i!==null)placed.push(i);}
+    if(!placed.length)break;
+  }
+  let guard=0;
+  while(!findMove()&&guard++<6){
+    const i=placeRefillOne(randomType());
+    if(i===null)break;
+    placed.push(i);
+  }
+}
+async function move(from,to){
+  if(busy||ended||from===to||board[from]===null||board[to]!==null)return;
+  busy=true;selected=null;hintMove=null;previewCell=null;pendingTool=null;lastCleared=[];
+  const movedType=board[from],movedLevel=levels[from],plantsBefore=board.filter(v=>v!==null).length;
+  board[to]=board[from];levels[to]=levels[from];board[from]=null;levels[from]=0;
+  render();
+  let cleared=false;
+  try{
+    cleared=await clearLines('move');
+    if(!cleared){
+      const placed=plantRefill(next);
+      next=Array.from({length:3},randomType);
+      ensureMove(placed);
+      const refillPlaced=placed.length;
+      render();
+      const refillCleared=await clearLines('refill');
+      if(refillCleared)cleared=true;
+      if(!refillCleared)say('新植物探出头了，试试把相同图案连起来。');
+      if(!cleared){
+        const plantsNow=board.filter(v=>v!==null).length;
+        if(plantsNow<plantsBefore+refillPlaced&&board[to]===null){
+          board[to]=movedType;levels[to]=movedLevel;render();
+          say('刚才的移动没有落稳，已把植物放回落点，再试一次。');
+        }
+      }
+    }
+    finishIfNeeded();
+  }finally{busy=false;}
+}
+function activate(i){
+  if(busy||ended)return;
+  if(tool){
+    if(board[i]===null){say('请选择有植物的格子。');return;}
+    if(!inventory[tool])return;
+    if(tool==='shovel'){
+      if(!pendingTool||pendingTool.tool!=='shovel'||pendingTool.cell!==i){
+        pendingTool={tool:'shovel',cell:i};previewCell=null;render();
+        say(`点一株植物将它铲除：再点一次确认铲除${cellName(i)}的${names[board[i]]}，点其他格子可换目标。`);
+        return;
+      }
+      pendingTool=null;hintMove=null;inventory.shovel--;board[i]=null;levels[i]=0;tool=null;selected=null;lastCleared=[];
+      playSound();render();say(`已铲除${cellName(i)}的植物，腾出一个空格。`);
+      return;
+    }
+    if(tool==='water'){
+      if(!pendingTool||pendingTool.tool!=='water'||pendingTool.cell!==i){
+        pendingTool={tool:'water',cell:i};previewCell=i;render();
+        say(`浇水壶将让这 ${affectedCells(i).length} 格植物成长（绿框所示），再点一次确认使用；点其他格子可换目标。`);
+        return;
+      }
+      pendingTool=null;hintMove=null;previewCell=null;inventory.water--;
+      affectedCells(i).forEach(n=>levels[n]++);
+      tool=null;selected=null;lastCleared=[];playSound();render();say('浇水完成，选中的植物和邻居都长大了一点。');
+      return;
+    }
+    hintMove=null;previewCell=null;inventory.sun--;levels[i]++;tool=null;selected=null;lastCleared=[];
+    playSound();render();say('阳光洒下来，植物长大了一点。');
+    return;
+  }
+  if(board[i]!==null){
+    if(hintMove&&i!==hintMove.from)hintMove=null;
+    selected=selected===i?null:i;render();
+    say(selected===null?'挑一株植物，开始整理小花园。':'已选中，点一个空格种下它。');
+  }else if(selected!==null)void move(selected,i);
+}
 function cleanup(){if(ghost)ghost.remove();if(hover!==null)cells[hover].classList.remove('target');ghost=null;hover=null;drag=null;}
 boardEl.addEventListener('pointerdown',e=>{const cell=e.target.closest('.cell');if(!cell||busy||ended||e.button!==0||board[+cell.dataset.index]===null||tool||drag)return;drag={id:e.pointerId,from:+cell.dataset.index,x:e.clientX,y:e.clientY,moved:false};cell.setPointerCapture(e.pointerId);});
 boardEl.addEventListener('pointermove',e=>{if(!drag||drag.id!==e.pointerId)return;if(!drag.moved&&Math.hypot(e.clientX-drag.x,e.clientY-drag.y)>7){drag.moved=true;ghost=document.createElement('div');ghost.className='ghost';ghost.textContent=icons[board[drag.from]];document.body.append(ghost);}if(!drag.moved)return;ghost.style.left=e.clientX+'px';ghost.style.top=e.clientY+'px';if(hover!==null)cells[hover].classList.remove('target');const target=document.elementFromPoint(e.clientX,e.clientY)?.closest('.cell');hover=target&&boardEl.contains(target)&&board[+target.dataset.index]===null?+target.dataset.index:null;if(hover!==null)cells[hover].classList.add('target');});
-boardEl.addEventListener('pointerup',e=>{if(!drag||drag.id!==e.pointerId)return;const {from,moved}=drag;const target=document.elementFromPoint(e.clientX,e.clientY)?.closest('.cell');cleanup();if(moved){suppressUntil=performance.now()+400;e.preventDefault();if(target&&boardEl.contains(target))void move(from,+target.dataset.index);}});
-let suppressUntil=0;
-boardEl.addEventListener('click',e=>{if(e.detail&&performance.now()<suppressUntil)e.stopImmediatePropagation();},true);
+let suppressUntil=0,suppressCell=null;
+boardEl.addEventListener('pointerup',e=>{if(!drag||drag.id!==e.pointerId)return;const {from,moved}=drag;const target=document.elementFromPoint(e.clientX,e.clientY)?.closest('.cell');cleanup();if(moved){suppressUntil=performance.now()+150;suppressCell=target&&boardEl.contains(target)?+target.dataset.index:null;e.preventDefault();if(target&&boardEl.contains(target))void move(from,+target.dataset.index);}});
+boardEl.addEventListener('click',e=>{if(e.detail&&performance.now()<suppressUntil){const cell=e.target.closest('.cell');if(suppressCell===null||(cell&&+cell.dataset.index===suppressCell))e.stopImmediatePropagation();}},true);
 boardEl.addEventListener('pointercancel',cleanup);boardEl.addEventListener('lostpointercapture',cleanup);
-function start(){if(busy)return;cleanup();levels=Array(64).fill(0);score=0;growth=0;selected=null;tool=null;previewCell=null;hintsLeft=3;firstClear=false;hintMove=null;inventory={shovel:1,sun:1,water:1};ended=false;restartFromEnd=false;next=Array.from({length:3},randomType);opening();if(document.getElementById('over').open)document.getElementById('over').close();render();say('先点实线 1 的植物，再点虚线 2 的空格，试试第一次三连。');}
+function start(){
+  if(busy)return;cleanup();levels=Array(64).fill(0);score=0;growth=0;selected=null;tool=null;previewCell=null;pendingTool=null;lastClear=null;lastCleared=[];totalClearEvents=0;totalClearedCells=0;hintsLeft=3;firstClear=false;hintMove=null;inventory={shovel:1,sun:1,water:1};ended=false;restartFromEnd=false;next=Array.from({length:3},randomType);opening();if(document.getElementById('over').open)document.getElementById('over').close();render();say('第一步：先点实线 1 的植物，再点虚线 2 的空格——三个相同图案连成一线就会消除；消除后继续找三连，没有走法时点「找三连」。');
+}
 for(const key of ['shovel','sun','water'])document.getElementById(key).addEventListener('click',()=>{
   if(busy||ended)return;if(!inventory[key]){say('这个道具用完啦。');return;}
-  tool=tool===key?null:key;selected=null;previewCell=tool==='sun'||tool==='water'?board.findIndex(v=>v!==null):null;render();
-  say(tool?'请选择一株植物使用道具。':'已取消道具。');
+  tool=tool===key?null:key;selected=null;pendingTool=null;previewCell=tool==='sun'||tool==='water'?board.findIndex(v=>v!==null):null;render();
+  if(!tool){say('已取消道具。');return;}
+  say(key==='shovel'?'点一株植物将它铲除，点中后需再点一次确认。':key==='sun'?'阳光：点一株植物让它成长 +1。':'浇水壶：点一株植物，它和上下左右的邻居都会成长 +1；先显示绿框预览，再点一次确认。');
 });
-for(let i=0;i<64;i++)for(const event of ['pointerenter','focus'])cells[i].addEventListener(event,()=>{if(!busy&&!ended&&(tool==='sun'||tool==='water')&&previewCell!==i){previewCell=i;render();}});
+for(let i=0;i<64;i++)for(const event of ['pointerenter','focus'])cells[i].addEventListener(event,()=>{if(!busy&&!ended&&!pendingTool&&(tool==='sun'||tool==='water')&&previewCell!==i){previewCell=i;render();}});
 document.getElementById('sound').addEventListener('click',e=>{soundOn=!soundOn;e.currentTarget.textContent='音效：'+(soundOn?'开':'关');});
-document.getElementById('hint').addEventListener('click',()=>{if(busy||ended||hintsLeft===0)return;tool=null;previewCell=null;hintsLeft--;hintMove=findMove();selected=hintMove?.from??null;render();say(hintMove?'把实线 1 的植物移到虚线 2，亮边格将成三连。':'暂时没有可直接三连的移动；可先整理空格或使用道具。');});
-document.getElementById('reward').addEventListener('click',async()=>{if(busy||ended)return;const name=prompt('想获得哪种道具？请输入 铲子、阳光 或 浇水壶');const key={'铲子':'shovel','阳光':'sun','浇水壶':'water'}[name];if(!key)return;if(inventory[key]>=2){say('这个道具已经达到上限。');return;}busy=true;try{if(await ads.rewarded(key))addTool(key);}catch(e){say('广告暂不可用。');}finally{busy=false;render();}});
+document.getElementById('hint').addEventListener('click',()=>{
+  if(busy||ended||hintsLeft===0)return;
+  tool=null;previewCell=null;pendingTool=null;
+  const found=findMove();
+  if(!found){
+    hintMove=null;selected=null;render();
+    say('暂时没有可直接三连的移动，本次提示不扣次数。'+noMoveAdvice());
+    return;
+  }
+  hintsLeft--;hintMove=found;selected=null;render();
+  say('提示已标出起点和落点：先点实线 1 的植物，再点虚线 2 的空格即可。');
+});
+document.getElementById('reward').addEventListener('click',async()=>{if(busy||ended)return;const name=prompt('想获得哪种道具？请输入 铲子、阳光 或 浇水壶');const key={'铲子':'shovel','阳光':'sun','浇水壶':'water'}[name];if(!key)return;if(inventory[key]>=2){say('这个道具已经达到上限。');return;}busy=true;try{if(await ads.rewarded(key)){if(addTool(key))say(toolLabel(key)+' +1，已放入工具栏。');}}catch(e){say('广告暂不可用。');}finally{busy=false;render();}});
 function requestRestart(){if(busy)return;restartFromEnd=ended;if(document.getElementById('over').open)document.getElementById('over').close();document.getElementById('confirm').showModal();}
 function cancelRestart(){document.getElementById('confirm').close();if(restartFromEnd)document.getElementById('over').showModal();}
 document.getElementById('restart').addEventListener('click',requestRestart);
 document.getElementById('cancel-restart').addEventListener('click',cancelRestart);
 document.getElementById('confirm').addEventListener('cancel',e=>{e.preventDefault();cancelRestart();});
 document.getElementById('confirm-restart').addEventListener('click',async()=>{document.getElementById('confirm').close();if(restartFromEnd){busy=true;try{await ads.interstitial();}catch(e){}finally{busy=false;start();}}else start();});
-document.getElementById('again').addEventListener('click',requestRestart);
+document.getElementById('again').addEventListener('click',async()=>{if(busy)return;if(ended){busy=true;try{await ads.interstitial();}catch(e){}finally{busy=false;}start();return;}requestRestart();});
+document.getElementById('view-board').addEventListener('click',()=>{document.getElementById('over').close();});
 document.getElementById('over').addEventListener('cancel',e=>e.preventDefault());start();
 </script></body></html>
