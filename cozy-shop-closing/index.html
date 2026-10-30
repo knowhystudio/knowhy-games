@@ -1020,7 +1020,7 @@
     return function loop(ts) {
       if (gen !== loopGen) return;
       if (!state || !state.running || state.paused) return;
-      if (document.hidden && state && state.running && !state.paused) pauseGame(true); if (!state || !state.running || state.paused) return; const dt = Math.min(0.1, Math.max(0, (ts - lastTs) / 1000));
+      if ((document.hidden || !document.hasFocus()) && state && state.running && !state.paused) pauseGame(true); if (!state || !state.running || state.paused) return; const dt = Math.min(0.1, Math.max(0, (ts - lastTs) / 1000));
       lastTs = ts;
       state.timeLeft -= dt;
       if (state.timeLeft <= 0) {
@@ -1074,8 +1074,8 @@
     rafId = requestAnimationFrame(makeLoop(loopGen));
     renderItems();
   }
-  /* 自动暂停：切页、切窗口或应用、页面藏起时都暂停；回来后不自动继续，须点「继续营业」。另加 500 毫秒看门狗，防切换事件漏掉。 */ function autoPause() { if (state && state.running && !state.paused) pauseGame(true); } window.addEventListener("blur", autoPause); window.addEventListener("pagehide", autoPause); setInterval(function () { if (document.hidden) autoPause(); }, 500); document.addEventListener("visibilitychange", function () {
-    if (document.hidden && state && state.running && !state.paused) pauseGame(true);
+  /* 自动暂停：切页、切窗口或应用、页面藏起时都暂停；回来后不自动继续，须点「继续营业」。另加 250 毫秒看门狗，页面隐藏或失去焦点即暂停，防切换事件漏掉。 */ function autoPause() { if (state && state.running && !state.paused) pauseGame(true); } window.addEventListener("blur", autoPause); window.addEventListener("pagehide", autoPause); setInterval(function () { if (document.hidden || !document.hasFocus()) autoPause(); }, 250); document.addEventListener("visibilitychange", function () {
+    if ((document.hidden || !document.hasFocus()) && state && state.running && !state.paused) pauseGame(true);
   });
 
   /* ── 开始 / 结束 / 再来一局 ── */
